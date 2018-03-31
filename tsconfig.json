@@ -5,6 +5,7 @@
     "strict": true,
     "noImplicitAny": true,
     "esModuleInterop": true,
-    "outDir": "./dist/"
+    "outDir": "./dist/",
+    "types": ["chrome"]
   }
 }

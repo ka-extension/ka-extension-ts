@@ -2,10 +2,13 @@ const path = require("path");
 
 module.exports = {
   entry: { 
-    main: "./src/index.ts"
+    index: "./src/index.ts",
+    background: "./src/background.ts",
+    popup: "./src/popup.ts",
+    content: "./src/content.ts"
   },
   output: {
-    filename: "index.js",
+    filename: "[name].js",
     path: path.resolve(__dirname, "dist")
   },
   module: {
