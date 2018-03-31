@@ -1,0 +1,24 @@
+{
+  "name": "ka-extension-ts",
+  "version": "1.0.0",
+  "description": "A chrome extension for the Khan Academy Computer Programming section",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "errordetails": "webpack --display-error-details",
+    "build": "webpack",
+    "clean": "rm ./dist/*"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^4.4.1",
+    "webpack-cli": "^2.0.13",
+    "webpack-dev-server": "^3.1.1"
+  },
+  "dependencies": {
+    "ts-loader": "^4.1.0",
+    "typescript": "^2.8.1"
+  }
+}
