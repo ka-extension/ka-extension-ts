@@ -1,7 +1,4 @@
 // TS Promise-based utility functions for finding JS generated elements on a page
-
-import { Promise } from "bluebird";
-
 function querySelectorAllPromise(selectorString: string, interval: number = 250, maxTrials?: number): Promise<NodeList> {
 	return new Promise((resolve: (nodes: NodeList) => void, reject: (...args: any[]) => void): void => {
 	    let i: number = 0;
@@ -19,7 +16,7 @@ function querySelectorPromise(elementString: string, interval: number = 250, max
 	return querySelectorAllPromise(elementString, interval, maxTrials).then((e: NodeList): Node => e[0]);
 }
 
-function objectNotEmptyTimer(obj: object, interval: number = 100) {
+function objectNotEmptyTimer(obj: object, interval: number = 100): Promise<object> {
     return new Promise((resolve: (obj: object) => void, reject: (...args: any[]) => void) => {
         (function check(): void {
             if(typeof obj != "object") { reject(new TypeError(`${obj} is not an object`)); }

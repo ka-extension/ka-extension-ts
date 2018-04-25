@@ -5,7 +5,8 @@ module.exports = {
     index: "./src/index.ts",
     background: "./src/background.ts",
     popup: "./src/popup.ts",
-    content: "./src/content.ts"
+    content: "./src/content.ts",
+    vendor: ["whatwg-fetch"]
   },
   output: {
     filename: "[name].js",

@@ -6,15 +6,12 @@ function getCookies(): { [name: string]: string; } {
         .map((e: string): string[] => e.split(/=(.+)/)
         .filter((e: string): boolean => e.length > 0)
         .map((e: string): string => decodeURIComponent(e.trim())))
-    pairs.forEach((e: string[]): void => void(cookies[e[0]] = e[1]));
+    pairs.forEach((e: string[]): void => void(cookies[e[0]] = e[1])); 
     return cookies;
-};
-
-let csrfCookie: string;
+}  
 
 function getCSRF(): string {
-    csrfCookie = typeof csrfCookie != "undefined" ? csrfCookie : getCookies()[CSRF_NAME];
-    return csrfCookie;
+    return getCookies()[CSRF_NAME];
 }
 
 export { getCookies, getCSRF };

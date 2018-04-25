@@ -1,7 +1,8 @@
 import "whatwg-fetch";
 import { CSRF_HEADER } from "../names";
 import { getCSRF } from "./cookie-util";
-import * as P from "bluebird";
+import { buildQuery } from "./text-util";
+import { UsernameOrKaid, CommentSortType } from "../data";
 
 async function getJSON(url: URL | string, projection?: object) {
     url = new URL(url.toString());
@@ -17,7 +18,7 @@ async function getJSON(url: URL | string, projection?: object) {
     })
         .then((response: Response): (Promise<Response> | Response) => 
             response.status >= 200 && response.status < 300 ? 
-            response : P.Promise.reject(response))
+            response : Promise.reject(response))
         .catch((e => void console.error(e)));
     if (response == undefined) {
         throw new Error(`Error fetching ${url}`);
@@ -31,4 +32,41 @@ async function getJSON(url: URL | string, projection?: object) {
     return body;
 }
 
-export { getJSON };
+interface FocusData {
+    id: string;
+    kind: string;
+}
+
+interface CommentData {
+    expandKey: string;
+    key: string;
+    focus: FocusData;
+    focusUrl: string;
+}
+
+// Symbol.asyncIterator polyfill
+if(Symbol["asyncIterator"] === undefined) {
+    ((Symbol as any)["asyncIterator"]) = Symbol.for("asyncIterator");
+}
+
+async function* commentDataGenerator(user: UsernameOrKaid, sort: CommentSortType = CommentSortType.TOP, limit: number = 10): AsyncIterator<CommentData[]> {
+    let page: number = 0;
+    for (;;) {
+        const body: CommentData[] | undefined = await getJSON(`${window.location.origin}/api/internal/user/replies?${buildQuery({
+            casing: "camel",
+            [user.type]: user.toString(),
+            sort: sort.toString(),
+            subject: "all",
+            limit: limit.toString(),
+            page: (page++).toString(),
+            _: Date.now().toString()
+        })}`).then(e => e as CommentData[]).catch(e => void console.error(e));
+        if(!body) {
+            return;
+        } else {
+            yield body;
+        }
+    }
+}
+
+export { getJSON, FocusData, CommentData, commentDataGenerator };
