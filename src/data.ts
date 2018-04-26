@@ -27,4 +27,28 @@ class UsernameOrKaid {
 
 enum CommentSortType { TOP = 1, RECENT = 2 }
 
-export { InvalidUsernameOrKaid, IdType, UsernameOrKaid, CommentSortType };
+interface Program {
+    contentKindCode: string;
+    newUrlPath: string;
+    hideFromHotlist: boolean;
+    relativeUrl: string;
+    originScratchpadId?: number;
+    forkedFromTopic: string;
+    projectEval?: string;
+    height: number;
+    date: string;
+    originSimilarity: number;
+    id: number;
+    contentKind: string;
+    type: string;
+    flags: string[];
+    url: string;
+    sumVotesIncremented: number;
+    isProject: boolean;
+    isProjectOrFork: boolean;
+    kaid: string;
+    imageUrl: string;
+    width: number;
+}
+
+export { InvalidUsernameOrKaid, IdType, UsernameOrKaid, CommentSortType, Program };

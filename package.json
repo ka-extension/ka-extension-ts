@@ -15,7 +15,7 @@
   "devDependencies": {
     "@types/bluebird": "^3.5.20",
     "@types/chrome": "0.0.63",
-    "@types/core-js": "^0.9.36",
+    "@types/core-js": "^0.9.46",
     "dts-webpack-plugin": "0.0.9",
     "webpack": "^4.4.1",
     "webpack-cli": "^2.0.13",
@@ -24,6 +24,7 @@
   "dependencies": {
     "@types/lodash": "^4.14.108",
     "array-includes": "^3.0.3",
+    "babel-polyfill": "^6.26.0",
     "bluebird": "^3.5.1",
     "core-js": "^2.5.5",
     "es6-symbol": "^3.1.1",

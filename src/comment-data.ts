@@ -43,8 +43,8 @@ class CommentLinker {
     }
 }
 
-function commentsButtonEventListener(uok: string): void {
-    const commentLinkGenerator: CommentLinker = new CommentLinker(new UsernameOrKaid(uok));
+function commentsButtonEventListener(uok: UsernameOrKaid): void {
+    const commentLinkGenerator: CommentLinker = new CommentLinker(uok);
     querySelectorPromise(".simple-button.discussion-list-more", 100)
         .then(button => {
             button.addEventListener("click", () => commentLinkGenerator.next())

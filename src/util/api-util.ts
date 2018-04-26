@@ -2,7 +2,7 @@ import "whatwg-fetch";
 import { CSRF_HEADER } from "../names";
 import { getCSRF } from "./cookie-util";
 import { buildQuery } from "./text-util";
-import { UsernameOrKaid, CommentSortType } from "../data";
+import { UsernameOrKaid, CommentSortType, Program } from "../data";
 
 async function getJSON(url: URL | string, projection?: object) {
     url = new URL(url.toString());
@@ -30,6 +30,11 @@ async function getJSON(url: URL | string, projection?: object) {
     }
 
     return body;
+}
+
+function getProgram(programId: string | number): Promise<Program> {
+    return getJSON(`${window.location.origin}/api/labs/scratchpads/${programId.toString()}`)
+        .then(e => e as Program);
 }
 
 interface FocusData {
@@ -69,4 +74,4 @@ async function* commentDataGenerator(user: UsernameOrKaid, sort: CommentSortType
     }
 }
 
-export { getJSON, FocusData, CommentData, commentDataGenerator };
+export { getJSON, FocusData, CommentData, commentDataGenerator, getProgram };
