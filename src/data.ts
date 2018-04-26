@@ -51,4 +51,12 @@ interface Program {
     width: number;
 }
 
-export { InvalidUsernameOrKaid, IdType, UsernameOrKaid, CommentSortType, Program };
+interface UserProfileData {
+  isModerator: boolean;
+}
+
+interface KA {
+  _userProfileData: UserProfileData
+}
+
+export { InvalidUsernameOrKaid, IdType, UsernameOrKaid, CommentSortType, Program, KA };

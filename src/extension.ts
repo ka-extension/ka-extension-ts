@@ -66,11 +66,8 @@ abstract class Extension {
     constructor() {
         this.url = window.location.href.split("/");
         this.KAdefine = new RefinedKAdefine(getKAdefine());
-        this.kaid = "";
         var req = this.KAdefine.require(KAScripts.KA);
-        if(req.getKaid) {
-          this.kaid = req.getKaid();
-        }
+        this.kaid = req.getKaid ? req.getKaid() : "";
     }
     onDiscussionPage(): void | Promise<void> {
         console.info("Discussion package loaded");
