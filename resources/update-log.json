@@ -1,0 +1,43 @@
+[
+    {
+        "version": "3.1.1",
+        "new": [
+            "Added a hide editor button"
+        ],
+        "fixes": [
+            "Improved some program info styling",
+            "Fixed URL coverage for programs (cs/pixar/computer-science)",
+            "Fixed small HTML parsing bug for comment editing",
+            "Total number of votes on profile is now accurate. It no longer counts the automatic vote",
+            "Extension now works in different KA subdomains",
+            "Removed the thumbnail feature"
+        ]
+    },
+    {
+        "version": "3.1.0",
+        "new": [
+            "Added some evaluation tools",
+            "Added user/program reporting. Programs and users you report will go into a Google Sheet monitored by KA Guardian Evan Lewis",
+            "You can now add duplicate badges to your showcase"
+        ],
+        "fixes": [
+            "Improved some notification styling",
+            "You can now see your own program's flags",
+            "Fixed a notif deletion bug"
+        ]
+    },
+    {
+        "version": "3.0.0",
+        "new": [
+            "Added a dark theme for the editor",
+            "You can now change your location text easily, in profile settings",
+            "You can now delete notifications",
+            "Added the ability to edit comments",
+            "You can now link to a specific comment from a user's discussion page"
+        ],
+        "fixes": [
+            "Fixed a notification bug which stopped the number of notifications from displaying properly",
+            "Fixed a notification overflow bug"
+        ]
+    }
+]

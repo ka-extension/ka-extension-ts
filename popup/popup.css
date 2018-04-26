@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+body {
+    font-size: 14px;
+    font-family: "Roboto", "arial", sans-serif;
+    margin: 0;
+}
+
+li {
+    margin-bottom: 5px;
+}
+
+#discord{
+    font-size:12px;
+    text-align: center;
+    color: #808080;
+}
+
+#main {
+    margin: 4% 4% 7% 4%;
+    color: #000000;
+}
+
+#header {
+    background: #1fab54;
+    padding: 3% 4%;
+    color: #FFFFFF;
+    box-shadow: 1px 1px 2px #a5a5a5;
+    display: flex;
+    align-items: center;
+}
+
+#header img {
+    float: left;
+    margin-right: 10px;
+}
+
+#header h2 {
+    margin: 0;
+    font-weight: 100;
+}
+
+#nav {
+    display: flex;
+    flex-direction: row; 
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
