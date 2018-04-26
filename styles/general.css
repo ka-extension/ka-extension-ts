@@ -1,0 +1,39 @@
+/** Community guidelines **/
+.video-discussion {
+    float: left !important;
+    margin: 0px !important;
+    width: 50% !important;
+    display: block;
+}
+
+.footer_crtwg {
+    max-width: none !important;
+}
+
+.main-discussion-guidelines.discussion-guidelines {
+    float: right !important;
+    width: 25% !important;
+    display: block !important;
+    margin-top: 0px !important;
+}
+
+/** Widen scratchpad **/
+.wrap_xyqcvi {
+    max-width: none !important;
+}
+
+/** Report button under programs **/
+#kae-report-button {
+    text-decoration: none !important;
+    background: white;
+    border: 1px solid #ac3939;
+    color: #ac3939;
+    border-radius: 4px !important;
+    display: inline-block !important;
+    font-size: 15px !important;
+    font-weight: 400 !important;
+    padding: 8px 8px !important;
+    margin: 0px 3px 0px 0px !important;
+    text-align: center !important;
+    cursor: pointer;
+}

@@ -3,7 +3,7 @@ import { UsernameOrKaid, CommentSortType } from "./data";
 import { querySelectorPromise } from "./util/promise-util";
 import { buildQuery } from "./util/text-util";
 import { flatten, zipObject } from "lodash";
-import { extensionCommentClassName } from "./names";
+import { EXTENSION_COMMENT_CLASSNAME } from "./names";
 
 class CommentDataIterator {
     private complete: boolean = false;
@@ -50,7 +50,7 @@ function commentsButtonEventListener(uok: UsernameOrKaid): void {
             button.addEventListener("click", () => commentLinkGenerator.next())
             commentLinkGenerator.next();
             setInterval(() => {
-                var unalteredComments = document.querySelectorAll(`.discussion-item.reply:not(.${extensionCommentClassName})`);
+                var unalteredComments = document.querySelectorAll(`.discussion-item.reply:not(.${EXTENSION_COMMENT_CLASSNAME})`);
                 for(let i = 0; i < unalteredComments.length; i++) {
                     let comment = unalteredComments[i];
                     let url = commentLinkGenerator.getUrl(comment.id);
@@ -67,7 +67,7 @@ function commentsButtonEventListener(uok: UsernameOrKaid): void {
                         let outerSpan = document.createElement("span");
                         outerSpan.appendChild(link);
                         metaControls.appendChild(outerSpan);
-                        comment.className += ` ${extensionCommentClassName}`;
+                        comment.className += ` ${EXTENSION_COMMENT_CLASSNAME}`;
                     }
                 }
             }, 100);

@@ -3,6 +3,7 @@ import { getProgram } from "./util/api-util";
 
 interface KAdefineResult {
     data?: KAdefineData;
+    getKaid?(): string;
 }
 
 interface KAdefineData {
@@ -13,7 +14,7 @@ interface KAdefineData {
 }
 
 interface KAdefineType {
-    require(url: string): KAdefineResult; 
+    require(url: string): KAdefineResult;
 }
 
 function getKAdefine(): KAdefineType {
@@ -32,12 +33,12 @@ class RefinedKAdefine {
         return new Promise((resolve, reject) => {
             let counter = 0;
             const attempt = () => {
-                try { 
+                try {
                     const data: KAdefineResult = this.KAdefine.require(url);
                     if (test && !test(data)) {
                         throw new Error("Data failed tests");
                     }
-                    resolve(data); 
+                    resolve(data);
                 } catch (e) {
                     if (!maxAttempts || counter++ < maxAttempts) {
                         setTimeout(attempt, interval);
@@ -52,7 +53,8 @@ class RefinedKAdefine {
 }
 
 enum KAScripts {
-    DISCUSSION = "./javascript/discussion-package/discussion.js"
+    DISCUSSION = "./javascript/discussion-package/discussion.js",
+    KA = "./javascript/shared-package/ka.js"
 }
 
 const KAdefine: KAdefineType = (window as any)["KAdefine"] as KAdefineType
@@ -60,9 +62,15 @@ const KAdefine: KAdefineType = (window as any)["KAdefine"] as KAdefineType
 abstract class Extension {
     private readonly KAdefine: RefinedKAdefine;
     private readonly url: string[];
+    public kaid: string;
     constructor() {
         this.url = window.location.href.split("/");
         this.KAdefine = new RefinedKAdefine(getKAdefine());
+        this.kaid = "";
+        var req = this.KAdefine.require(KAScripts.KA);
+        if(req.getKaid) {
+          this.kaid = req.getKaid();
+        }
     }
     onDiscussionPage(): void | Promise<void> {
         console.info("Discussion package loaded");
@@ -75,15 +83,15 @@ abstract class Extension {
                 if (e) {
                     this.onDiscussionPage();
                     if (e.data && (e.data.which == "profile") && (this.url[6] == "replies")) {
-                        this.onRepliesPage(new UsernameOrKaid(this.url[4]));                
+                        this.onRepliesPage(new UsernameOrKaid(this.url[4]));
                     }
                 }
-            })
+            }).catch(console.error);
 
-            this.KAdefine.asyncRequire(KAScripts.DISCUSSION, 100, (data: KAdefineResult) => 
-                typeof data.data != "undefined" && typeof data.data.focusId != "undefined" && 
+            this.KAdefine.asyncRequire(KAScripts.DISCUSSION, 100, (data: KAdefineResult) =>
+                typeof data.data != "undefined" && typeof data.data.focusId != "undefined" &&
                 typeof data.data.focusKind != "undefined").then(e => {
-                
+
                 if (e && e.data && e.data.focusId && e.data.focusKind == "scratchpad") {
                     getProgram(e.data.focusId).then(e => this.onProgramPage(e));
                 }
