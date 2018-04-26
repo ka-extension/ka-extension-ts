@@ -21,3 +21,19 @@
 .wrap_xyqcvi {
     max-width: none !important;
 }
+
+/** Report button under programs **/
+#kae-report-button {
+    text-decoration: none !important;
+    background: white;
+    border: 1px solid #ac3939;
+    color: #ac3939;
+    border-radius: 4px !important;
+    display: inline-block !important;
+    font-size: 15px !important;
+    font-weight: 400 !important;
+    padding: 8px 8px !important;
+    margin: 0px 3px 0px 0px !important;
+    text-align: center !important;
+    cursor: pointer;
+}
