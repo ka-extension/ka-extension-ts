@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "errordetails": "webpack --display-error-details",
     "build": "webpack",
+    "watch": "webpack --watch",
     "clean": "rm ./dist/*"
   },
   "keywords": [],
@@ -18,7 +19,7 @@
     "@types/core-js": "^0.9.46",
     "dts-webpack-plugin": "0.0.9",
     "webpack": "^4.4.1",
-    "webpack-cli": "^2.0.13",
+    "webpack-cli": "^2.0.15",
     "webpack-dev-server": "^3.1.1"
   },
   "dependencies": {

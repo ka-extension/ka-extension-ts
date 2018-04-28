@@ -37,6 +37,7 @@ interface Program {
     projectEval?: string;
     height: number;
     date: string;
+    created: string;
     originSimilarity: number;
     id: number;
     contentKind: string;
