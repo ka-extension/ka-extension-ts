@@ -74,13 +74,17 @@ abstract class Extension {
     }
     abstract onProgramPage(program: Program): void | Promise<void>;
     abstract onRepliesPage(uok: UsernameOrKaid): void | Promise<void>;
+    abstract onHotlistPage(): void;
+    abstract onProfilePage(uok: UsernameOrKaid): void;
     async init(): Promise<void> {
         if (window.location.host.includes("khanacademy.org")) {
             this.KAdefine.asyncRequire(KAScripts.DISCUSSION).then(e => {
                 if (e) {
                     this.onDiscussionPage();
                     if (e.data && (e.data.which == "profile") && (this.url[6] == "replies")) {
-                        this.onRepliesPage(new UsernameOrKaid(this.url[4]));
+                        var identifier: UsernameOrKaid = new UsernameOrKaid(this.url[4]);
+                        this.onRepliesPage(identifier);
+                        this.onProfilePage(identifier);
                     }
                 }
             }).catch(console.error);
@@ -91,6 +95,12 @@ abstract class Extension {
 
                 if (e && e.data && e.data.focusId && e.data.focusKind == "scratchpad") {
                     getProgram(e.data.focusId).then(e => this.onProgramPage(e));
+                }
+            }).catch(console.error);
+
+            this.KAdefine.asyncRequire(KAScripts.KA).then(e => {
+                if (e && this.url[5] === "browse"){
+                    this.onHotlistPage();
                 }
             }).catch(console.error);
         }
