@@ -97,12 +97,10 @@ abstract class Extension {
                     getProgram(e.data.focusId).then(e => this.onProgramPage(e));
                 }
             }).catch(console.error);
-
-            this.KAdefine.asyncRequire(KAScripts.KA).then(e => {
-                if (e && this.url[5] === "browse"){
-                    this.onHotlistPage();
-                }
-            }).catch(console.error);
+            
+            if (this.url[5] === "browse"){
+                this.onHotlistPage();
+            }
         }
     }
 }

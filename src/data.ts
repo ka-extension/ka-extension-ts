@@ -57,7 +57,7 @@ interface UserProfileData {
 }
 
 interface KA {
-  _userProfileData: UserProfileData
+  _userProfileData?: UserProfileData
 }
 
-export { InvalidUsernameOrKaid, IdType, UsernameOrKaid, CommentSortType, Program, KA };
+export { InvalidUsernameOrKaid, IdType, UsernameOrKaid, CommentSortType, Program, KA, UserProfileData };
