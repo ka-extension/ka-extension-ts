@@ -4,7 +4,7 @@ import { commentsButtonEventListener } from "./comment-data";
 import { addProgramFlags } from "./flag";
 import { addReportButton } from "./report";
 import { addUserInfo } from "./profile";
-import { addProgramDates } from "./project";
+import { addProgramDates, hideEditor } from "./project";
 
 
 class ExtensionImpl extends Extension {
@@ -12,6 +12,7 @@ class ExtensionImpl extends Extension {
         addProgramFlags(program, this.kaid);
         addReportButton(program, this.kaid);
         addProgramDates(program, this.kaid);
+        hideEditor(program);
     }
     async onRepliesPage(uok: UsernameOrKaid) {
         commentsButtonEventListener(uok);

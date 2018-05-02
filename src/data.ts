@@ -50,6 +50,7 @@ interface Program {
     kaid: string;
     imageUrl: string;
     width: number;
+    userAuthoredContentType: string;
 }
 
 interface UserProfileData {
