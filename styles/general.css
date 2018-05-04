@@ -37,3 +37,33 @@
     text-align: center !important;
     cursor: pointer;
 }
+
+/** Hide editor feature **/
+.kae-hide-400 {
+  min-width: 400px !important;
+  width: 400px !important;
+}
+
+.kae-hide-500 {
+  min-width: 500px !important;
+  width: 500px !important;
+}
+
+.kae-hide-600 {
+  min-width: 600px !important;
+  width: 600px !important;
+}
+
+.kae-hide {
+  display: none !important;
+}
+
+#kae-hide-div {
+    text-align: right !important;
+    float: right !important;
+    margin-bottom: 5px;
+}
+
+#kae-hide-button {
+    width: 100px;
+}
