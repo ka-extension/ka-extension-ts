@@ -1,4 +1,4 @@
-import { Program, UsernameOrKaid } from "./data";
+import { Program } from "./data";
 import { formatDate } from "./util/text-util";
 import { LS_PREFIX } from "./names";
 
