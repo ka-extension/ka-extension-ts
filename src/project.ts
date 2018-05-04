@@ -1,4 +1,4 @@
-import { Program } from "./data";
+import { Program, UsernameOrKaid } from "./data";
 import { formatDate } from "./util/text-util";
 import { LS_PREFIX } from "./names";
 
@@ -57,4 +57,25 @@ function hideEditor(program: Program): void {
   }
 }
 
-export { addProgramDates, hideEditor };
+function keyboardShortcuts(program: Program): void {
+  document.addEventListener("keydown", (e: KeyboardEvent) : void => {
+    if(!e.ctrlKey || !e.altKey) return;
+    e.preventDefault();
+    switch(e.which) {
+      case 82: // R - Restart program
+        const restartButton: HTMLAnchorElement | null = <HTMLAnchorElement> document.querySelector("#restart-code");
+        if(restartButton) restartButton.click();
+        break;
+      case 68: // D - Toggle documentation
+        const firstLink: HTMLAnchorElement | null = <HTMLAnchorElement> document.querySelector(".link_1uvuyao-o_O-tabTrigger_pbokdw-o_O-inactiveTab_1t8hj6j");
+        if(firstLink) firstLink.click();
+        break;
+      case 80: // P - Go to the profile of program creator
+        window.location.href = `${window.location.origin}/profile/${program.kaid}`;
+        break;
+    }
+  });
+
+}
+
+export { addProgramDates, hideEditor, keyboardShortcuts };
