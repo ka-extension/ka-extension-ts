@@ -2,7 +2,8 @@ import { commentDataGenerator, CommentData } from "./util/api-util";
 import { UsernameOrKaid, CommentSortType } from "./data";
 import { querySelectorPromise } from "./util/promise-util";
 import { buildQuery } from "./util/text-util";
-import { flatten, zipObject } from "lodash";
+import flatten from "lodash.flatten";
+import zipObject from "lodash.zipobject";
 import { EXTENSION_COMMENT_CLASSNAME } from "./names";
 
 class CommentDataIterator {
