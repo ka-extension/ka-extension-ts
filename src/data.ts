@@ -53,12 +53,33 @@ interface Program {
     userAuthoredContentType: string;
 }
 
+interface Scratchpad {
+    thumb: string;
+    created: string;
+    authorKaid: string;
+    title: string;
+    sumVotesIncremented: number;
+    flaggedByUser: boolean;
+    url: string;
+    key: string;
+    authorNickname: string;
+    spinoffCount: number;
+    translatedTitle: string;
+}
+
+interface Scratchpads {
+    cursor?: string;
+    scratchpads: Scratchpad[];
+}
+
 interface UserProfileData {
-  isModerator: boolean;
+  isModerator?: boolean;
+  dateJoined: string;
+  kaid: string;
 }
 
 interface KA {
   _userProfileData?: UserProfileData
 }
 
-export { InvalidUsernameOrKaid, IdType, UsernameOrKaid, CommentSortType, Program, KA, UserProfileData };
+export { InvalidUsernameOrKaid, IdType, UsernameOrKaid, CommentSortType, Program, Scratchpads, KA, UserProfileData };
