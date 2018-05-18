@@ -21,8 +21,8 @@ function addUserInfo(uok: UsernameOrKaid): void {
             totals.spinoffs += scratchpad.spinoffCount;
             return totals;
         }, { programs: Scratchpads.scratchpads.length, votes: 0, spinoffs: 0 });
-        const averageSpinoffs = Math.round(totals.spinoffs / totals.programs).toString(),
-        averageVotes = Math.round(totals.votes / totals.programs).toString();
+        const averageSpinoffs = Math.round(totals.spinoffs / totals.programs || 0).toString();
+        const averageVotes = Math.round(totals.votes / totals.programs || 0).toString();
         querySelectorPromise(".user-statistics-table > tbody").then(table => table as HTMLElement).then(table => {
             table.innerHTML += tableElement("Programs", totals.programs.toString());
             table.innerHTML += tableElement("Total votes received", totals.votes.toString());
