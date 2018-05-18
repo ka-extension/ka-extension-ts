@@ -19,12 +19,13 @@ module.exports = {
             exclude: [
                 path.resolve(__dirname, "node_modules")
             ],
-            loader: "ts-loader"
+            include: path.resolve(__dirname, "src"),
+            use: ["cache-loader", "ts-loader"]
         }
     ]
   },
   resolve: {
-      extensions: [ ".ts" ]
+      extensions: [ ".ts", ".js", ".json" ]
   },
   devtool: "source-map"
 };

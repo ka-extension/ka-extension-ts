@@ -6,7 +6,7 @@ import { UsernameOrKaid, CommentSortType, Program } from "../data";
 
 async function getJSON(url: URL | string, projection?: object) {
     url = new URL(url.toString());
-    if(projection) {
+    if (projection) {
         url.searchParams.append("projection", JSON.stringify(projection));
     }
     const response: Response | undefined = await fetch(url.toString(), {
@@ -14,10 +14,11 @@ async function getJSON(url: URL | string, projection?: object) {
         headers: {
             [CSRF_HEADER]: getCSRF()
         },
+        // credentials: "include"
         credentials: "same-origin"
     })
-        .then((response: Response): (Promise<Response> | Response) => 
-            response.status >= 200 && response.status < 300 ? 
+        .then((response: Response): (Promise<Response> | Response) =>
+            response.status >= 200 && response.status < 300 ?
             response : Promise.reject(response))
         .catch((e => void console.error(e)));
     if (response == undefined) {
@@ -50,7 +51,7 @@ interface CommentData {
 }
 
 // Symbol.asyncIterator polyfill
-if(Symbol["asyncIterator"] === undefined) {
+if (Symbol["asyncIterator"] === undefined) {
     ((Symbol as any)["asyncIterator"]) = Symbol.for("asyncIterator");
 }
 

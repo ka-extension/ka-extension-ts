@@ -1,48 +1,166 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 
+
 body {
     font-size: 14px;
     font-family: "Roboto", "arial", sans-serif;
     margin: 0;
+    width: 500px;
+}
+
+#header {
+    /* background: #1fab54; */
+    /* padding: 3% 4%; */
+    /* color: #FFFFFF; */
+    /* box-shadow: 1px 1px 2px #a5a5a5; */
+    display: flex;
+    /* align-items: center; */
+    /* justify-content: space-between; */
+}
+
+#header .nav.button {
+    background: rgb(253, 253, 253);
+    padding: 20px;
+    width: 50%;
+    border-bottom: 1px solid rgb(206, 211, 215);
+    cursor: pointer;
+    text-align: center;
+}
+
+#header .nav.button.selected {
+    background: none;
+    border-bottom: none;
+}
+
+#header #general {
+    border-right: 1px solid rgb(206, 211, 215);
+}
+
+#header img {
+    display: inline;
+    vertical-align: -50%;
+    width: 30px;
+    height: 30px;
+}
+
+#header h2 {
+    display: inline;
+    margin: 0px 5px 0px 0px;
+    font-weight: 100;
+}
+
+#nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+/** Main popup page style, with update logs. **/
+.main {
+    margin: 4% 4% 7% 4%;
+    color: #000000;
 }
 
 li {
     margin-bottom: 5px;
 }
 
-#discord{
-    font-size:12px;
+#version {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 0px 30px 0px 10px;
+    outline: none;
+    color: #555;
+    width: 20%;
+    height: 20px;
+}
+
+#discord {
+    font-size: 12px;
     text-align: center;
     color: #808080;
 }
 
-#main {
-    margin: 4% 4% 7% 4%;
-    color: #000000;
+/** Notifications page style **/
+.notifications {
+    display: none;
+    height: 400px;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
-#header {
-    background: #1fab54;
-    padding: 3% 4%;
-    color: #FFFFFF;
-    box-shadow: 1px 1px 2px #a5a5a5;
+.mark-notifications-read {
+    margin: 5px 5px 0px;
+    display: inline-block;
+}
+
+.unread-number {
+    margin: 0px;
+    padding: 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.notifs-container a {
+    text-decoration: none;
+    color: black;
+}
+
+.new-notif {
+    padding: 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     display: flex;
+    flex-flow: row wrap;
     align-items: center;
 }
 
-#header img {
-    float: left;
+.new-notif:hover {
+    background: rgb(250, 250, 250);
+    color: rgb(17, 82, 176);
+}
+
+.notif-img {
     margin-right: 10px;
+    width: 40px;
+    height: 40px;
 }
 
-#header h2 {
-    margin: 0;
-    font-weight: 100;
+.notif-content {
+    flex: 1 0;
+    font-weight: 10;
 }
 
-#nav {
-    display: flex;
-    flex-direction: row; 
-    justify-content: space-between;
-    margin-bottom: 10px;
+.notif-date {
+    flex: 1 100%;
+    margin-left: 50px;
+}
+
+.loading-spinner {
+    border: none;
+    width: 100px;
+    height: 100px;
+    display: block;
+    margin: 10px auto;
+    animation: spinner 1s linear infinite;
+}
+@keyframes spinner {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.notifications-button-more {
+    margin: 10px auto;
+    display: none;
+    width: 90%;
+    text-align: center;
+    padding: 5px 10px;
+    background: #e7e7e7;
+    background: linear-gradient(to bottom,#eee,#dcdcdc);
+    border: 1px solid #dcdcdc #dcdcdc #b6b6b6;
+    border-radius: 3px;
+    color: #444;
+    cursor: pointer;
+}
+.notifications-button-more:hover {
+    box-shadow: 0 1px 1px rgba(0,0,0,0.35), inset 0 0 50px 5px rgba(255,255,255,0.2)
 }

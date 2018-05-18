@@ -84,7 +84,6 @@ abstract class Extension {
                     if (e.data && (e.data.which == "profile") && (this.url[6] == "replies")) {
                         var identifier: UsernameOrKaid = new UsernameOrKaid(this.url[4]);
                         this.onRepliesPage(identifier);
-                        this.onProfilePage(identifier);
                     }
                 }
             }).catch(console.error);
@@ -100,6 +99,10 @@ abstract class Extension {
             
             if (this.url[5] === "browse"){
                 this.onHotlistPage();
+            }
+            if(this.url[3] === "profile" && !this.url[6]){
+                var identifier: UsernameOrKaid = new UsernameOrKaid(this.url[4]);
+                this.onProfilePage(identifier);
             }
         }
     }

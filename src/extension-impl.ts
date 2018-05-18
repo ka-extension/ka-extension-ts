@@ -19,10 +19,10 @@ class ExtensionImpl extends Extension {
         commentsButtonEventListener(uok);
     }
     onProfilePage(uok: UsernameOrKaid) {
-      addUserInfo(uok);
+        addUserInfo(uok);
     }
     onHotlistPage() {
-      console.info("On the hotlist");
+        console.info("On the hotlist");
     }
 }
 
