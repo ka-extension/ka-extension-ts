@@ -67,19 +67,49 @@ interface Scratchpad {
     translatedTitle: string;
 }
 
+// Since there are different kinds of notifs, add in other props that are optional.
+interface Notification {
+    author_avatar_name: string;
+    author_avatar_src: string;
+    author_nickname: string;
+    brand_new: boolean;
+    class_: string[];
+    content: string;
+    date: string;
+    feedback: string;
+    feedback_hierarchy: string[];
+    feedback_is_comment: boolean;
+    feedback_is_passing_eval_answer: boolean;
+    feedback_is_project_eval_answer: boolean;
+    feedback_is_project_eval_request: boolean;
+    feedback_is_question: boolean;
+    feedback_is_reply: boolean
+    feedback_type: string;
+    focus: string;
+    focus_title: string;
+    kaid: string;
+    kind: string;
+    read: boolean;
+    translated_focus_title: string;
+    url: string;
+    urlsafe_key: string;
+    user_id: string;
+}
+
 interface Scratchpads {
     cursor?: string;
     scratchpads: Scratchpad[];
 }
 
 interface UserProfileData {
-  isModerator?: boolean;
-  dateJoined: string;
-  kaid: string;
+    countBrandNewNotifications: number;
+    isModerator?: boolean;
+    dateJoined: string;
+    kaid: string;
 }
 
 interface KA {
   _userProfileData?: UserProfileData
 }
 
-export { InvalidUsernameOrKaid, IdType, UsernameOrKaid, CommentSortType, Program, Scratchpads, KA, UserProfileData };
+export { InvalidUsernameOrKaid, IdType, UsernameOrKaid, CommentSortType, Program, Notification, Scratchpads, KA, UserProfileData };

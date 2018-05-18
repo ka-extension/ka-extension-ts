@@ -22,7 +22,7 @@ class ExtensionImpl extends Extension {
         addUserInfo(uok);
     }
     onHotlistPage() {
-      console.info("On the hotlist");
+        console.info("On the hotlist");
     }
 }
 

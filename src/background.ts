@@ -1,1 +1,1 @@
-console.log(10);
+console.log("Background.ts here, hello world.");
