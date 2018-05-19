@@ -14,7 +14,6 @@ async function getJSON(url: URL | string, projection?: object) {
         headers: {
             [CSRF_HEADER]: getCSRF()
         },
-        // credentials: "include"
         credentials: "same-origin"
     })
         .then((response: Response): (Promise<Response> | Response) =>
@@ -75,4 +74,101 @@ async function* commentDataGenerator(user: UsernameOrKaid, sort: CommentSortType
     }
 }
 
-export { getJSON, FocusData, CommentData, commentDataGenerator, getProgram };
+enum DiscussionTypes {
+    QUESTION = "question",
+    COMMENT = "comment"
+}
+
+interface ConvoTATFocusRaw {
+    relativeUrl: string
+}
+
+interface ConvoReplyRaw {
+    authorKaid: string,
+    authorNickname: string,
+    content: string,
+    date: string,
+    key?: string
+}
+
+interface ConvoTATRaw {
+    focus: ConvoTATFocusRaw
+    feedback: ConvoReplyRaw[]
+}
+
+interface FinalConvo {
+    url: string,
+    baseTip: FinalReply,
+    replies: FinalReply[]
+}
+
+interface FinalReply {
+    nickname: string,
+    profileUrl: string,
+    epoch: number,
+    content: string
+}
+
+function getConvo(key: string, focusKind: string, focusId: string, discussionType: DiscussionTypes): Promise<FinalConvo> {
+    return Promise.all([
+        getJSON(`${window.location.origin}/api/internal/discussions/${focusKind}/${focusId}/${discussionType}?${buildQuery({
+            casing: "camel", 
+            qa_expand_key: key, 
+            sort: "1", 
+            subject: "all", 
+            limit: "1", 
+            page: "0", 
+            lang: "en",
+            _: Date.now() + ""
+        })}`, {
+            focus: {
+                relativeUrl: 1
+            },
+            feedback: [
+                {
+                    normal: {
+                        authorKaid: 1,
+                        authorNickname: 1,
+                        content: 1,
+                        date: 1,
+                        key: 1
+                    }
+                }
+            ]
+        }).then(e => e as ConvoTATRaw),
+        getJSON(`${window.location.origin}/api/internal/discussions/${key}/replies`, [
+            {
+                normal: {
+                    authorKaid: 1,
+                    authorNickname: 1,
+                    content: 1,
+                    date: 1
+                }
+            }
+        ]).then(e => e as ConvoReplyRaw[])
+    ]).then(e => {
+        const [base, replies] = e;
+        return base.feedback.length > 0 && base.feedback[0].key != key ? Promise.reject("That T&T doesn't exist") : Promise.resolve({
+            url: `https://www.khanacademy.org${base.focus.relativeUrl}?qa_expand_key=${key}`,
+            baseTip: {
+                nickname: base.feedback[0].authorNickname,
+                profileUrl: `https://www.khanacademy.org/profile/${base.feedback[0].authorKaid}`,
+                epoch: new Date(base.feedback[0].date).getTime(),
+                content: base.feedback[0].content
+            },
+            replies: replies.map(e => ({
+                nickname: e.authorNickname,
+                profileUrl: `https://www.khanacademy.org/profile/${e.authorKaid}`,
+                epoch: new Date(e.date).getTime(),
+                content: e.content
+            } as FinalReply))
+        } as FinalConvo);
+    });
+}
+
+export { 
+    getJSON, FocusData, CommentData, 
+    commentDataGenerator, getProgram, 
+    getConvo, FinalReply, FinalConvo,
+    DiscussionTypes
+};

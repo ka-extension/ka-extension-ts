@@ -25,6 +25,7 @@
         "activeTab",
         "storage",
         "cookies",
+        "downloads",
         "*://*.khanacademy.org/*"
     ],
     "web_accessible_resources": [
