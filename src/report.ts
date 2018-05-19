@@ -1,6 +1,8 @@
 import { buildQuery } from "./util/text-util";
 import { Program } from "./data"
-import { QUEUE_ROOT, EXTENSION_ITEM_CLASSNAME } from "./names";
+import { QUEUE_ROOT, EXTENSION_ITEM_CLASSNAME, EXTENSION_ID } from "./names";
+import { getJSON, DiscussionTypes, getConvo } from "./util/api-util";
+import { Message, MessageTypes, Downloadable } from "./message-types";
 
 function addReportButton(program: Program, kaid: string) {
     const buttons: HTMLElement | null = document.querySelector(".buttons_vponqv");
@@ -42,6 +44,34 @@ function addReportButtonDiscussionPosts(focusId: string, focusKind: string) {
                 report.textContent = "Report";
                 meta.appendChild(separator);
                 meta.appendChild(report);
+
+                if(item.classList.contains("comment") && typeof Blob != "undefined" && typeof URL != "undefined") {
+                    meta.appendChild(separator.cloneNode(true));
+                    let download: HTMLAnchorElement = document.createElement("a");
+                    download.href = "#";
+                    download.setAttribute("data-key", id);
+                    download.setAttribute("data-focus-id", focusId);
+                    download.setAttribute("data-focus-kind", focusKind);
+                    download.textContent = "Download conversation";
+                    download.addEventListener("click", (e: MouseEvent) => {
+                        e.preventDefault();
+                        let target: HTMLAnchorElement = e.target as HTMLAnchorElement;
+                        let key: string | null = target.getAttribute("data-key"), 
+                            focusId: string | null = target.getAttribute("data-focus-id"), 
+                            focusKind: string | null = target.getAttribute("data-focus-kind");
+                        if(key && focusId && focusKind) {
+                            getConvo(key, focusKind, focusId, DiscussionTypes.COMMENT)
+                                .then(e => new Blob([ JSON.stringify(e, null, 4) ], { type: "application/json" }))
+                                .then(URL.createObjectURL)
+                                .then(url => ({ url, filename: `${id}.json`, saveAs: true } as Downloadable))
+                                .then(message => ({ message, type: MessageTypes.DOWNLOAD } as Message))
+                                .then(e => chrome.runtime.sendMessage(EXTENSION_ID, e))
+                                .catch(console.error);
+                        }
+                    });
+                    meta.appendChild(download);
+                }
+
                 item.classList.add(EXTENSION_ITEM_CLASSNAME);
             }
         }
