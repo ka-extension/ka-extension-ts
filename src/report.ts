@@ -19,9 +19,9 @@ function addReportButton(program: Program, kaid: string) {
 }
 
 function addReportButtonDiscussionPosts(focusId: string, focusKind: string) {
-    const items: NodeListOf<HTMLDivElement> = document.querySelectorAll(
-        `.question:not(.is-author):not(.${EXTENSION_ITEM_CLASSNAME}), ` + 
-        `.comment:not(.is-author):not(.${EXTENSION_ITEM_CLASSNAME})`);
+    const items: NodeListOf <HTMLDivElement> = document.querySelectorAll(
+        `.question:not(.${EXTENSION_ITEM_CLASSNAME}), ` + 
+        `.comment:not(.${EXTENSION_ITEM_CLASSNAME})`);
     for(let i = 0; i < items.length; i++) {
         let item: HTMLDivElement = items[i];
         let id: string = item.id;
@@ -29,19 +29,30 @@ function addReportButtonDiscussionPosts(focusId: string, focusKind: string) {
             let meta: HTMLDivElement | null = item.getElementsByClassName("discussion-meta-controls")
                 [0] as HTMLDivElement;
             if(meta) {
+                if(!item.classList.contains("is-author")){
+                    let separator: HTMLSpanElement = document.createElement("span");
+                    separator.className = "discussion-meta-separator";
+                    separator.textContent = "•";
+                    let report: HTMLAnchorElement = document.createElement("a");
+                    report.href = `${QUEUE_ROOT}submit?${buildQuery({
+                        type: "discussion",
+                        id: `${item.classList.contains("comment") ?
+                            "comment" : "question"}|${focusKind}|${focusId}|${id}`,
+                        callback: window.location.href
+                    })}`;
+                    report.textContent = "Report";
+                    meta.appendChild(separator);
+                    meta.appendChild(report);
+                }
                 let separator: HTMLSpanElement = document.createElement("span");
                 separator.className = "discussion-meta-separator";
                 separator.textContent = "•";
-                let report: HTMLAnchorElement = document.createElement("a");
-                report.href = `${QUEUE_ROOT}submit?${buildQuery({
-                    type: "discussion",
-                    id: `${item.classList.contains("comment") ? 
-                        "comment" : "question"}|${focusKind}|${focusId}|${id}`,
-                    callback: window.location.href
-                })}`;
-                report.textContent = "Report";
+                let downloadButton: HTMLAnchorElement = document.createElement("a");
+                downloadButton.textContent = "Download";
+                downloadButton.href = `${location.origin}/api/internal/discussions/${id}/replies?format=pretty`;
+                downloadButton.download = "comments.json";
                 meta.appendChild(separator);
-                meta.appendChild(report);
+                meta.appendChild(downloadButton);
                 item.classList.add(EXTENSION_ITEM_CLASSNAME);
             }
         }
