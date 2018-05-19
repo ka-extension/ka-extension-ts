@@ -73,30 +73,30 @@ function displayNotifs(notifJson: NotifObj) {
     currentCursor = notifJson.cursor;
     // Add unread count here, with KA object.
     unreadNumber!.textContent = "";
-    function newNotif(href: string, imgSrc: string, nickname: string, focus: string, content: string, date: string): string {
+    function newNotif(notif: Notification): string {
         // Depending on notification type, "<span> added a comment on </span>" will vary.
         // See if notifs can have "mark read" button, and somehow mark them read individually.
         // Unread notifs could have that green dot or have a slightly different style somehow.
-        let nickText = document.createTextNode(nickname);
-        let focusText = document.createTextNode(focus);
-        let contentText = document.createTextNode(content);
+        let nickText = document.createTextNode(notif.author_nickname);
+        let focusText = document.createTextNode(notif.translated_focus_title);
+        let contentText = document.createTextNode(notif.content);
 
-        return `<a target="_blank" href="https://www.khanacademy.org${href}">
+        return `<a target="_blank" href="https://www.khanacademy.org${notif.url}">
                     <div class="new-notif">
-                        <img class="notif-img" src="${imgSrc}">
+                        <img class="notif-img" src="${notif.author_avatar_src}">
                         <p class="notif-content">
                             <strong>${nickText.textContent}</strong>
                             <span> added a comment on </span>
                             <strong>${focusText.textContent}</strong>:<br>
                             <span>${contentText.textContent}</span>
                         </p>
-                        <div class="notif-date">${formatDate(date)}</div>
+                        <div class="notif-date">${formatDate(notif.date)}</div>
                     </div>
                 </a>`;
     }
     loadingSpinner!.style.display = "none";
     notifJson.notifications.forEach((notif: Notification) => {
-        notifsContainer!.innerHTML += newNotif(notif.url, notif.author_avatar_src, notif.author_nickname, notif.translated_focus_title, notif.content, notif.date);
+        notifsContainer!.innerHTML += newNotif(notif);
     });
     loadMore!.style.display = "block";
 };
@@ -150,7 +150,7 @@ markRead!.addEventListener("click", e => {
 
 log.forEach((e, i) => version!.appendChild(createOption(e.version, i)));
 version!.onchange = function(e): void {
-    versionPage(+(<HTMLInputElement>e.target).value);
+    versionPage(+(<HTMLInputElement> e.target).value);
 };
 
 versionPage(0);
