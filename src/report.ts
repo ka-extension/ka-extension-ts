@@ -22,8 +22,8 @@ function addReportButton(program: Program, kaid: string) {
 
 function addReportButtonDiscussionPosts(focusId: string, focusKind: string) {
     const items: NodeListOf<HTMLDivElement> = document.querySelectorAll(
-        `.question:not(.is-author):not(.${EXTENSION_ITEM_CLASSNAME}), ` + 
-        `.comment:not(.is-author):not(.${EXTENSION_ITEM_CLASSNAME})`);
+        `.question:not(.${EXTENSION_ITEM_CLASSNAME}), ` + 
+        `.comment:not(.${EXTENSION_ITEM_CLASSNAME})`);
     for(let i = 0; i < items.length; i++) {
         let item: HTMLDivElement = items[i];
         let id: string = item.id;
