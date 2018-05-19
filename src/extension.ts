@@ -72,6 +72,9 @@ abstract class Extension {
     onDiscussionPage(): void | Promise<void> {
         console.info("Discussion package loaded");
     }
+    onDetailedDiscussionPage(focusId: string, focusKind: string): void | Promise<void> {
+        console.info("Detailed discussion page");
+    }
     abstract onProgramPage(program: Program): void | Promise<void>;
     abstract onRepliesPage(uok: UsernameOrKaid): void | Promise<void>;
     abstract onHotlistPage(): void;
@@ -91,9 +94,11 @@ abstract class Extension {
             this.KAdefine.asyncRequire(KAScripts.DISCUSSION, 100, (data: KAdefineResult) =>
                 typeof data.data != "undefined" && typeof data.data.focusId != "undefined" &&
                 typeof data.data.focusKind != "undefined").then(e => {
-
-                if (e && e.data && e.data.focusId && e.data.focusKind == "scratchpad") {
-                    getProgram(e.data.focusId).then(e => this.onProgramPage(e));
+                if(e.data && e.data.focusId && e.data.focusKind) {
+                    this.onDetailedDiscussionPage(e.data.focusId, e.data.focusKind);
+                    if(e.data.focusKind == "scratchpad") {
+                        getProgram(e.data.focusId).then(e => this.onProgramPage(e));
+                    }
                 }
             }).catch(console.error);
             

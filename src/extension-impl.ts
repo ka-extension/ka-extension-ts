@@ -2,7 +2,7 @@ import { Extension } from "./extension";
 import { Program, UsernameOrKaid } from "./data";
 import { commentsButtonEventListener } from "./comment-data";
 import { addProgramFlags } from "./flag";
-import { addReportButton } from "./report";
+import { addReportButton, addReportButtonDiscussionPosts } from "./report";
 import { addUserInfo } from "./profile";
 import { addProgramDates, hideEditor, keyboardShortcuts } from "./project";
 
@@ -14,6 +14,9 @@ class ExtensionImpl extends Extension {
         addProgramDates(program, this.kaid);
         hideEditor(program);
         keyboardShortcuts(program);
+    }
+    onDetailedDiscussionPage(focusId: string, focusKind: string) {
+        setInterval(addReportButtonDiscussionPosts.bind(null, focusId, focusKind), 100);
     }
     async onRepliesPage(uok: UsernameOrKaid) {
         commentsButtonEventListener(uok);
