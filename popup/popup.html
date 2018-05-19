@@ -8,7 +8,7 @@
     <body>
         <div id="header">
             <div class="nav button selected" id="general">
-                <h2>General Info</h2>
+                <h2>Update Log</h2>
                  <img src="../images/icon48.png">
             </div>
             <div class="nav button" id="notifs">
@@ -17,7 +17,6 @@
             </div>
         </div>
         <div class="page main">
-            <h3>Update Log</h3>
             <select id="version"></select>
             <p>New features:</p>
             <ul id="new"></ul>
@@ -26,7 +25,9 @@
             <a id="discord" href="https://discord.gg/Bhd9FjN" target="_blank">Discord Server</a>
         </div>
         <div class="page notifications">
-            <input type="button" class="mark-notifications-read" value="Mark All Read"/>
+            <div class="absolute-notif-header">
+                <input type="button" class="mark-notifications-read" value="Mark All Read"/>
+            </div>
             <h4 class="unread-number"></h4>
             <div class="notifs-container">
                 <img class="loading-spinner" src="https://cdn.kastatic.org/images/spinner-dark.svg"/>
