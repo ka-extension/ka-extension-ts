@@ -1,6 +1,5 @@
 ## Khan Academy Extension
-### [Install on Chrome](https://chrome.google.com/webstore/detail/the-khan-academy-extensio/gniggljddhajnfbkjndcgnomkddfcial)
-
+### [![Install](https://developer.chrome.com/webstore/images/ChromeWebStore_Badge_v2_206x58.png)](https://chrome.google.com/webstore/detail/the-khan-academy-extensio/gniggljddhajnfbkjndcgnomkddfcial)
 Khan Academy Extension is a chrome extension for the computing section of [khanacademy](https://khanacademy.org). 
 
 
