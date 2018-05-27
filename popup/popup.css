@@ -6,6 +6,7 @@ body {
     font-family: "Roboto", "arial", sans-serif;
     margin: 0;
     width: 500px;
+    background: white;
 }
 
 #header {
