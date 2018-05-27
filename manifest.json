@@ -5,14 +5,18 @@
     "version": "3.1.0",
     "description": "A Chrome Extension for Khan Academy",
     "minimum_chrome_version": "33.0.1750",
+    "icons": {
+        "16": "images/icon16.png",
+        "48": "images/icon48.png",
+        "128": "images/icon128.png"
+    },
     "browser_action": {
-        "name": "Khan Academy Extension",
-        "icons": {
-          "16": "images/icon16.png",
-          "48": "images/icon48.png",
-          "128": "images/icon128.png"
+        "default_title": "Khan Academy Extension",
+        "default_icon": {
+            "16": "images/icon16.png", 
+            "48": "images/icon48.png",
+            "128": "images/icon128.png"
         },
-        "default_icon": "images/icon128.png",
         "default_popup": "popup/popup.html"
     },
     "content_scripts": [{
