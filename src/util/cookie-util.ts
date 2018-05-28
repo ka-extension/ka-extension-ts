@@ -1,4 +1,4 @@
-import { CSRF_NAME } from "../names";
+import { CSRF_NAME } from "../types/names";
 
 function getCookies(): { [name: string]: string; } {
     const cookies: { [name: string]: string; } = {};

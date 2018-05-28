@@ -1,8 +1,8 @@
 import "whatwg-fetch";
-import { CSRF_HEADER } from "../names";
+import { CSRF_HEADER } from "../types/names";
 import { getCSRF } from "./cookie-util";
 import { buildQuery } from "./text-util";
-import { UsernameOrKaid, CommentSortType, Program } from "../data";
+import { UsernameOrKaid, CommentSortType, Program } from "../types/data";
 
 async function getJSON(url: URL | string, projection?: object) {
     url = new URL(url.toString());
