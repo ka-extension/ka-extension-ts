@@ -1,4 +1,4 @@
-import { UsernameOrKaid, Scratchpads, UserProfileData } from "./data";
+import { UsernameOrKaid, Scratchpads, UserProfileData } from "./types/data";
 import { querySelectorPromise } from "./util/promise-util";
 import { getJSON } from "./util/api-util";
 import { formatDate } from "./util/text-util";

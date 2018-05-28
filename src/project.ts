@@ -1,6 +1,6 @@
-import { Program } from "./data";
+import { Program } from "./types/data";
 import { formatDate } from "./util/text-util";
-import { LS_PREFIX } from "./names";
+import { LS_PREFIX } from "./types/names";
 
 function addProgramDates(program: Program, uok: string): void {
     const profilePrograms: HTMLAnchorElement | null = <HTMLAnchorElement> document.querySelector(".profile-programs");

@@ -1,5 +1,5 @@
 import { Extension } from "./extension";
-import { Program, UsernameOrKaid } from "./data";
+import { Program, UsernameOrKaid } from "./types/data";
 import { commentsButtonEventListener } from "./comment-data";
 import { addProgramFlags } from "./flag";
 import { addReportButton, addReportButtonDiscussionPosts } from "./report";
