@@ -1,5 +1,5 @@
-import { MessageTypes, Message } from "./message-types";
-import { EXTENSION_ID } from "./names";
+import { MessageTypes, Message } from "./types/message-types";
+import { EXTENSION_ID } from "./types/names";
 
 console.log(chrome.runtime.id == EXTENSION_ID);
 

@@ -1,4 +1,4 @@
-import { UsernameOrKaid, Program } from "./data";
+import { UsernameOrKaid, Program } from "./types/data";
 import { getProgram, getConvo } from "./util/api-util";
 
 interface KAdefineResult {

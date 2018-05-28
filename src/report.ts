@@ -1,8 +1,8 @@
 import { buildQuery } from "./util/text-util";
-import { Program } from "./data"
-import { QUEUE_ROOT, EXTENSION_ITEM_CLASSNAME, EXTENSION_ID } from "./names";
+import { Program } from "./types/data"
+import { QUEUE_ROOT, EXTENSION_ITEM_CLASSNAME, EXTENSION_ID } from "./types/names";
 import { getJSON, DiscussionTypes, getConvo } from "./util/api-util";
-import { Message, MessageTypes, Downloadable } from "./message-types";
+import { Message, MessageTypes, Downloadable } from "./types/message-types";
 
 function addReportButton(program: Program, kaid: string) {
     const buttons: HTMLElement | null = document.querySelector(".buttons_vponqv");
