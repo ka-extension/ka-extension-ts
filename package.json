@@ -4,15 +4,18 @@
   "description": "A chrome extension for the Khan Academy Computer Programming section",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "errordetails": "webpack --display-error-details",
     "build": "webpack",
     "watch": "webpack --watch",
     "clean": "rm ./dist/*"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["Khan Academy", "TypeScript", "Extension"],
+  "author": "KA Extension Developers",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ka-extension/ka-extension-ts"
+  },
   "devDependencies": {
     "@types/bluebird": "^3.5.20",
     "@types/chrome": "0.0.63",
