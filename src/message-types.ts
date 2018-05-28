@@ -1,6 +1,6 @@
 interface Message {
     type: MessageTypes,
-    message: object
+    message?: object
 }
 
 interface Downloadable {
@@ -8,7 +8,8 @@ interface Downloadable {
 }
 
 enum MessageTypes {
-    DOWNLOAD = "download"
+    DOWNLOAD = "download",
+    ICON = "show_icon"
 }
 
 export { MessageTypes, Message, Downloadable };

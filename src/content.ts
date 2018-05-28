@@ -12,4 +12,7 @@
     style.type = "text/css";
     style.href = chrome.extension.getURL("styles/general.css");
     (document.head || document.documentElement).appendChild(style);
+    chrome.runtime.sendMessage({
+        type: "show_icon"
+    });
 })();
