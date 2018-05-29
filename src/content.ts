@@ -13,6 +13,11 @@
     style.href = chrome.extension.getURL("styles/general.css");
     (document.head || document.documentElement).appendChild(style);
     chrome.runtime.sendMessage({
-        type: "show_icon"
+        type: "colour_icon"
+    });
+    window.addEventListener("beforeunload", () => {
+        chrome.runtime.sendMessage({
+            type: "grey_icon"
+        });
     });
 })();
