@@ -13,6 +13,8 @@ chrome.runtime.onMessageExternal.addListener(function(arg: any, sender: chrome.r
     }
 });
 
+let searchInterval: any;
+
 chrome.runtime.onMessage.addListener((arg: any, sender: chrome.runtime.MessageSender) => {
     console.log("Internal Message: ", arg);
     arg = arg as Message;
@@ -21,13 +23,15 @@ chrome.runtime.onMessage.addListener((arg: any, sender: chrome.runtime.MessageSe
             chrome.browserAction.setIcon({
                 path: "./images/colour/icon16.png"
             });
-            setInterval(() => {
-                chrome.tabs.query({}, tabs => {
-                    const urlRegex: RegExp = /https?:\/\/([^.]+).khanacademy.org/i;
-                    if(!tabs.some(tab => urlRegex.test(tab.url || ""))){
+            searchInterval = setInterval(() => {
+                chrome.tabs.query({
+                    url: "*://*.khanacademy.org/*"
+                }, tabs => {
+                    if(tabs.length < 1){
                         chrome.browserAction.setIcon({
                             path: "./images/grey/icon16.png"
                         });
+                        clearInterval(searchInterval);
                     }
                 });
             }, 100);
