@@ -61,39 +61,41 @@ function page(i: number): void {
     for (var p = 0; p < pages!.length; p++) {
         pages![p].setAttribute("style", "display: none");
     }
-    pages![i].setAttribute("style", "display: block");
+    pages![i % 2].setAttribute("style", "display: block");
     for (var b = 0; b < navButtons!.length; b++) {
         navButtons![b].setAttribute("style", "border-bottom: 1px solid rgb(206, 211, 215); background: rgb(250, 250, 250);");
     }
-    navButtons![i].setAttribute("style", "border-bottom: none; background: none;");
+    navButtons![i % 2].setAttribute("style", "border-bottom: none; background: none;");
 };
+
+function newNotif(notif: Notification): string {
+    // Depending on notification type, "<span> added a comment on </span>" will vary.
+    // See if notifs can have "mark read" button, and somehow mark them read individually.
+    // Unread notifs could have that green dot or have a slightly different style somehow.
+    let nickText = document.createTextNode(notif.author_nickname);
+    let focusText = document.createTextNode(notif.translated_focus_title);
+    let contentText = document.createTextNode(notif.content);
+
+    return `<a target="_blank" href="https://www.khanacademy.org${notif.url}">
+                <div class="new-notif">
+                    <img class="notif-img" src="${notif.author_avatar_src}">
+                    <p class="notif-content">
+                        <strong>${nickText.textContent}</strong>
+                        <span> added a comment on </span>
+                        <strong>${focusText.textContent}</strong>:<br>
+                        <span>${contentText.textContent}</span>
+                    </p>
+                    <div class="notif-date">${formatDate(notif.date)}</div>
+                </div>
+            </a>`;
+}
 
 function displayNotifs(notifJson: NotifObj) {
     if (!notifJson) console.log("Didn't receieve notifications.");
     currentCursor = notifJson.cursor;
     // Add unread count here, with KA object.
     unreadNumber!.textContent = "";
-    function newNotif(notif: Notification): string {
-        // Depending on notification type, "<span> added a comment on </span>" will vary.
-        // See if notifs can have "mark read" button, and somehow mark them read individually.
-        // Unread notifs could have that green dot or have a slightly different style somehow.
-        let nickText = document.createTextNode(notif.author_nickname);
-        let focusText = document.createTextNode(notif.translated_focus_title);
-        let contentText = document.createTextNode(notif.content);
-
-        return `<a target="_blank" href="https://www.khanacademy.org${notif.url}">
-                    <div class="new-notif">
-                        <img class="notif-img" src="${notif.author_avatar_src}">
-                        <p class="notif-content">
-                            <strong>${nickText.textContent}</strong>
-                            <span> added a comment on </span>
-                            <strong>${focusText.textContent}</strong>:<br>
-                            <span>${contentText.textContent}</span>
-                        </p>
-                        <div class="notif-date">${formatDate(notif.date)}</div>
-                    </div>
-                </a>`;
-    }
+    
     loadingSpinner!.style.display = "none";
     notifJson.notifications.forEach((notif: Notification) => {
         notifsContainer!.innerHTML += newNotif(notif);
