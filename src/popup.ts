@@ -6,15 +6,15 @@ import { CSRF_HEADER, COOKIE } from "./types/names";
 import { Notification } from "./types/data";
 
 interface LogEntry {
-    version: string;
-    new: string[];
-    fixes: string[];
-};
+	version: string;
+	new: string[];
+	fixes: string[];
+}
 
 interface NotifObj {
-    cursor: string;
-    notifications: Notification[];
-    has_more: boolean;
+	cursor: string;
+	notifications: Notification[];
+	has_more: boolean;
 }
 
 let currentPage: number = 0;
@@ -38,45 +38,45 @@ const loadingSpinner: HTMLElement | null = document.querySelector(".loading-spin
 const markRead: HTMLElement | null = document.querySelector(".mark-notifications-read");
 const loadMore: HTMLElement | null = document.querySelector(".notifications-button-more");
 
-function elementWithText(tag: string, text: string): HTMLElement {
-    const element: HTMLElement = document.createElement(tag);
-    element.textContent = text;
-    return element;
-};
-
-function createOption(text: string, value: number): HTMLElement {
-    const option: HTMLOptionElement = document.createElement('option');
-    option.value = value.toString();
-    option.textContent = text;
-    return option;
+function elementWithText (tag: string, text: string): HTMLElement {
+	const element: HTMLElement = document.createElement(tag);
+	element.textContent = text;
+	return element;
 }
 
-function versionPage(i: number): void {
-    newFeatures!.innerHTML = fixes!.innerHTML = "";
-    log[i].new.map(e => elementWithText("li", e)).forEach(e => newFeatures!.appendChild(e));
-    log[i].fixes.map(e => elementWithText("li", e)).forEach(e => fixes!.appendChild(e));
-};
+function createOption (text: string, value: number): HTMLElement {
+	const option: HTMLOptionElement = document.createElement('option');
+	option.value = value.toString();
+	option.textContent = text;
+	return option;
+}
 
-function page(i: number): void {
-    for (var p = 0; p < pages!.length; p++) {
-        pages![p].setAttribute("style", "display: none");
-    }
-    pages![i % 2].setAttribute("style", "display: block");
-    for (var b = 0; b < navButtons!.length; b++) {
-        navButtons![b].setAttribute("style", "border-bottom: 1px solid rgb(206, 211, 215); background: rgb(250, 250, 250);");
-    }
-    navButtons![i % 2].setAttribute("style", "border-bottom: none; background: none;");
-};
+function versionPage (i: number): void {
+	newFeatures!.innerHTML = fixes!.innerHTML = "";
+	log[i].new.map(e => elementWithText("li", e)).forEach(e => newFeatures!.appendChild(e));
+	log[i].fixes.map(e => elementWithText("li", e)).forEach(e => fixes!.appendChild(e));
+}
 
-function newNotif(notif: Notification): string {
-    // Depending on notification type, "<span> added a comment on </span>" will vary.
-    // See if notifs can have "mark read" button, and somehow mark them read individually.
-    // Unread notifs could have that green dot or have a slightly different style somehow.
-    let nickText = document.createTextNode(notif.author_nickname);
-    let focusText = document.createTextNode(notif.translated_focus_title);
-    let contentText = document.createTextNode(notif.content);
+function page (i: number): void {
+	for (let p = 0; p < pages!.length; p++) {
+		pages![p].setAttribute("style", "display: none");
+	}
+	pages![i % 2].setAttribute("style", "display: block");
+	for (let b = 0; b < navButtons!.length; b++) {
+		navButtons![b].setAttribute("style", "border-bottom: 1px solid rgb(206, 211, 215); background: rgb(250, 250, 250);");
+	}
+	navButtons![i % 2].setAttribute("style", "border-bottom: none; background: none;");
+}
 
-    return `<a target="_blank" href="https://www.khanacademy.org${notif.url}">
+function newNotif (notif: Notification): string {
+	// Depending on notification type, "<span> added a comment on </span>" will vary.
+	// See if notifs can have "mark read" button, and somehow mark them read individually.
+	// Unread notifs could have that green dot or have a slightly different style somehow.
+	const nickText = document.createTextNode(notif.author_nickname);
+	const focusText = document.createTextNode(notif.translated_focus_title);
+	const contentText = document.createTextNode(notif.content);
+
+	return `<a target="_blank" href="https://www.khanacademy.org${notif.url}">
                 <div class="new-notif">
                     <img class="notif-img" src="${notif.author_avatar_src}">
                     <p class="notif-content">
@@ -90,69 +90,69 @@ function newNotif(notif: Notification): string {
             </a>`;
 }
 
-function displayNotifs(notifJson: NotifObj) {
-    if (!notifJson) console.log("Didn't receieve notifications.");
-    currentCursor = notifJson.cursor;
-    // Add unread count here, with KA object.
-    unreadNumber!.textContent = "";
-    
-    loadingSpinner!.style.display = "none";
-    notifJson.notifications.forEach((notif: Notification) => {
-        notifsContainer!.innerHTML += newNotif(notif);
-    });
-    loadMore!.style.display = "block";
-};
+function displayNotifs (notifJson: NotifObj) {
+	if (!notifJson) { console.log("Didn't receieve notifications."); }
+	currentCursor = notifJson.cursor;
+	// Add unread count here, with KA object.
+	unreadNumber!.textContent = "";
 
-function getNotifs() {
-    getChromeFkey().then((fkey) => {
-        fetch(`https://www.khanacademy.org/api/internal/user/notifications/readable?cursor=${currentCursor}`, {
-            method: 'GET',
-            headers: {
-                [CSRF_HEADER]: fkey.toString(),
-                [COOKIE]: getChromeCookies()
-            },
-            credentials: "same-origin"
-        }).then((res: Response): (Promise<NotifObj> | NotifObj) => {
-            return res.json();
-        }).then((data: NotifObj): void => {
-            displayNotifs(data);
-        });
-    });
-};
+	loadingSpinner!.style.display = "none";
+	notifJson.notifications.forEach((notif: Notification) => {
+		notifsContainer!.innerHTML += newNotif(notif);
+	});
+	loadMore!.style.display = "block";
+}
 
-function markNotifsRead() {
-    getChromeFkey().then((fkey) => {
-        fetch(`https://www.khanacademy.org/api/internal/user/notifications/clear_brand_new`, {
-            method: 'POST',
-            headers: {
-                [CSRF_HEADER]: fkey.toString(),
-                [COOKIE]: getChromeCookies()
-            },
-            credentials: "same-origin"
-        }).then((res: Response): (Promise<NotifObj> | NotifObj) => {
-            return res.json();
-        }).then((data: NotifObj): void => {
-            console.log(data);
-        });
-    });
+function getNotifs () {
+	getChromeFkey().then((fkey) => {
+		fetch(`https://www.khanacademy.org/api/internal/user/notifications/readable?cursor=${currentCursor}`, {
+			method: 'GET',
+			headers: {
+				[CSRF_HEADER]: fkey.toString(),
+				[COOKIE]: getChromeCookies()
+			},
+			credentials: "same-origin"
+		}).then((res: Response): (Promise<NotifObj> | NotifObj) => {
+			return res.json();
+		}).then((data: NotifObj): void => {
+			displayNotifs(data);
+		});
+	});
+}
+
+function markNotifsRead () {
+	getChromeFkey().then((fkey) => {
+		fetch(`https://www.khanacademy.org/api/internal/user/notifications/clear_brand_new`, {
+			method: 'POST',
+			headers: {
+				[CSRF_HEADER]: fkey.toString(),
+				[COOKIE]: getChromeCookies()
+			},
+			credentials: "same-origin"
+		}).then((res: Response): (Promise<NotifObj> | NotifObj) => {
+			return res.json();
+		}).then((data: NotifObj): void => {
+			console.log(data);
+		});
+	});
 }
 
 generalNav!.addEventListener("click", e => currentPage > 0 && page(--currentPage));
 notifsNav!.addEventListener("click", e => {
-    if (currentPage > log.length - 1) return;
-    page(++currentPage);
-    getNotifs();
+	if (currentPage > log.length - 1) { return; }
+	page(++currentPage);
+	getNotifs();
 });
 loadMore!.addEventListener("click", e => {
-    getNotifs();
+	getNotifs();
 });
 markRead!.addEventListener("click", e => {
-    markNotifsRead();
+	markNotifsRead();
 });
 
 log.forEach((e, i) => version!.appendChild(createOption(e.version, i)));
-version!.onchange = function(e): void {
-    versionPage(+(<HTMLInputElement> e.target).value);
+version!.onchange = function (e): void {
+	versionPage(+(<HTMLInputElement> e.target).value);
 };
 
 versionPage(0);
