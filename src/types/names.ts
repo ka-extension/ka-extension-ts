@@ -7,8 +7,8 @@ const EXTENSION_ITEM_CLASSNAME: string = "ka-extension-modified-item";
 const QUEUE_ROOT: string = "https://reportqueue.herokuapp.com/";
 const LS_PREFIX: string = "ka-extension-";
 
-export { 
-    CSRF_NAME, CSRF_HEADER, COOKIE, 
-    EXTENSION_ID, QUEUE_ROOT, EXTENSION_COMMENT_CLASSNAME, 
-    LS_PREFIX, EXTENSION_ITEM_CLASSNAME 
+export {
+	CSRF_NAME, CSRF_HEADER, COOKIE,
+	EXTENSION_ID, QUEUE_ROOT, EXTENSION_COMMENT_CLASSNAME,
+	LS_PREFIX, EXTENSION_ITEM_CLASSNAME
 };
