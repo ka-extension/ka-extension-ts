@@ -8,8 +8,8 @@
 		"build": "webpack",
 		"watch": "webpack --watch",
 		"clean": "rm ./dist/*",
-		"lint": "tslint -c tslint.json \"src/**/*.ts\"",
-		"fix": "tslint -c tslint.json \"src/**/*.ts\" --fix"
+		"lint": "tslint --project tsconfig.json -c tslint.json \"src/**/*.ts\"",
+		"fix": "tslint --project tsconfig.json -c tslint.json \"src/**/*.ts\" --fix"
 	},
 	"keywords": ["Khan Academy", "TypeScript", "Extension"],
 	"author": "KA Extension Developers",
