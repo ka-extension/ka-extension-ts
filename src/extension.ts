@@ -1,5 +1,5 @@
 import { UsernameOrKaid, Program } from "./types/data";
-import { getProgram, getConvo } from "./util/api-util";
+import { getProgram } from "./util/api-util";
 
 interface KAdefineResult {
 	data?: KAdefineData;
@@ -57,7 +57,6 @@ enum KAScripts {
 	KA = "./javascript/shared-package/ka.js"
 }
 
-const KAdefine: KAdefineType = (window as any).KAdefine as KAdefineType;
 
 abstract class Extension {
 	private readonly KAdefine: RefinedKAdefine;
