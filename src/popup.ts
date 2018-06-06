@@ -1,6 +1,5 @@
 import * as updateLog from "../resources/update-log.json";
-import { getCookies, getChromeCookies, getCSRF, getChromeFkey } from "./util/cookie-util";
-import { getJSON } from "./util/api-util";
+import { getChromeCookies, getChromeFkey } from "./util/cookie-util";
 import { formatDate } from "./util/text-util";
 import { CSRF_HEADER, COOKIE } from "./types/names";
 import { Notification } from "./types/data";

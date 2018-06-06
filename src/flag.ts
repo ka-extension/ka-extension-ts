@@ -1,4 +1,4 @@
-import { Program, KA, UserProfileData } from "./types/data";
+import { Program, UserProfileData } from "./types/data";
 
 function addProgramFlags (program: Program, kaid: string): void {
 	const controls: HTMLElement = <HTMLElement> document.querySelector(".discussion-meta-controls");
