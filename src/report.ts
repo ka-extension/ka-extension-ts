@@ -1,8 +1,11 @@
 import { buildQuery } from "./util/text-util";
-import { Program } from "./types/data";
+import { Program, UsernameOrKaid } from "./types/data";
 import { QUEUE_ROOT, EXTENSION_ITEM_CLASSNAME, EXTENSION_ID } from "./types/names";
 import { DiscussionTypes, getConvo } from "./util/api-util";
 import { Message, MessageTypes, Downloadable } from "./types/message-types";
+import { querySelectorAllPromise } from "./util/promise-util";
+import { getJSON } from "./util/api-util";
+import { UserProfileData, IdType } from "./types/data";
 
 function addReportButton (program: Program, kaid: string) {
 	const buttons: HTMLElement | null = document.querySelector(".buttons_vponqv");
@@ -17,6 +20,32 @@ function addReportButton (program: Program, kaid: string) {
 		reportButton.setAttribute("role", "button");
 		reportButton.innerHTML = "<span>Report</span>";
 		buttons.insertBefore(reportButton, buttons.children[1]);
+	}
+}
+
+async function addProfileReportButton (uok: UsernameOrKaid, loggedInKaid: string) {
+	const kaid: string = uok.type === IdType.KAID ? uok.toString() : 
+		await getJSON(`${window.location.origin}/api/internal/user/profile?username=${uok}`, {
+			kaid: 1
+		}).then(data => data as UserProfileData).then(e => e.kaid);
+	if (loggedInKaid === kaid) { return; }
+	const widget: NodeList = await querySelectorAllPromise(".profile-widget", 100);
+	const [discussionWidget] = Array.prototype.slice.call(widget)
+		.filter((e: HTMLElement) => e.querySelector("a.profile-widget-view-all[href$=\"/discussion\"]"));
+	if (discussionWidget) {
+		const button: HTMLAnchorElement = document.createElement("a");
+        button.id = "kae-report-button";
+        button.style.setProperty("margin", "10px 0px 10px 0px", "important");
+        button.style.setProperty("display", "block", "important");
+        button.innerHTML = "<span>Report user</span>";
+		button.href = `${QUEUE_ROOT}submit?${buildQuery({
+			type: "user",
+			id: kaid,
+			callback: window.location.href
+		})}`;
+		const dWidget = document.getElementById("discussion-widget");
+		const widget = discussionWidget.getElementsByClassName("profile-widget-contents")[0];
+		dWidget && dWidget.children[0] ? dWidget.insertBefore(button, dWidget.children[0]) : widget.appendChild(button);
 	}
 }
 
@@ -78,4 +107,8 @@ function addReportButtonDiscussionPosts (focusId: string, focusKind: string) {
 	}
 }
 
-export { addReportButton, addReportButtonDiscussionPosts };
+export { 
+	addReportButton, 
+	addReportButtonDiscussionPosts, 
+	addProfileReportButton 
+};
