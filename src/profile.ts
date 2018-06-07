@@ -15,8 +15,7 @@ function addUserInfo (uok: UsernameOrKaid): void {
 	querySelectorPromise(".user-statistics-table > tbody")
 	.then(table => table as HTMLElement)
 	.then(table => {
-
-			getJSON(`${window.location.origin}/api/internal/user/scratchpads?username=${uok.id}&limit=1000`, {
+			getJSON(`${window.location.origin}/api/internal/user/scratchpads?${uok.type}=${uok.id}&limit=1000`, {
 				scratchpads: [{
 					sumVotesIncremented: 1,
 					spinoffCount: 1
@@ -38,7 +37,7 @@ function addUserInfo (uok: UsernameOrKaid): void {
 				table.innerHTML += tableElement("Programs", totals.programs.toString());
 			}).catch(console.error);
 
-			getJSON(`${window.location.origin}/api/internal/user/profile?username=${uok.id}`, {
+			getJSON(`${window.location.origin}/api/internal/user/profile?${uok.type}=${uok.id}`, {
 				dateJoined: 1,
 				kaid: 1
 			})
@@ -61,13 +60,12 @@ function addUserInfo (uok: UsernameOrKaid): void {
 				}, 0);
 				table.innerHTML += tableElement("Total Badges", total.toString());
 			}).catch(console.error);
-
 	}).catch(console.error);
 
 }
 
 function addLocationInput (uok: UsernameOrKaid): void {
-	getJSON(`${window.location.origin}/api/internal/user/profile?username=${uok}`, {
+	getJSON(`${window.location.origin}/api/internal/user/profile?${uok.type}=${uok}`, {
 		userLocation: 1
 	})
 	.then(userData => userData as UserProfileData)

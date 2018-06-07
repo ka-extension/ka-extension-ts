@@ -61,12 +61,12 @@ enum KAScripts {
 abstract class Extension {
 	private readonly KAdefine: RefinedKAdefine;
 	private readonly url: string[];
-	public kaid: string;
+	public kaid: string | null;
 	constructor () {
 		this.url = window.location.href.split("/");
 		this.KAdefine = new RefinedKAdefine(getKAdefine());
 		const req = this.KAdefine.require(KAScripts.KA);
-		this.kaid = req.getKaid ? req.getKaid() : "";
+		this.kaid = req.getKaid ? req.getKaid() : null;
 	}
 	onDiscussionPage (): void | Promise<void> {
 		console.info("Discussion package loaded");

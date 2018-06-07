@@ -26,6 +26,12 @@ class UsernameOrKaid {
 	toString (): string {
 		return this.id;
 	}
+	asKaid (): string | null {
+		return this.type === IdType.KAID ? this.toString() : null;
+	}
+	asUsername (): string | null {
+		return this.type === IdType.KAID ? this.toString() : null;
+	}
 }
 
 enum CommentSortType { TOP = 1, RECENT = 2 }
@@ -126,4 +132,8 @@ interface KA {
 	_userProfileData?: UserProfileData;
 }
 
-export { InvalidUsernameOrKaid, IdType, UsernameOrKaid, CommentSortType, Program, Notification, Scratchpads, KA, UserLocation, UserProfileData };
+export {
+	InvalidUsernameOrKaid, IdType, UsernameOrKaid,
+	CommentSortType, Program, Notification,
+	Scratchpads, KA, UserLocation, UserProfileData
+};
