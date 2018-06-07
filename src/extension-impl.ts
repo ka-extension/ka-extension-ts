@@ -3,7 +3,7 @@ import { Program, UsernameOrKaid } from "./types/data";
 import { commentsButtonEventListener } from "./comment-data";
 import { addProgramFlags } from "./flag";
 import { addReportButton, addReportButtonDiscussionPosts } from "./report";
-import { addUserInfo } from "./profile";
+import { addUserInfo, addLocationInput } from "./profile";
 import { addProgramDates, hideEditor, keyboardShortcuts } from "./project";
 
 
@@ -23,6 +23,7 @@ class ExtensionImpl extends Extension {
 	}
 	onProfilePage (uok: UsernameOrKaid) {
 		addUserInfo(uok);
+		addLocationInput(uok);
 	}
 	onHotlistPage () {
 		console.info("On the hotlist");
