@@ -132,8 +132,8 @@ interface KA {
 	_userProfileData?: UserProfileData;
 }
 
-export { 
-	InvalidUsernameOrKaid, IdType, UsernameOrKaid, 
-	CommentSortType, Program, Notification, 
-	Scratchpads, KA, UserLocation, UserProfileData 
+export {
+	InvalidUsernameOrKaid, IdType, UsernameOrKaid,
+	CommentSortType, Program, Notification,
+	Scratchpads, KA, UserLocation, UserProfileData
 };

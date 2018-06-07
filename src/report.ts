@@ -24,7 +24,7 @@ function addReportButton (program: Program, kaid: string) {
 }
 
 async function addProfileReportButton (uok: UsernameOrKaid, loggedInKaid: string) {
-	const kaid: string = uok.type === IdType.KAID ? uok.toString() : 
+	const kaid: string = uok.type === IdType.KAID ? uok.toString() :
 		await getJSON(`${window.location.origin}/api/internal/user/profile?username=${uok}`, {
 			kaid: 1
 		}).then(data => data as UserProfileData).then(e => e.kaid);
@@ -34,10 +34,10 @@ async function addProfileReportButton (uok: UsernameOrKaid, loggedInKaid: string
 		.filter((e: HTMLElement) => e.querySelector("a.profile-widget-view-all[href$=\"/discussion\"]"));
 	if (discussionWidget) {
 		const button: HTMLAnchorElement = document.createElement("a");
-        button.id = "kae-report-button";
-        button.style.setProperty("margin", "10px 0px 10px 0px", "important");
-        button.style.setProperty("display", "block", "important");
-        button.innerHTML = "<span>Report user</span>";
+		button.id = "kae-report-button";
+		button.style.setProperty("margin", "10px 0px 10px 0px", "important");
+		button.style.setProperty("display", "block", "important");
+		button.innerHTML = "<span>Report user</span>";
 		button.href = `${QUEUE_ROOT}submit?${buildQuery({
 			type: "user",
 			id: kaid,
@@ -107,8 +107,8 @@ function addReportButtonDiscussionPosts (focusId: string, focusKind: string) {
 	}
 }
 
-export { 
-	addReportButton, 
-	addReportButtonDiscussionPosts, 
-	addProfileReportButton 
+export {
+	addReportButton,
+	addReportButtonDiscussionPosts,
+	addProfileReportButton
 };
