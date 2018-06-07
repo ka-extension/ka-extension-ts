@@ -104,15 +104,26 @@ interface Scratchpads {
 	scratchpads: Scratchpad[];
 }
 
+interface UserLocation {
+	city: string;
+	country: string;
+	displayText: string;
+	googlePlacesId: string;
+	lastModified: string;
+	postalCode: string;
+	state: string;
+}
+
 interface UserProfileData {
 	countBrandNewNotifications: number;
 	isModerator?: boolean;
 	dateJoined: string;
 	kaid: string;
+	userLocation: UserLocation;
 }
 
 interface KA {
 	_userProfileData?: UserProfileData;
 }
 
-export { InvalidUsernameOrKaid, IdType, UsernameOrKaid, CommentSortType, Program, Notification, Scratchpads, KA, UserProfileData };
+export { InvalidUsernameOrKaid, IdType, UsernameOrKaid, CommentSortType, Program, Notification, Scratchpads, KA, UserLocation, UserProfileData };
