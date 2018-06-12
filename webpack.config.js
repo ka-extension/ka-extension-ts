@@ -1,6 +1,7 @@
 const path = require("path");
 
 module.exports = {
+  mode: "production",
   entry: { 
     index: ["whatwg-fetch", "./src/index.ts"],
     background: "./src/background.ts",

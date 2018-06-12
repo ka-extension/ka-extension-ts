@@ -1,0 +1,21 @@
+{
+    "rules": {
+        "curly": true,
+        "no-eval": true,
+        "no-string-literal": true,
+        "no-unused-variable": true,
+        "no-use-before-declare": true,
+        "no-var-keyword": true,
+        "triple-equals": true,
+        "eofline": true,
+        "indent": [true, "tabs", 4],
+        "prefer-const": true,
+        "arrow-return-shorthand": true,
+        "no-consecutive-blank-lines": [true, 2],
+        "no-trailing-whitespace": true,
+        "semicolon": [true, "always", "ignore-bound-class-methods"],
+        "space-before-function-paren": [true, "always"],
+        "space-within-parens": true,
+        "variable-name": [true, "check-format", "allow-pascal-case"]
+    }
+}
