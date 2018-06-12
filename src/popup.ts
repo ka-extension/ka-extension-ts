@@ -81,7 +81,7 @@ function displayNotifs(notifJson: NotifObj) {
         let focusText = document.createTextNode(notif.translated_focus_title);
         let contentText = document.createTextNode(notif.content);
 
-        return `<a target="_blank" href="https://www.khanacademy.org${notif.url}">
+        return `<a target="_blank" href="https://www.khanacademy.org/notifications/read?keys=${notif.urlsafe_key}&redirect_url=${notif.url}">
                     <div class="new-notif">
                         <img class="notif-img" src="${notif.author_avatar_src}">
                         <p class="notif-content">
