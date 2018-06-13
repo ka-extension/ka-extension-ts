@@ -21,6 +21,12 @@ function addProgramDates (program: Program, uok: string): void {
 		isHiddenElm.style.color = (hidden ? "#af2f18" : "#18af18");
 		isHiddenElm.innerHTML += `This project is ${hidden ? '' : 'not '}hidden from the hotlist.`;
 		updatedSpan.appendChild(isHiddenElm);
+
+		const approved: boolean = program.definitelyNotSpam;
+		const isApprovedEl: HTMLDivElement = <HTMLDivElement> document.createElement("div");
+		isApprovedEl.style.color = (approved ? "#18af18" : "#21242C");
+		isApprovedEl.innerHTML += `This project ${approved ? 'is' : 'has not been'} Guardian approved.`;
+		updatedSpan.appendChild(isApprovedEl);
 	}
 }
 

@@ -49,6 +49,7 @@ interface Program {
 	created: string;
 	originSimilarity: number;
 	id: number;
+	definitelyNotSpam: boolean;
 	contentKind: string;
 	type: string;
 	flags: string[];
