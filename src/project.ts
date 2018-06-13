@@ -25,7 +25,7 @@ function addProgramDates (program: Program, uok: string): void {
 		const approved: boolean = program.definitelyNotSpam;
 		const isApprovedEl: HTMLDivElement = <HTMLDivElement> document.createElement("div");
 		isApprovedEl.style.color = (approved ? "#18af18" : "#21242C");
-		isApprovedEl.innerHTML += `This project ${approved ? 'is' : 'has not been'} Guardian approved.`
+		isApprovedEl.innerHTML += `This project ${approved ? 'is' : 'has not been'} Guardian approved.`;
 		updatedSpan.appendChild(isApprovedEl);
 	}
 }

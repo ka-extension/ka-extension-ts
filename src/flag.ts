@@ -1,5 +1,5 @@
 import { Program, UserProfileData } from "./types/data";
-import { querySelectorPromise, querySelectorAllPromise } from "./util/promise-util";
+import { querySelectorPromise } from "./util/promise-util";
 
 function addProgramFlags (program: Program, kaid: string): void {
 	querySelectorPromise(".discussion-meta-controls")
