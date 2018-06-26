@@ -2,18 +2,12 @@ import * as updateLog from "../resources/update-log.json";
 import { getChromeCookies, getChromeFkey } from "./util/cookie-util";
 import { formatDate } from "./util/text-util";
 import { CSRF_HEADER, COOKIE } from "./types/names";
-import { Notification } from "./types/data";
+import { Notification, NotifObj } from "./types/data";
 
 interface LogEntry {
 	version: string;
 	new: string[];
 	fixes: string[];
-}
-
-interface NotifObj {
-	cursor: string;
-	notifications: Notification[];
-	has_more: boolean;
 }
 
 let currentPage: number = 0;
@@ -103,7 +97,7 @@ function displayNotifs (notifJson: NotifObj) {
 }
 
 function getNotifs () {
-	getChromeFkey().then((fkey) => {
+	getChromeFkey().then(fkey => {
 		fetch(`https://www.khanacademy.org/api/internal/user/notifications/readable?cursor=${currentCursor}`, {
 			method: 'GET',
 			headers: {
@@ -114,13 +108,14 @@ function getNotifs () {
 		}).then((res: Response): (Promise<NotifObj> | NotifObj) => {
 			return res.json();
 		}).then((data: NotifObj): void => {
+			console.log(data);
 			displayNotifs(data);
 		});
 	});
 }
 
 function markNotifsRead () {
-	getChromeFkey().then((fkey) => {
+	getChromeFkey().then(fkey => {
 		fetch(`https://www.khanacademy.org/api/internal/user/notifications/clear_brand_new`, {
 			method: 'POST',
 			headers: {
