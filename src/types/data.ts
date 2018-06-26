@@ -133,8 +133,16 @@ interface KA {
 	_userProfileData?: UserProfileData;
 }
 
+interface NotifObj {
+	cursor: string;
+	notifications: Notification[];
+	has_more: boolean;
+}
+
+
 export {
 	InvalidUsernameOrKaid, IdType, UsernameOrKaid,
 	CommentSortType, Program, Notification,
-	Scratchpads, KA, UserLocation, UserProfileData
+	Scratchpads, KA, UserLocation, UserProfileData,
+	NotifObj
 };
