@@ -5,8 +5,6 @@ import { NotifObj } from "./types/data";
 
 console.log(chrome.runtime.id === EXTENSION_ID);
 
-alert(1);
-
 chrome.runtime.onMessageExternal.addListener((arg: any, sender: chrome.runtime.MessageSender) => {
 	console.log("External Message: ", arg);
 	arg = arg as Message;
