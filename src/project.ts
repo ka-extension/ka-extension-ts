@@ -2,31 +2,47 @@ import { Program } from "./types/data";
 import { formatDate } from "./util/text-util";
 import { LS_PREFIX } from "./types/names";
 
+function tableRow (key: string, val: string, title?: string): HTMLTableRowElement {
+	const tr = document.createElement("tr");
+
+	const keyElm: HTMLTableDataCellElement = <HTMLTableDataCellElement> document.createElement("td");
+	keyElm.className = "kae-td";
+
+	const valElm: HTMLTableDataCellElement = <HTMLTableCellElement> keyElm.cloneNode();
+	keyElm.textContent = key;
+	valElm.textContent = val;
+
+	if(title){
+		valElm.title = title;
+	}
+
+	tr.appendChild(keyElm);
+	tr.appendChild(valElm);
+
+	return tr;
+}
+
 function addProgramDates (program: Program, uok: string): void {
 	const profilePrograms: HTMLAnchorElement | null = <HTMLAnchorElement> document.querySelector(".profile-programs");
 	if (profilePrograms && profilePrograms.nextElementSibling) {
 		const updatedSpan: HTMLSpanElement = <HTMLSpanElement> profilePrograms.nextElementSibling;
+		const table = document.createElement("table");
+		table.className = "kae-table";
+
 		const updated: string = formatDate(program.date);
 		const created: string = formatDate(program.created);
-		updatedSpan.innerHTML += `<br>Created: ${created}`;
-		updatedSpan.innerHTML += `<br>Updated: ${updated}`;
-		if (program.kaid === uok) {
-			const flagSpan: HTMLDivElement = <HTMLDivElement> document.createElement("div");
-			flagSpan.title = program.flags.join("\n");
-			flagSpan.innerHTML += `Flags: ${program.flags.length}`;
-			updatedSpan.appendChild(flagSpan);
-		}
 		const hidden: boolean = program.hideFromHotlist;
-		const isHiddenElm: HTMLDivElement = <HTMLDivElement> document.createElement("div");
-		isHiddenElm.style.color = (hidden ? "#af2f18" : "#18af18");
-		isHiddenElm.innerHTML += `This project is ${hidden ? '' : 'not '}hidden from the hotlist.`;
-		updatedSpan.appendChild(isHiddenElm);
-
 		const approved: boolean = program.definitelyNotSpam;
-		const isApprovedEl: HTMLDivElement = <HTMLDivElement> document.createElement("div");
-		isApprovedEl.style.color = (approved ? "#18af18" : "#21242C");
-		isApprovedEl.innerHTML += `This project ${approved ? 'is' : 'has not been'} Guardian approved.`;
-		updatedSpan.appendChild(isApprovedEl);
+
+		if (program.kaid === uok){
+			table.appendChild(tableRow("Flags", program.flags.length.toString(), program.flags.join("\n")));
+		}
+
+		table.appendChild(tableRow("Hidden from Hotlist", hidden ? "Yes" : "No"));
+		table.appendChild(tableRow("Guardian Approved", approved ? "Yes" : "No"));
+		table.appendChild(tableRow("Updated", updated));
+		table.appendChild(tableRow("Created", created));
+		updatedSpan.appendChild(table);
 	}
 }
 
