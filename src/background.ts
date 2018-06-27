@@ -45,7 +45,7 @@ chrome.browserAction.setBadgeBackgroundColor({
 
 setInterval(() => {
 	getChromeFkey().then(fkey => {
-		fetch(`https://www.khanacademy.org/api/internal/user/notifications/readable?limit=100`, {
+		fetch(`https://www.khanacademy.org/api/internal/user/notifications/readable`, {
 			method: 'GET',
 			headers: {
 				[CSRF_HEADER]: fkey.toString(),
@@ -69,4 +69,4 @@ setInterval(() => {
 			});
 		});
 	}).catch(console.error);
-}, 150);
+}, 1000);
