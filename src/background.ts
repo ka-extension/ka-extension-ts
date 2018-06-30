@@ -51,13 +51,9 @@ setInterval((): void => {
 	if (!kaid){ return; }
 
 	getChromeFkey().then(fkey => {
-<<<<<<< HEAD
 		fetch(`https://www.khanacademy.org/api/internal/user/profile?kaid=${kaid}&projection=${JSON.stringify({
 			countBrandNewNotifications: 1
 		})}`, {
-=======
-		fetch(`https://www.khanacademy.org/api/internal/user/notifications/readable`, {
->>>>>>> 66dd26b73632d0a07b9cc9fb74d20cf8423e19b9
 			method: 'GET',
 			headers: {
 				[CSRF_HEADER]: fkey.toString(),
@@ -79,9 +75,5 @@ setInterval((): void => {
 			});
 		}).catch(console.error);
 	}).catch(console.error);
-<<<<<<< HEAD
 
 }, 750);
-=======
-}, 1000);
->>>>>>> 66dd26b73632d0a07b9cc9fb74d20cf8423e19b9
