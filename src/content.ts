@@ -1,3 +1,5 @@
+import { MessageTypes } from "./types/message-types";
+
 (() => {
 	console.log("content.js fired");
 
@@ -14,12 +16,22 @@
 	(document.head || document.documentElement).appendChild(style);
 
 	chrome.runtime.sendMessage({
-		type: "colour_icon"
+		type: MessageTypes.COLOUR_ICON
 	});
 
 	window.addEventListener("beforeunload", () => {
 		chrome.runtime.sendMessage({
-			type: "grey_icon"
+			type: MessageTypes.GREY_ICON
 		});
 	});
+
+	window.addEventListener("message", e => {
+		if (!e.data.type){ return; }
+		console.log(e);
+		chrome.runtime.sendMessage({
+			type: e.data.type,
+			message: e.data.message
+		});
+	});
+
 })();

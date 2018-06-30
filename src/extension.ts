@@ -104,9 +104,19 @@ abstract class Extension {
 			if (this.url[5] === "browse") {
 				this.onHotlistPage();
 			}
+
 			if (this.url[3] === "profile" && !this.url[6]) {
 				const identifier: UsernameOrKaid = new UsernameOrKaid(this.url[4]);
 				this.onProfilePage(identifier);
+			}
+
+			if (this.kaid !== null) {
+				window.postMessage({
+					type: "kaid",
+					message: {
+						kaid: this.kaid
+					}
+				}, "*");
 			}
 		}
 	}

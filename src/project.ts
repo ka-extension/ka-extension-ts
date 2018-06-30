@@ -1,6 +1,6 @@
 import { Program } from "./types/data";
 import { formatDate } from "./util/text-util";
-import { LS_PREFIX } from "./types/names";
+import { PREFIX } from "./types/names";
 
 function tableRow (key: string, val: string, title?: string): HTMLTableRowElement {
 	const tr = document.createElement("tr");
@@ -51,7 +51,7 @@ function hideEditor (program: Program): void {
 	const wrap: HTMLDivElement | null = <HTMLDivElement> document.querySelector(".wrapScratchpad_1jkna7i");
 	if (wrap && program.userAuthoredContentType !== "webpage") {
 		const editor: HTMLDivElement = <HTMLDivElement> document.querySelector(".scratchpad-editor-wrap");
-		const lsEditorId: string = `${LS_PREFIX}editor-hide`;
+		const lsEditorId: string = `${PREFIX}editor-hide`;
 		let lsEditorVal: string | null = <string> localStorage.getItem(lsEditorId);
 		console.log('Editor hide ls value is', lsEditorVal);
 		if (lsEditorVal && lsEditorVal === "true") {
