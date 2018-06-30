@@ -10,7 +10,8 @@ interface Downloadable {
 enum MessageTypes {
 	DOWNLOAD = "download",
 	COLOUR_ICON = "colour_icon",
-	GREY_ICON = "grey_icon"
+	GREY_ICON = "grey_icon",
+	KAID = "kaid",
 }
 
 export { MessageTypes, Message, Downloadable };

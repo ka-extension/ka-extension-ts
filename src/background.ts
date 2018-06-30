@@ -1,7 +1,9 @@
 import { MessageTypes, Message } from "./types/message-types";
-import { EXTENSION_ID, CSRF_HEADER, COOKIE } from "./types/names";
+import { CSRF_HEADER, COOKIE, EXTENSION_ID } from "./types/names";
 import { getChromeFkey, getChromeCookies } from "./util/cookie-util";
-import { NotifObj } from "./types/data";
+import { UserProfileData } from "./types/data";
+
+let kaid: string;
 
 console.log(chrome.runtime.id === EXTENSION_ID);
 
@@ -14,7 +16,6 @@ chrome.runtime.onMessageExternal.addListener((arg: any, sender: chrome.runtime.M
 			break;
 	}
 });
-
 
 chrome.runtime.onMessage.addListener((arg: any, sender: chrome.runtime.MessageSender) => {
 	console.log("Internal Message: ", arg);
@@ -36,6 +37,9 @@ chrome.runtime.onMessage.addListener((arg: any, sender: chrome.runtime.MessageSe
 				}
 			});
 			break;
+		case MessageTypes.KAID:
+			kaid = arg.message.kaid;
+			break;
 	}
 });
 
@@ -43,30 +47,33 @@ chrome.browserAction.setBadgeBackgroundColor({
 	color: "#35c61b"
 });
 
-setInterval(() => {
+setInterval((): void => {
+	if (!kaid){ return; }
+
 	getChromeFkey().then(fkey => {
-		fetch(`https://www.khanacademy.org/api/internal/user/notifications/readable`, {
+		fetch(`https://www.khanacademy.org/api/internal/user/profile?kaid=${kaid}&projection=${JSON.stringify({
+			countBrandNewNotifications: 1
+		})}`, {
 			method: 'GET',
 			headers: {
 				[CSRF_HEADER]: fkey.toString(),
 				[COOKIE]: getChromeCookies()
 			},
 			credentials: "same-origin"
-		}).then((res: Response): (Promise<NotifObj> | NotifObj) => {
-			return res.json();
-		}).then((data: NotifObj): void => {
-			const notifs: number = data.notifications.reduce((prev, curr) => {
-				return prev + (curr.brand_new ? 1 : 0);
-			}, 0);
-			if (notifs > 0){
+		})
+		.then(res => res.json())
+		.then(data => data as UserProfileData)
+		.then(data => {
+			if(data.countBrandNewNotifications > 0){
 				chrome.browserAction.setBadgeText({
-					text: notifs > 9 ? "9+" : notifs.toString()
+					text: data.countBrandNewNotifications.toString()
 				});
 				return;
 			}
 			chrome.browserAction.setBadgeText({
 				text: ""
 			});
-		});
+		}).catch(console.error);
 	}).catch(console.error);
-}, 1000);
+
+}, 750);
