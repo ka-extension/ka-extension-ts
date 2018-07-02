@@ -54,7 +54,7 @@ setInterval((): void => {
 		fetch(`https://www.khanacademy.org/api/internal/user/profile?kaid=${kaid}&projection=${JSON.stringify({
 			countBrandNewNotifications: 1
 		})}`, {
-			method: 'GET',
+			method: "GET",
 			headers: {
 				[CSRF_HEADER]: fkey.toString(),
 				[COOKIE]: getChromeCookies()

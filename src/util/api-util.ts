@@ -47,6 +47,7 @@ interface CommentData {
 	key: string;
 	focus: FocusData;
 	focusUrl: string;
+	flags: string[];
 }
 
 // Symbol.asyncIterator polyfill
@@ -65,7 +66,20 @@ async function* commentDataGenerator (user: UsernameOrKaid, sort: CommentSortTyp
 			limit: limit.toString(),
 			page: (page++).toString(),
 			_: Date.now().toString()
-		})}`).then(e => e as CommentData[]).catch(e => void console.error(e));
+		})}`, [
+			{
+				normal: {
+					focusUrl: 1,
+					expandKey: 1,
+					key: 1,
+					flags: 1,
+					focus: {
+						id: 1,
+						kind: 1
+					}
+				}
+			}
+		]).then(e => e as CommentData[]).catch(e => void console.error(e));
 		if(!body) {
 			return;
 		} else {

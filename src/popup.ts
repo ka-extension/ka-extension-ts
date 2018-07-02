@@ -38,7 +38,7 @@ function elementWithText (tag: string, text: string): HTMLElement {
 }
 
 function createOption (text: string, value: number): HTMLElement {
-	const option: HTMLOptionElement = document.createElement('option');
+	const option: HTMLOptionElement = document.createElement("option");
 	option.value = value.toString();
 	option.textContent = text;
 	return option;
@@ -99,7 +99,7 @@ function displayNotifs (notifJson: NotifObj) {
 function getNotifs () {
 	getChromeFkey().then(fkey => {
 		fetch(`https://www.khanacademy.org/api/internal/user/notifications/readable?cursor=${currentCursor}`, {
-			method: 'GET',
+			method: "GET",
 			headers: {
 				[CSRF_HEADER]: fkey.toString(),
 				[COOKIE]: getChromeCookies()
@@ -117,7 +117,7 @@ function getNotifs () {
 function markNotifsRead () {
 	getChromeFkey().then(fkey => {
 		fetch(`https://www.khanacademy.org/api/internal/user/notifications/clear_brand_new`, {
-			method: 'POST',
+			method: "POST",
 			headers: {
 				[CSRF_HEADER]: fkey.toString(),
 				[COOKIE]: getChromeCookies()

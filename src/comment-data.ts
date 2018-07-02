@@ -37,6 +37,9 @@ class CommentLinker {
 		return typeof this.comments[id] === "object" ?
 			`${this.comments[id].focusUrl}?qa_expand_key=${this.comments[id].expandKey}` : undefined;
 	}
+	getFlags (id: string) : string[] | undefined {
+		return typeof this.comments[id] === "object" ? this.comments[id].flags : undefined;
+	}
 	next (): Promise<void> {
 		return Promise.all([this.top.next(), this.recent.next()]).then(e => flatten(e))
 			.then(e => void Object.assign(this.comments, zipObject(e.map(e => e.key), e)));
@@ -53,10 +56,11 @@ function commentsButtonEventListener (uok: UsernameOrKaid): void {
 				const unalteredComments = document.querySelectorAll(`.discussion-item.reply:not(.${EXTENSION_COMMENT_CLASSNAME})`);
 				for(let i = 0; i < unalteredComments.length; i++) {
 					const comment = unalteredComments[i];
+					const metaControls = comment.querySelector(".discussion-meta-controls");
+					const flagControls = comment.querySelector(".flag-show");
 					const url = commentLinkGenerator.getUrl(comment.id);
-					if(url) {
-						const metaControls = comment.getElementsByClassName("discussion-meta-controls")[0];
-						if(!metaControls) { continue; }
+					const flags = commentLinkGenerator.getFlags(comment.id);
+					if(url && metaControls) {
 						const separator = document.createElement("span");
 						separator.className = "discussion-meta-separator";
 						separator.textContent = "• ";
@@ -68,6 +72,11 @@ function commentsButtonEventListener (uok: UsernameOrKaid): void {
 						outerSpan.appendChild(link);
 						metaControls.appendChild(outerSpan);
 						comment.className += ` ${EXTENSION_COMMENT_CLASSNAME}`;
+					}
+					if (flagControls && flags) {
+						flagControls.textContent =  `${flagControls.textContent === "Flagged" ?
+							"Flagged" : "Flag"} (${flags.length})`;
+						flagControls.setAttribute("title", flags.join("\n"));
 					}
 				}
 			}, 100);
