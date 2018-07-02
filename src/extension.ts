@@ -78,8 +78,10 @@ abstract class Extension {
 	abstract onRepliesPage (uok: UsernameOrKaid): void | Promise<void>;
 	abstract onHotlistPage (): void;
 	abstract onProfilePage (uok: UsernameOrKaid): void;
+	abstract onPage (): void;
 	async init (): Promise<void> {
 		if (window.location.host.includes("khanacademy.org")) {
+			this.onPage();
 			this.KAdefine.asyncRequire(KAScripts.DISCUSSION).then(e => {
 				if (e) {
 					this.onDiscussionPage();
