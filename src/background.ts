@@ -48,8 +48,7 @@ chrome.browserAction.setBadgeBackgroundColor({
 });
 
 setInterval((): void => {
-	if (!kaid){ return; }
-
+	if (!kaid) { return; }
 	getChromeFkey().then(fkey => {
 		fetch(`https://www.khanacademy.org/api/internal/user/profile?kaid=${kaid}&projection=${JSON.stringify({
 			countBrandNewNotifications: 1
