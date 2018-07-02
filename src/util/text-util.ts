@@ -10,11 +10,11 @@ function HTMLtoKAMarkdown (html: string): string {
 
 function KAMarkdowntoHTML (markdown: string): string {
 	return markdown
-		.replace(/\`\`\`\s*([.\s\S]*?)\s*\`\`\`/ig, (match, one) => `<pre><code>${one}</code></pre>`)
-		.replace(/\`(.+?)\`/ig, (match, one) => `<code>${one}</code>`)
-		.replace(/\*(.+?)\*/ig, (match, one) => `<b>${one}</b>`)
-		.replace(/_(.+?)_/ig, (match, one) => `<em>${one}</em>`)
-		.replace(/\n/ig, () => `<br>`);
+		.replace(/\`\`\`\s*([.\s\S]*?)\s*\`\`\`/ig, (_, one) => `<pre><code>${one}</code></pre>`)
+		.replace(/\`(.+?)\`/ig, (_, one) => `<code>${one}</code>`)
+		.replace(/\*(.+?)\*/ig, (_, one) => `<b>${one}</b>`)
+		.replace(/_(.+?)_/ig, (_, one) => `<em>${one}</em>`)
+		.replace(/\n/ig, () => "<br />");
 }
 
 function buildQuery (params: { [key: string]: string }): string {

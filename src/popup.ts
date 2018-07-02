@@ -1,6 +1,6 @@
 import * as updateLog from "../resources/update-log.json";
 import { getChromeCookies, getChromeFkey } from "./util/cookie-util";
-import { formatDate, escapeHTML } from "./util/text-util";
+import { formatDate, escapeHTML, KAMarkdowntoHTML } from "./util/text-util";
 import { CSRF_HEADER, COOKIE } from "./types/names";
 import { Notification, NotifObj } from "./types/data";
 
@@ -92,13 +92,13 @@ function newNotif (notif: Notification): string {
 						} else if (notif.modNickname && notif.text) {
 							return `
 								<span><strong>${escapeHTML(notif.modNickname)}</strong> sent you a guardian message:</span><br />
-								<span>${escapeHTML(notif.text)}</span>`;
+								<span>${KAMarkdowntoHTML(escapeHTML(notif.text) || "")}</span>`;
 						} else if (notif.authorNickname && (notif.translatedFocusTitle || notif.translatedScratchpadTitle) && notif.content) {
 							return `
 								<strong>${escapeHTML(notif.authorNickname)}</strong>
 								<span> added a comment on </span>
 								<strong>${escapeHTML(notif.translatedFocusTitle || notif.translatedScratchpadTitle || "")}</strong>:<br />
-								<span>${escapeHTML(notif.content)}</span>`;
+								<span>${KAMarkdowntoHTML(escapeHTML(notif.content) || "")}</span>`;
 						} else if (notif.coachName && notif.contentTitle) {
 							return `
 								<strong>${escapeHTML(notif.coachName)}</strong> assigned you <strong>${escapeHTML(notif.contentTitle)}</strong>`;
