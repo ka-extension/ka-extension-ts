@@ -47,13 +47,11 @@ function addProgramDates (program: Program, uok: string): void {
 }
 
 function hideEditor (program: Program): void {
-	console.log('Running!');
 	const wrap: HTMLDivElement | null = <HTMLDivElement> document.querySelector(".wrapScratchpad_1jkna7i");
 	if (wrap && program.userAuthoredContentType !== "webpage") {
 		const editor: HTMLDivElement = <HTMLDivElement> document.querySelector(".scratchpad-editor-wrap");
 		const lsEditorId: string = `${PREFIX}editor-hide`;
 		let lsEditorVal: string | null = <string> localStorage.getItem(lsEditorId);
-		console.log('Editor hide ls value is', lsEditorVal);
 		if (lsEditorVal && lsEditorVal === "true") {
 			editor.classList.toggle("kae-hide");
 			wrap.classList.toggle(`kae-hide-${program.width.toString()}`);
