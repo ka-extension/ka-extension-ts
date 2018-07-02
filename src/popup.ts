@@ -1,6 +1,6 @@
 import * as updateLog from "../resources/update-log.json";
 import { getChromeCookies, getChromeFkey } from "./util/cookie-util";
-import { formatDate } from "./util/text-util";
+import { formatDate, escapeHTML } from "./util/text-util";
 import { CSRF_HEADER, COOKIE } from "./types/names";
 import { Notification, NotifObj } from "./types/data";
 
@@ -61,26 +61,67 @@ function page (i: number): void {
 	navButtons![i % 2].setAttribute("style", "border-bottom: none; background: none;");
 }
 
+function isKAEvalPlead (notif: Notification): boolean {
+	return notif.class_.indexOf("PleaseEvalCsNotification") !== -1;
+}
+
+function isKAEvalReplyPlead (notif: Notification): boolean {
+	return notif.class_.indexOf("EvalEachotherNotification") !== -1;
+}
+
+function isModMessage (notif: Notification): boolean {
+	return notif.class_.indexOf("ModNotification") !== -1;
+}
+
 function newNotif (notif: Notification): string {
 	// Depending on notification type, "<span> added a comment on </span>" will vary.
 	// See if notifs can have "mark read" button, and somehow mark them read individually.
 	// Unread notifs could have that green dot or have a slightly different style somehow.
-	const nickText = document.createTextNode(notif.author_nickname);
-	const focusText = document.createTextNode(notif.translated_focus_title);
-	const contentText = document.createTextNode(notif.content);
-
-	return `<a target="_blank" href="https://www.khanacademy.org/notifications/read?keys=${notif.urlsafe_key}&redirect_url=${notif.url}">
-                <div class="new-notif">
-                    <img class="notif-img" src="${notif.author_avatar_src}">
-                    <p class="notif-content">
-                        <strong>${nickText.textContent}</strong>
-                        <span> added a comment on </span>
-                        <strong>${focusText.textContent}</strong>:<br>
-                        <span>${contentText.textContent}</span>
-                    </p>
-                    <div class="notif-date">${formatDate(notif.date)}</div>
-                </div>
-            </a>`;
+	return notif.notes && notif.notes.length > 0 ? notif.notes.map(newNotif).join("\n") :
+		`<a target="_blank" href="https://www.khanacademy.org/notifications/read?keys=${notif.urlsafeKey}&redirect_url=${notif.url || "/"}">
+			<div class="new-notif">
+				<img class="notif-img" src="${isModMessage(notif) && "../images/guardian.png" || (isKAEvalPlead(notif) ||
+					isKAEvalReplyPlead(notif)) && "../images/hand.png" || notif.iconSrc || notif.authorAvatarSrc ||
+					notif.topicIconUrl || notif.imageSource || "../images/blank.png"}">
+				<p class="notif-content">
+					${(() => {
+						if (isKAEvalPlead(notif)) {
+							return "<strong>Help one of your fellow students learn, evaluate a project today! → →</strong>";
+						} else if (isKAEvalReplyPlead(notif)) {
+							return "<strong>Now that your project has been evaluated, return the favor. Evaluate a peer today! → →</strong>";
+						} else if (notif.modNickname && notif.text) {
+							return `
+								<span><strong>${escapeHTML(notif.modNickname)}</strong> sent you a guardian message:</span><br />
+								<span>${escapeHTML(notif.text)}</span>`;
+						} else if (notif.authorNickname && (notif.translatedFocusTitle || notif.translatedScratchpadTitle) && notif.content) {
+							return `
+								<strong>${escapeHTML(notif.authorNickname)}</strong>
+								<span> added a comment on </span>
+								<strong>${escapeHTML(notif.translatedFocusTitle || notif.translatedScratchpadTitle || "")}</strong>:<br />
+								<span>${escapeHTML(notif.content)}</span>`;
+						} else if (notif.coachName && notif.contentTitle) {
+							return `
+								<strong>${escapeHTML(notif.coachName)}</strong> assigned you <strong>${escapeHTML(notif.contentTitle)}</strong>`;
+						} else if (notif.missionName && notif.class_.indexOf("ClassMissionNotification") !== -1) {
+							return `<strong>New Mission: ${escapeHTML(notif.missionName)}</strong>`;
+						} else if (notif.translatedDisplayName && notif.class_.indexOf("RewardNotification") !== -1) {
+							return `<strong>Reward Acquired: ${escapeHTML(notif.translatedDisplayName)}</strong>`;
+						} else if (notif.iconSrc && notif.extendedDescription && notif.description) {
+							return `
+								<strong>New Badge</strong>:<br />
+								<span>${escapeHTML(notif.description)}</span>`;
+						} else if (notif.text) {
+							console.info("INFO: Non-specific notif", notif);
+							return `<span>${escapeHTML(notif.text)}</span>`;
+						} else {
+							console.error(`ERROR: Unhandled notif type: ${JSON.stringify(notif, null, 4)}`);
+							return `<strong>Error processing notif.  Check console for details.</strong>`;
+						}
+					})()}
+				</p>
+				<div class="notif-date">${formatDate(notif.date)}</div>
+			</div>
+		</a>`;
 }
 
 function displayNotifs (notifJson: NotifObj) {
@@ -97,8 +138,9 @@ function displayNotifs (notifJson: NotifObj) {
 }
 
 function getNotifs () {
+	loadMore!.setAttribute("disabled", "true");
 	getChromeFkey().then(fkey => {
-		fetch(`https://www.khanacademy.org/api/internal/user/notifications/readable?cursor=${currentCursor}`, {
+		fetch(`https://www.khanacademy.org/api/internal/user/notifications/readable?cursor=${currentCursor}&casing=camel`, {
 			method: "GET",
 			headers: {
 				[CSRF_HEADER]: fkey.toString(),
@@ -108,8 +150,11 @@ function getNotifs () {
 		}).then((res: Response): (Promise<NotifObj> | NotifObj) => {
 			return res.json();
 		}).then((data: NotifObj): void => {
-			console.log(data);
+			loadMore!.removeAttribute("disabled");
 			displayNotifs(data);
+		}).catch(e => {
+			console.error(e);
+			loadMore!.removeAttribute("disabled");
 		});
 	});
 }
@@ -125,8 +170,6 @@ function markNotifsRead () {
 			credentials: "same-origin"
 		}).then((res: Response): (Promise<NotifObj> | NotifObj) => {
 			return res.json();
-		}).then((data: NotifObj): void => {
-			console.log(data);
 		});
 	});
 }

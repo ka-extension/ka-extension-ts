@@ -31,4 +31,16 @@ function formatDate (date: string): string {
 	return `${("0" + (d.getMonth() + 1)).slice(-2)}/${("0" + d.getDate()).slice(-2)}/${d.getFullYear()} ${("0" + d.getHours()).slice(-2)}:${("0" + d.getMinutes()).slice(-2)}`;
 }
 
-export { HTMLtoKAMarkdown, KAMarkdowntoHTML, buildQuery, formatDate };
+const specialChars: { [item: string]: string } = {
+	"&": "&amp;",
+	"\"": "&quot;",
+	"'": "&apos;",
+	"<": "&lt;",
+	">": "&gt;"
+};
+
+function escapeHTML (str: string): string | null {
+	return str.replace(/[&"'<>]/g, (char: string) => specialChars[char]);
+}
+
+export { HTMLtoKAMarkdown, KAMarkdowntoHTML, buildQuery, formatDate, escapeHTML };
