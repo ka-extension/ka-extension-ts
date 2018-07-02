@@ -124,6 +124,11 @@ function newNotif (notif: Notification): string {
 		</a>`;
 }
 
+function fkeyNotFound () {
+	notifsContainer!.innerHTML =
+		"<h2 class=\"please-sign-in\">Please visit KA and make sure you're signed in</h2>";
+}
+
 function displayNotifs (notifJson: NotifObj) {
 	if (!notifJson) { console.log("Didn't receieve notifications."); }
 	currentCursor = notifJson.cursor;
@@ -156,7 +161,7 @@ function getNotifs () {
 			console.error(e);
 			loadMore!.removeAttribute("disabled");
 		});
-	});
+	}).catch(fkeyNotFound);
 }
 
 function markNotifsRead () {
@@ -170,8 +175,8 @@ function markNotifsRead () {
 			credentials: "same-origin"
 		}).then((res: Response): (Promise<NotifObj> | NotifObj) => {
 			return res.json();
-		});
-	});
+		}).catch(console.error);
+	}).catch(fkeyNotFound);
 }
 
 generalNav!.addEventListener("click", e => currentPage > 0 && page(--currentPage));
