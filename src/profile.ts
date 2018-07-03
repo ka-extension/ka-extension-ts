@@ -1,4 +1,4 @@
-import { UsernameOrKaid, Scratchpads, UserLocation, UserProfileData } from "./types/data";
+import { UsernameOrKaid, Scratchpads, UserLocation, UserProfileData, KA } from "./types/data";
 import { querySelectorPromise, querySelectorAllPromise } from "./util/promise-util";
 import { getJSON } from "./util/api-util";
 import { formatDate } from "./util/text-util";
@@ -43,6 +43,10 @@ function addUserInfo (uok: UsernameOrKaid): void {
 			})
 			.then(data => data as UserProfileData)
 			.then(data => {
+				const kaObj = (window as any).KA as KA;
+				if (kaObj._userProfileData && kaObj._userProfileData.kaid === data.kaid) {
+					setInterval(duplicateBadges, 100);
+				}
 				table.innerHTML += tableElement("Date joined", formatDate(data.dateJoined));
 				table.innerHTML += tableElement("User kaid", data.kaid);
 			}).catch(console.error);
@@ -110,6 +114,15 @@ function addLocationInput (uok: UsernameOrKaid): void {
 			}
 		}).catch(console.error);
 	}).catch(console.error);
+}
+
+function duplicateBadges () {
+	const usedBadges = document.getElementsByClassName("used");
+	if (usedBadges.length > 0) {
+		for (let i = 0; i < usedBadges.length; i++) {
+			usedBadges[i].classList.remove("used");
+		}
+	}
 }
 
 export { addUserInfo, addLocationInput };
