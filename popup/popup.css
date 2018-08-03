@@ -172,3 +172,7 @@ li {
 .notifications-button-more:hover {
     box-shadow: 0 1px 1px rgba(0,0,0,0.35), inset 0 0 50px 5px rgba(255,255,255,0.2)
 }
+
+.please-sign-in {
+    margin-left: 20px;
+}

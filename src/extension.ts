@@ -78,17 +78,20 @@ abstract class Extension {
 	abstract onRepliesPage (uok: UsernameOrKaid): void | Promise<void>;
 	abstract onHotlistPage (): void;
 	abstract onProfilePage (uok: UsernameOrKaid): void;
+	abstract onPage (): void;
 	async init (): Promise<void> {
 		if (window.location.host.includes("khanacademy.org")) {
+			this.onPage();
 			this.KAdefine.asyncRequire(KAScripts.DISCUSSION).then(e => {
 				if (e) {
 					this.onDiscussionPage();
-					if (e.data && (e.data.which === "profile") && (this.url[6] === "replies")) {
-						const identifier: UsernameOrKaid = new UsernameOrKaid(this.url[4]);
-						this.onRepliesPage(identifier);
-					}
 				}
 			}).catch(console.error);
+
+			if (this.url[5] === "discussion" && this.url[6] === "replies" && this.url[3] === "profile") {
+				const identifier: UsernameOrKaid = new UsernameOrKaid(this.url[4]);
+				this.onRepliesPage(identifier);
+			}
 
 			this.KAdefine.asyncRequire(KAScripts.DISCUSSION, 100, (data: KAdefineResult) =>
 				typeof data.data !== "undefined" && typeof data.data.focusId !== "undefined" &&

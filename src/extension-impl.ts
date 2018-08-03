@@ -5,6 +5,7 @@ import { addProgramFlags } from "./flag";
 import { addReportButton, addReportButtonDiscussionPosts, addProfileReportButton } from "./report";
 import { addUserInfo, addLocationInput } from "./profile";
 import { addProgramDates, hideEditor, keyboardShortcuts } from "./project";
+import { deleteNotifButtons } from "./notif";
 
 
 class ExtensionImpl extends Extension {
@@ -32,6 +33,9 @@ class ExtensionImpl extends Extension {
 	}
 	onHotlistPage () {
 		console.info("On the hotlist");
+	}
+	onPage () {
+		deleteNotifButtons();
 	}
 }
 

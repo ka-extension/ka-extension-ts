@@ -79,31 +79,45 @@ interface Scratchpad {
 
 // Since there are different kinds of notifs, add in other props that are optional.
 interface Notification {
-	author_avatar_name: string;
-	author_avatar_src: string;
-	author_nickname: string;
-	brand_new: boolean;
+	notes?: Notification[];
+	iconSrc?: string;
+	extendedDescription?: string;
+	description?: string;
+	authorAvatarName?: string;
+	authorAvatarSrc?: string;
+	authorNickname?: string;
+	brandNew: boolean;
 	class_: string[];
-	content: string;
+	content?: string;
 	date: string;
-	feedback: string;
-	feedback_hierarchy: string[];
-	feedback_is_comment: boolean;
-	feedback_is_passing_eval_answer: boolean;
-	feedback_is_project_eval_answer: boolean;
-	feedback_is_project_eval_request: boolean;
-	feedback_is_question: boolean;
-	feedback_is_reply: boolean;
-	feedback_type: string;
-	focus: string;
-	focus_title: string;
-	kaid: string;
+	feedback?: string;
+	feedbackHierarchy?: string[];
+	feedbackIsComment?: boolean;
+	feedbackIsPassingEvalAnswer?: boolean;
+	feedbackIsProjectEvalAnswer?: boolean;
+	feedbackIsProjectEvalRequest?: boolean;
+	feedbackIsQuestion?: boolean;
+	feedbackIsReply?: boolean;
+	feedbackType?: string;
+	focus?: string;
+	focusTitle?: string;
+	kaid?: string;
 	kind: string;
 	read: boolean;
-	translated_focus_title: string;
+	translatedFocusTitle?: string;
+	translatedScratchpadTitle?: string;
 	url: string;
-	urlsafe_key: string;
-	user_id: string;
+	urlsafeKey: string;
+	userId: string;
+	modNickname?: string;
+	text?: string;
+	contentTitle?: string;
+	coachName?: string;
+	topicIconUrl?: string;
+	imageSource?: string;
+	missionName?: string;
+	translatedDisplayName?: string;
+	thumbnailSrc?: string;
 }
 
 interface Scratchpads {

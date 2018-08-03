@@ -32,6 +32,16 @@ async function getJSON (url: URL | string, projection?: object) {
 	return body;
 }
 
+function deleteNotif (key: string): Promise<Response> {
+	return fetch(`${window.location.origin}/api/internal/user/notifications/${key}`, {
+		method: "DELETE",
+		headers: {
+			[CSRF_HEADER]: getCSRF()
+		},
+		credentials: "same-origin"
+	}).then(e => e.status >= 200 && e.status < 300 ? Promise.resolve(e) : Promise.reject(e));
+}
+
 function getProgram (programId: string | number): Promise<Program> {
 	return getJSON(`${window.location.origin}/api/labs/scratchpads/${programId.toString()}`)
 		.then(e => e as Program);
@@ -47,6 +57,7 @@ interface CommentData {
 	key: string;
 	focus: FocusData;
 	focusUrl: string;
+	flags: string[];
 }
 
 // Symbol.asyncIterator polyfill
@@ -65,7 +76,20 @@ async function* commentDataGenerator (user: UsernameOrKaid, sort: CommentSortTyp
 			limit: limit.toString(),
 			page: (page++).toString(),
 			_: Date.now().toString()
-		})}`).then(e => e as CommentData[]).catch(e => void console.error(e));
+		})}`, [
+			{
+				normal: {
+					focusUrl: 1,
+					expandKey: 1,
+					key: 1,
+					flags: 1,
+					focus: {
+						id: 1,
+						kind: 1
+					}
+				}
+			}
+		]).then(e => e as CommentData[]).catch(e => void console.error(e));
 		if(!body) {
 			return;
 		} else {
@@ -170,5 +194,5 @@ export {
 	getJSON, FocusData, CommentData,
 	commentDataGenerator, getProgram,
 	getConvo, FinalReply, FinalConvo,
-	DiscussionTypes
+	DiscussionTypes, deleteNotif
 };
