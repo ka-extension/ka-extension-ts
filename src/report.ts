@@ -51,8 +51,8 @@ async function addProfileReportButton (uok: UsernameOrKaid, loggedInKaid: string
 
 function addReportButtonDiscussionPosts (focusId: string, focusKind: string) {
 	const items: NodeListOf<HTMLDivElement> = document.querySelectorAll(
-		`.question:not(.${EXTENSION_ITEM_CLASSNAME}), ` +
-		`.comment:not(.${EXTENSION_ITEM_CLASSNAME})`);
+		`.question:not(.${EXTENSION_ITEM_CLASSNAME}),
+		.comment:not(.${EXTENSION_ITEM_CLASSNAME})`);
 	for(let i = 0; i < items.length; i++) {
 		const item: HTMLDivElement = items[i];
 		const id: string = item.id;
