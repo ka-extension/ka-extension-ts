@@ -94,6 +94,7 @@ function newNotif (notif: Notification): string {
 								<span><strong>${escapeHTML(notif.modNickname)}</strong> sent you a guardian message:</span><br />
 								<span>${KAMarkdowntoHTML(escapeHTML(notif.text) || "")}</span>`;
 						} else if (notif.authorNickname && (notif.translatedFocusTitle || notif.translatedScratchpadTitle) && notif.content) {
+							// 'added a comment on' should depend on notif type.
 							return `
 								<strong>${escapeHTML(notif.authorNickname)}</strong>
 								<span> added a comment on </span>
