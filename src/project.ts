@@ -40,7 +40,9 @@ function addProgramDates (program: Program, uok: string): void {
 
 		table.appendChild(tableRow("Hidden from Hotlist", hidden ? "Yes" : "No"));
 		table.appendChild(tableRow("Guardian Approved", approved ? "Yes" : "No"));
-		table.appendChild(tableRow("Updated", updated));
+		if (updated !== created) {
+			table.appendChild(tableRow("Updated", updated));
+		}
 		table.appendChild(tableRow("Created", created));
 		updatedSpan.appendChild(table);
 	}
