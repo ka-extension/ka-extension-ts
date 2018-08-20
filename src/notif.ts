@@ -1,10 +1,11 @@
 import { deleteNotif } from "./util/api-util";
 import { urlUnencode } from "./util/text-util";
 import { EXTENSION_MODIFIED_NOTIF, SVG_NAMESPACE, DELETE_BUTTON } from "./types/names";
+import { querySelectorPromise } from "./util/promise-util";
 
 const toSelect = `[class^=notification_ayl7f7]:not(.${EXTENSION_MODIFIED_NOTIF})`;
 
-function deleteNotifButtons () {
+function deleteNotifButtons (): void {
 	setInterval(() => Array.from(document.querySelectorAll(toSelect)).forEach(notif => {
 		const innerLink = notif.getElementsByClassName("link_9objhk")[0] as HTMLAnchorElement;
 		if (innerLink && innerLink.href.indexOf("/notifications") > 0) {
@@ -37,4 +38,12 @@ function deleteNotifButtons () {
 	}), 100);
 }
 
-export { deleteNotifButtons };
+function updateNotifIndicator (): void {
+	querySelectorPromise(".notificationsBadge_1j1j5ke")
+	.then(greenCircle => {
+		const notifs: number = (window as any).KA._userProfileData.countBrandNewNotifications;
+		greenCircle.textContent = notifs.toString();
+	}).catch(console.error);
+}
+
+export { deleteNotifButtons, updateNotifIndicator };
