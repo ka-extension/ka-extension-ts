@@ -1,7 +1,8 @@
 import { MessageTypes, Message } from "./types/message-types";
-import { CSRF_HEADER, COOKIE, EXTENSION_ID } from "./types/names";
+import { CSRF_HEADER, COOKIE } from "./types/names";
 import { getChromeFkey, getChromeCookies } from "./util/cookie-util";
 import { UserProfileData } from "./types/data";
+declare const EXTENSION_ID: string;
 
 let kaid: string;
 
