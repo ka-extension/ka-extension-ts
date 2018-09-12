@@ -4,7 +4,7 @@ import { commentsButtonEventListener, commentsAddEditUI } from "./comment-data";
 import { addProgramFlags } from "./flag";
 import { addReportButton, addReportButtonDiscussionPosts, addProfileReportButton } from "./report";
 import { addUserInfo, addLocationInput } from "./profile";
-import { addProgramDates, hideEditor, keyboardShortcuts } from "./project";
+import { addProgramDates, hideEditor, keyboardShortcuts, darkToggleButton } from "./project";
 import { deleteNotifButtons, updateNotifIndicator } from "./notif";
 
 class ExtensionImpl extends Extension {
@@ -17,6 +17,7 @@ class ExtensionImpl extends Extension {
 		}
 		hideEditor(program);
 		keyboardShortcuts(program);
+		darkToggleButton();
 	}
 	onDetailedDiscussionPage (focusId: string, focusKind: string) {
 		setInterval(addReportButtonDiscussionPosts.bind(null, focusId, focusKind), 100);
