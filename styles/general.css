@@ -99,3 +99,25 @@ body .wrap_xyqcvi {
 .kae-notif-delete svg:hover {
     background: #dddddd;
 }
+
+#kae-toggle-dark {
+    background-color: transparent;
+    color: #FFFFFF;
+    text-decoration: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-block;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 400;
+    margin-right: 3px;
+    padding: 8px 8px;
+    text-align: center;
+    transition: 0.1s all;
+    user-select: none;
+    background: #656565;
+    -webkit-transition: 0.1s all;
+    -webkit-user-select: none;
+}

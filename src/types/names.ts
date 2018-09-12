@@ -12,6 +12,7 @@ const QUEUE_ROOT: string = "https://reportqueue.herokuapp.com/";
 const PREFIX: string = "ka-extension-";
 const SVG_NAMESPACE: string = "http://www.w3.org/2000/svg";
 const DELETE_BUTTON: string = "kae-notif-delete";
+const DARK_THEME: string = "ka-extension-toggle-editor-dark-theme";
 
 export {
 	CSRF_NAME, CSRF_HEADER, COOKIE,
@@ -20,5 +21,5 @@ export {
 	EXTENSION_COMMENT_EDIT_UI_CLASS,
 	EXTENSION_COMMENT_CANCEL_EDIT_PREFIX,
 	PREFIX, EXTENSION_ITEM_CLASSNAME, EXTENSION_MODIFIED_NOTIF,
-	SVG_NAMESPACE, DELETE_BUTTON
+	SVG_NAMESPACE, DELETE_BUTTON, DARK_THEME
 };

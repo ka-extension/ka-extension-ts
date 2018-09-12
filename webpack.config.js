@@ -2,7 +2,7 @@ const path = require("path");
 
 module.exports = {
   mode: "production",
-  entry: { 
+  entry: {
     index: ["whatwg-fetch", "./src/index.ts"],
     background: "./src/background.ts",
     popup: "./src/popup.ts",
@@ -22,11 +22,19 @@ module.exports = {
             ],
             include: path.resolve(__dirname, "src"),
             use: ["cache-loader", "ts-loader"]
+        },
+        {
+          test: /\.css$/,
+          use: ["cache-loader", "raw-loader"],
+          exclude: [
+            path.resolve(__dirname, "node_modules")
+          ],
+          include: path.resolve(__dirname, "styles"),
         }
     ]
   },
   resolve: {
-      extensions: [ ".ts", ".js", ".json" ]
+      extensions: [ ".ts", ".js", ".json", ".css" ]
   },
   devtool: "source-map"
 };

@@ -1,6 +1,23 @@
 import { Program } from "./types/data";
 import { formatDate } from "./util/text-util";
-import { PREFIX } from "./types/names";
+import { PREFIX, DARK_THEME } from "./types/names";
+import { querySelectorPromise } from "./util/promise-util";
+import monokai from "../styles/ace-themes/monokai.css";
+import textmate from "../styles/ace-themes/textmate.css";
+
+const themes: { [key: string]: string } = {};
+
+const aceThemes = {
+	addTheme (themeName: string, css: string) {
+		themes[themeName] = css.replace(new RegExp("\\.ace-" + themeName, "ig"), ".ace-tm");
+	},
+	getThemeCSS (themeName: string): string | null {
+		return themes[themeName];
+	}
+};
+
+aceThemes.addTheme("monokai", monokai);
+aceThemes.addTheme("tm", textmate);
 
 function tableRow (key: string, val: string, title?: string): HTMLTableRowElement {
 	const tr = document.createElement("tr");
@@ -99,4 +116,47 @@ function keyboardShortcuts (program: Program): void {
 	});
 }
 
-export { addProgramDates, hideEditor, keyboardShortcuts };
+function darkTheme () {
+	const sid = "ka-extension-ace-override";
+
+	const prevStyle = document.getElementById(sid);
+	if (document.getElementById(sid) && prevStyle) {
+		document.body.removeChild(prevStyle);
+	}
+
+	const s = document.createElement("style");
+	s.id = sid;
+
+	const currentInd = parseInt(localStorage.getItem(DARK_THEME) || "0", 10);
+	s.innerHTML = aceThemes.getThemeCSS(currentInd ? "monokai" : "tm") || "";
+
+	document.body.appendChild(s);
+}
+
+/*** Add a "Toggle Darkmode" button for programs ***/
+async function darkToggleButton () {
+	const rightArea = await querySelectorPromise(".right_piqaq3");
+
+	const outerButtonSpan = document.createElement("span");
+	outerButtonSpan.className = "pull-right";
+
+	const innerButtonLink: HTMLAnchorElement = document.createElement("a");
+	innerButtonLink.id = "kae-toggle-dark";
+	innerButtonLink.href = "javascript:void(0)";
+	innerButtonLink.textContent = "Toggle Dark Theme";
+	innerButtonLink.addEventListener("mouseover", () => innerButtonLink.style.background = "#484848");
+	innerButtonLink.addEventListener("mouseout", () => innerButtonLink.style.background = "#656565");
+	innerButtonLink.addEventListener("click", () => {
+		const currentInd = parseInt(localStorage.getItem(DARK_THEME) || "0", 10);
+		const next = currentInd ^ 1;
+		localStorage.setItem(DARK_THEME, next.toString());
+		darkTheme();
+	});
+
+	outerButtonSpan.appendChild(innerButtonLink);
+	rightArea.appendChild(outerButtonSpan);
+}
+
+darkTheme();
+
+export { addProgramDates, hideEditor, keyboardShortcuts, darkToggleButton };
