@@ -83,7 +83,7 @@ interface FocusData {
 interface CommentData {
 	expandKey: string;
 	key: string;
-	authorKaid: string,
+	authorKaid: string;
 	focus: FocusData;
 	focusUrl: string;
 	flags: string[];
