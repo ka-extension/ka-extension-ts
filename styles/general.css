@@ -1,16 +1,16 @@
 /** Community guidelines **/
-.video-discussion {
+body .video-discussion {
     float: left !important;
     margin: 0px !important;
     width: 50% !important;
     display: block;
 }
 
-.footer_crtwg {
+body .footer_crtwg {
     max-width: none !important;
 }
 
-.main-discussion-guidelines.discussion-guidelines {
+body .main-discussion-guidelines.discussion-guidelines {
     float: right !important;
     width: 25% !important;
     display: block !important;
@@ -18,7 +18,7 @@
 }
 
 /** Widen scratchpad **/
-.wrap_xyqcvi {
+body .wrap_xyqcvi {
     max-width: none !important;
 }
 
