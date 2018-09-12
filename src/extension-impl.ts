@@ -7,7 +7,6 @@ import { addUserInfo, addLocationInput } from "./profile";
 import { addProgramDates, hideEditor, keyboardShortcuts } from "./project";
 import { deleteNotifButtons, updateNotifIndicator } from "./notif";
 
-
 class ExtensionImpl extends Extension {
 	async onProgramPage (program: Program) {
 		const kaid = await getKaid();
@@ -24,8 +23,9 @@ class ExtensionImpl extends Extension {
 		setInterval(commentsAddEditUI.bind(null, focusId, focusKind), 100);
 		console.log("On detailed discussion page");
 	}
-	onRepliesPage (uok: UsernameOrKaid) {
-		commentsButtonEventListener(uok);
+	async onRepliesPage (uok: UsernameOrKaid) {
+		const kaid = await getKaid();
+		commentsButtonEventListener(uok, kaid);
 		console.log("On replies page");
 	}
 	async onProfilePage (uok: UsernameOrKaid) {

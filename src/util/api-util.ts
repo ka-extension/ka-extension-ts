@@ -4,7 +4,7 @@ import { getCSRF } from "./cookie-util";
 import { buildQuery } from "./text-util";
 import { UsernameOrKaid, CommentSortType, Program } from "../types/data";
 
-async function getJSON (url: URL | string, projection?: object) {
+async function getJSON (url: URL | string, projection?: object) : Promise<object> {
 	url = new URL(url.toString());
 	if (projection) {
 		url.searchParams.append("projection", JSON.stringify(projection));
@@ -15,6 +15,34 @@ async function getJSON (url: URL | string, projection?: object) {
 			[CSRF_HEADER]: getCSRF()
 		},
 		credentials: "same-origin"
+	})
+		.then((response: Response): (Promise<Response> | Response) =>
+			response.status >= 200 && response.status < 300 ?
+			response : Promise.reject(response))
+		.catch((e => void console.error(e)));
+	if (response === undefined) {
+		throw new Error(`Error fetching ${url}`);
+	}
+
+	const body: object | undefined = response.json().catch(e => void console.error(e));
+	if (body === undefined) {
+		throw new Error(`Error parsing body for ${url}`);
+	}
+
+	return body;
+}
+
+async function putPostJSON (url: URL | string, json: object = {}, method: "PUT" | "POST" = "POST") : Promise<object> {
+	url = new URL(url.toString());
+
+	const response: Response | undefined = await fetch(url.toString(), {
+		method,
+		headers: {
+			[CSRF_HEADER]: getCSRF(),
+			"Content-type": "application/json"
+		},
+		credentials: "same-origin",
+		body: JSON.stringify(json)
 	})
 		.then((response: Response): (Promise<Response> | Response) =>
 			response.status >= 200 && response.status < 300 ?
@@ -55,6 +83,7 @@ interface FocusData {
 interface CommentData {
 	expandKey: string;
 	key: string;
+	authorKaid: string,
 	focus: FocusData;
 	focusUrl: string;
 	flags: string[];
@@ -83,6 +112,7 @@ async function* commentDataGenerator (user: UsernameOrKaid, sort: CommentSortTyp
 					expandKey: 1,
 					key: 1,
 					flags: 1,
+					authorKaid: 1,
 					focus: {
 						id: 1,
 						kind: 1
@@ -194,5 +224,5 @@ export {
 	getJSON, FocusData, CommentData,
 	commentDataGenerator, getProgram,
 	getConvo, FinalReply, FinalConvo,
-	DiscussionTypes, deleteNotif
+	DiscussionTypes, deleteNotif, putPostJSON
 };
