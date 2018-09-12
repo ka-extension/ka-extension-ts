@@ -1,4 +1,4 @@
-import { Extension } from "./extension";
+import { Extension, getKaid } from "./extension";
 import { Program, UsernameOrKaid } from "./types/data";
 import { commentsButtonEventListener, commentsAddEditUI } from "./comment-data";
 import { addProgramFlags } from "./flag";
@@ -9,11 +9,12 @@ import { deleteNotifButtons, updateNotifIndicator } from "./notif";
 
 
 class ExtensionImpl extends Extension {
-	onProgramPage (program: Program) {
-		addProgramFlags(program, this.kaid ? this.kaid : "");
-		addProgramDates(program, this.kaid ? this.kaid : "");
-		if (this.kaid) {
-			addReportButton(program, this.kaid);
+	async onProgramPage (program: Program) {
+		const kaid = await getKaid();
+		addProgramFlags(program, kaid || "");
+		addProgramDates(program, kaid || "");
+		if (kaid) {
+			addReportButton(program, kaid);
 		}
 		hideEditor(program);
 		keyboardShortcuts(program);
@@ -27,9 +28,10 @@ class ExtensionImpl extends Extension {
 		commentsButtonEventListener(uok);
 		console.log("On replies page");
 	}
-	onProfilePage (uok: UsernameOrKaid) {
-		if (this.kaid) {
-			addProfileReportButton(uok, this.kaid);
+	async onProfilePage (uok: UsernameOrKaid) {
+		const kaid = await getKaid();
+		if (kaid) {
+			addProfileReportButton(uok, kaid);
 		}
 		addUserInfo(uok);
 		addLocationInput(uok);
