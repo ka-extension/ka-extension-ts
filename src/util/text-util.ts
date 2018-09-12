@@ -5,7 +5,7 @@ function HTMLtoKAMarkdown (html: string): string {
 		.replace(/<b>(.*?)<\/b>/ig, (match, one) => `*${one}*`)
 		.replace(/<em>(.*?)<\/em>/ig, (match, one) => `_${one}_`)
 		.replace(/<a.*?>(.*?)<\/a>/ig, (match, one) => one)
-		.replace(/<br(?:\s*\/\s*)?>/ig, () => `\n`);
+		.replace(/<br(?:\s*\/\s*)?>/ig, () => "\n");
 }
 
 function KAMarkdowntoHTML (markdown: string): string {
@@ -20,7 +20,7 @@ function KAMarkdowntoHTML (markdown: string): string {
 function buildQuery (params: { [key: string]: string }): string {
 	let ret: string = "";
 	let v: number = 0;
-	for(const i in params) {
+	for (const i in params) {
 		ret += `${encodeURIComponent(i)}=${encodeURIComponent(params[i] + "") + (v++ !== Object.keys(params).length - 1 ? "&" : "")}`;
 	}
 	return ret;
@@ -49,8 +49,8 @@ const specialChars: { [item: string]: string } = {
 	">": "&gt;"
 };
 
-function escapeHTML (str: string): string | null {
-	return str.replace(/[&"'<>]/g, (char: string) => specialChars[char]);
+function escapeHTML (str: string): string {
+	return str.replace(/[&"'<>]/g, (char: string) => specialChars[char] || "");
 }
 
 export {

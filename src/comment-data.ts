@@ -1,14 +1,12 @@
-import { commentDataGenerator, CommentData } from "./util/api-util";
+import { commentDataGenerator, CommentData, putPostJSON } from "./util/api-util";
 import { UsernameOrKaid, CommentSortType } from "./types/data";
-import { getCSRF } from "./util/cookie-util";
-import { KAMarkdowntoHTML, HTMLtoKAMarkdown } from "./util/text-util";
+import { KAMarkdowntoHTML, HTMLtoKAMarkdown, escapeHTML } from "./util/text-util";
 import { querySelectorPromise } from "./util/promise-util";
 import flatten from "lodash.flatten";
 import zipObject from "lodash.zipobject";
 import {
 	EXTENSION_ITEM_CLASSNAME,
 	EXTENSION_COMMENT_CLASSNAME,
-	EXTENSION_COMMENT_EDIT_CLASSNAME,
 	EXTENSION_COMMENT_EDIT_CLASS_PREFIX,
 	EXTENSION_COMMENT_EDIT_UI_CLASS,
 	EXTENSION_COMMENT_CANCEL_EDIT_PREFIX
@@ -49,6 +47,9 @@ class CommentLinker {
 	getFlags (id: string) : string[] | undefined {
 		return typeof this.comments[id] === "object" ? this.comments[id].flags : undefined;
 	}
+	getAuthorKaid (id: string) : string | undefined {
+		return typeof this.comments[id] === "object" ? this.comments[id].authorKaid : undefined;
+	}
 	getFocusId (id: string) : string | undefined {
 		return typeof this.comments[id] === "object"
 			? this.comments[id].focus.id : undefined;
@@ -63,7 +64,7 @@ class CommentLinker {
 	}
 }
 
-function commentsButtonEventListener (uok: UsernameOrKaid): void {
+function commentsButtonEventListener (uok: UsernameOrKaid, viewerKaid: string | null): void {
 	const commentLinkGenerator: CommentLinker = new CommentLinker(uok);
 	querySelectorPromise(".simple-button.discussion-list-more", 100)
 		.then(button => {
@@ -77,6 +78,8 @@ function commentsButtonEventListener (uok: UsernameOrKaid): void {
 					const flagControls = comment.querySelector(".flag-show");
 					const url = commentLinkGenerator.getUrl(comment.id);
 					const flags = commentLinkGenerator.getFlags(comment.id);
+					const focusId =  commentLinkGenerator.getFocusId(comment.id);
+					const focusType =  commentLinkGenerator.getFocusType(comment.id);
 					if(url && metaControls) {
 						const separator = document.createElement("span");
 						separator.className = "discussion-meta-separator";
@@ -95,6 +98,9 @@ function commentsButtonEventListener (uok: UsernameOrKaid): void {
 						flagControls.textContent =  `${flagControls.textContent === "Flagged" ?
 							"Flagged" : "Flag"} (${flags.length})`;
 						flagControls.setAttribute("title", flags.join("\n"));
+					}
+					if (viewerKaid && focusId && focusType && commentLinkGenerator.getAuthorKaid(comment.id) === viewerKaid) {
+						commentsAddEditLink(focusId, focusType, comment);
 					}
 				}
 			}, 100);
@@ -126,12 +132,14 @@ function commentsAddEditLink (focusId: string, focusKind: string, element: Eleme
 	commentEditLink.className = EXTENSION_COMMENT_EDIT_CLASS_PREFIX + element.id;
 	commentEditLink.href = "javascript:void(0)";
 	commentEditLink.textContent = "Edit";
+
 	const outerSpan = document.createElement("span");
 	outerSpan.appendChild(commentEditLink);
 	metaControls.appendChild(outerSpan);
 
 	const editCommentDiv = document.createElement("div");
 	editCommentDiv.className = EXTENSION_COMMENT_EDIT_UI_CLASS;
+
 	const textarea = document.createElement("textarea");
 	textarea.className = "discussion-text open";
 	textarea.style.display = "none";
@@ -139,37 +147,40 @@ function commentsAddEditLink (focusId: string, focusKind: string, element: Eleme
 
 	const discussionControl = document.createElement("div");
 	discussionControl.className = "discussion-controls";
+
 	const floatRightSpan = document.createElement("span");
 	floatRightSpan.className = "discussion-control float-right";
+
 	const orDivide = document.createElement("span");
 	orDivide.textContent = "or";
+
 	const cancel = document.createElement("a");
 	cancel.href = "javascript:void(0)";
 	cancel.textContent = "Cancel";
 	cancel.style.color = "#678d00";
 	cancel.className = EXTENSION_COMMENT_CANCEL_EDIT_PREFIX + element.id;
+
 	const editBtn = document.createElement("button");
 	editBtn.className = `simple-button primary edit-comment-${element.id}-button`;
 	editBtn.style.fontSize = "12px";
 	editBtn.setAttribute("type", "button");
 	editBtn.textContent = "Edit this comment";
+
 	const floatrights = [floatRightSpan.cloneNode(), floatRightSpan.cloneNode(), floatRightSpan.cloneNode()];
 	const correspondingElements = [cancel, orDivide, editBtn];
+
 	for(let i = 0; i < floatrights.length; i++) {
 		floatrights[i].appendChild(correspondingElements[i]);
 		discussionControl.appendChild(floatrights[i]);
 	}
+
 	discussionControl.style.display = "none";
 	element.appendChild(discussionControl);
 
 	cancel.addEventListener("click", function (e) {
-		const link = <HTMLElement> e.target;
-		const kaencrypted = link!.className.substr(EXTENSION_COMMENT_EDIT_CLASSNAME.length);
-		const parentComment = document.getElementById(kaencrypted);
-		const discMeta = parentComment!.getElementsByClassName("discussion-meta")[0];
-		const contentDiv = parentComment!.getElementsByClassName("discussion-content")[0];
-		const textarea = parentComment!.getElementsByTagName("textarea")[0];
-		const discussionControl = parentComment!.getElementsByClassName("discussion-controls")[0];
+		const discMeta = element.getElementsByClassName("discussion-meta")[0];
+		const contentDiv = element.getElementsByClassName("discussion-content")[0];
+		const textarea = element.getElementsByTagName("textarea")[0];
 		textarea.setAttribute("style", "display: none");
 		discussionControl.setAttribute("style", "display: none");
 		contentDiv.setAttribute("style", "display: block");
@@ -177,41 +188,30 @@ function commentsAddEditLink (focusId: string, focusKind: string, element: Eleme
 	});
 
 	editBtn.addEventListener("click", function (e) {
-		const link = <HTMLElement> e.target;
-		const kaencrypted = /edit-comment-(kaencrypted_.*?)-button/ig.exec(link.className)![1];
-		const parentComment = document.getElementById(kaencrypted);
-		const discMeta = parentComment!.getElementsByClassName("discussion-meta")[0];
-		const contentDiv = parentComment!.getElementsByClassName("discussion-content")[0];
-		const textarea = parentComment!.getElementsByTagName("textarea")[0];
-		const discussionControl = parentComment!.getElementsByClassName("discussion-controls")[0];
-		const x = new XMLHttpRequest();
+		const kaencrypted = element.id;
+		const discMeta = element.getElementsByClassName("discussion-meta")[0];
+		const contentDiv = element.getElementsByClassName("discussion-content")[0];
+		const textarea = element.getElementsByTagName("textarea")[0];
 		// Based off of @MatthiasSaihttam's bookmarklet (https://www.khanacademy.org/computer-programming/edit-comments/6039670653)
-		x.open("PUT",
-			`${window.location.origin}/api/internal/discussions/${focusKind}/${focusId}/comments/${kaencrypted}?casing=camel&lang=en&_=${Date.now()}`
-		);
-		x.setRequestHeader("x-ka-fkey", getCSRF());
-		x.setRequestHeader("Content-type", "application/json");
-		x.addEventListener("load", function () {
-			contentDiv.textContent = KAMarkdowntoHTML(textarea.value);
-			textarea.setAttribute("style", "display: none");
-			discussionControl.setAttribute("style", "display: none");
-			contentDiv.setAttribute("style", "display: block");
-			 discMeta.setAttribute("style", "display: block");
-		});
-		x.addEventListener("error", function () { alert("Unable to edit comment. Please try again."); });
-		x.send(JSON.stringify({ text: textarea.value }));
+		putPostJSON(
+			`${window.location.origin}/api/internal/discussions/${focusKind}/${focusId}/comments/${kaencrypted}?casing=camel&lang=en&_=${Date.now()}`,
+			{ text: textarea.value },
+			"PUT").then(() => {
+				contentDiv.innerHTML = KAMarkdowntoHTML(escapeHTML(textarea.value));
+				textarea.setAttribute("style", "display: none");
+				discussionControl.setAttribute("style", "display: none");
+				contentDiv.setAttribute("style", "display: block");
+				discMeta.setAttribute("style", "display: block");
+			}).catch(() => alert("Unable to edit comment. Please try again."));
 	});
 
-	commentEditLink.addEventListener("click", function (e) {
-		const link = <HTMLElement> e.target;
-		const kaencrypted = link!.className.substr(EXTENSION_COMMENT_EDIT_CLASS_PREFIX.length);
-		const parentComment = document.getElementById(kaencrypted);
-		const discMeta = parentComment!.getElementsByClassName("discussion-meta")[0];
-		const contentDiv = parentComment!.getElementsByClassName("discussion-content")[0];
-		const content = HTMLtoKAMarkdown(contentDiv.textContent as string).trim();
-		const textarea =  parentComment!.getElementsByTagName("textarea")[0];
-		const discussionControl = parentComment!.getElementsByClassName("discussion-controls")[0];
-		textarea.value = content;
+	commentEditLink.addEventListener("click", e => {
+		const discMeta = element.getElementsByClassName("discussion-meta")[0];
+		const contentDiv = element.getElementsByClassName("discussion-content")[0];
+		const content = HTMLtoKAMarkdown(contentDiv.innerHTML).trim();
+		const textarea = element.getElementsByTagName("textarea")[0];
+		const discussionControl = element.getElementsByClassName("discussion-controls")[0];
+		textarea.innerHTML = content;
 		contentDiv.setAttribute("style", "display: none");
 		discMeta.setAttribute("style", "display: none");
 		textarea.setAttribute("style", "display: block");

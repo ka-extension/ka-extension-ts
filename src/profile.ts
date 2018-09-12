@@ -1,14 +1,14 @@
 import { UsernameOrKaid, Scratchpads, UserLocation, UserProfileData, KA } from "./types/data";
 import { querySelectorPromise, querySelectorAllPromise } from "./util/promise-util";
 import { getJSON } from "./util/api-util";
-import { formatDate } from "./util/text-util";
+import { formatDate, escapeHTML } from "./util/text-util";
 import { getCSRF } from "./util/cookie-util";
 
 function addUserInfo (uok: UsernameOrKaid): void {
 	function tableElement (title: string, value: string): string {
 		return `<tr>
-                    <td class="user-statistics-label">${title}</td>
-                    <td>${value}</td>
+                    <td class="user-statistics-label">${escapeHTML(title)}</td>
+                    <td>${escapeHTML(value)}</td>
                 </tr>`;
 	}
 
@@ -52,10 +52,10 @@ function addUserInfo (uok: UsernameOrKaid): void {
 			}).catch(console.error);
 
 			querySelectorAllPromise(".badge-category-count", 10, 200)
-			.then(badgeList => badgeList as HTMLCollection)
+			.then(badgeList => badgeList)
 			.then(badgeList => {
 				if (badgeList.length < 6) { return; }
-				const badges: Element[] = Array.from(badgeList);
+				const badges = Array.from(badgeList);
 				const total: number = badges.reduce((prev, badge): number => {
 					if (badge.textContent) {
 						return prev + parseInt(badge.textContent);
