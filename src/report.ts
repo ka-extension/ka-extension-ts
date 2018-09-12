@@ -1,11 +1,12 @@
 import { buildQuery } from "./util/text-util";
 import { Program, UsernameOrKaid } from "./types/data";
-import { QUEUE_ROOT, EXTENSION_ITEM_CLASSNAME, EXTENSION_ID } from "./types/names";
+import { QUEUE_ROOT, EXTENSION_ITEM_CLASSNAME } from "./types/names";
 import { DiscussionTypes, getConvo } from "./util/api-util";
 import { Message, MessageTypes, Downloadable } from "./types/message-types";
 import { querySelectorAllPromise } from "./util/promise-util";
 import { getJSON } from "./util/api-util";
 import { UserProfileData, IdType } from "./types/data";
+declare const EXTENSION_ID: string;
 
 function addReportButton (program: Program, kaid: string) {
 	const buttons: HTMLElement | null = document.querySelector(".buttons_vponqv");

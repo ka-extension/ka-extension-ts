@@ -1,7 +1,6 @@
 const CSRF_NAME: string = "fkey";
 const CSRF_HEADER: string = `X-KA-${CSRF_NAME}`;
 const COOKIE: string = "cookie";
-const EXTENSION_ID: string = "goejbbmaedgamncedjggaanjkdmaajmh";//"oidabgkhdbhpidagfnmfgdgehbblalnc";//gniggljddhajnfbkjndcgnomkddfcial";
 const EXTENSION_COMMENT_CLASSNAME: string = "ka-extension-modified-comment";
 const EXTENSION_COMMENT_EDIT_CLASS_PREFIX: string = "ka-extension-edit-";
 const EXTENSION_COMMENT_EDIT_UI_CLASS: string = "ka-extension-edit-comment-ui-div";
@@ -16,7 +15,7 @@ const DARK_THEME: string = "ka-extension-toggle-editor-dark-theme";
 
 export {
 	CSRF_NAME, CSRF_HEADER, COOKIE,
-	EXTENSION_ID, QUEUE_ROOT, EXTENSION_COMMENT_CLASSNAME,
+	QUEUE_ROOT, EXTENSION_COMMENT_CLASSNAME,
 	EXTENSION_COMMENT_EDIT_CLASS_PREFIX,
 	EXTENSION_COMMENT_EDIT_UI_CLASS,
 	EXTENSION_COMMENT_CANCEL_EDIT_PREFIX,
