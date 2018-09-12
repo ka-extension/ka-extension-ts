@@ -21,20 +21,16 @@ function getKAdefine (): KAdefineType {
 	return (window as any).KAdefine as KAdefineType;
 }
 
-class RefinedKAdefine {
-	private readonly KAdefine: KAdefineType;
-	constructor (KAdefine: KAdefineType) {
-		this.KAdefine = KAdefine;
-	}
+const KAdefine = {
 	require (url: string): KAdefineResult {
-		return this.KAdefine.require(url);
-	}
+		return getKAdefine().require(url);
+	},
 	asyncRequire (url: string, interval: number = 100, test?: (data: KAdefineResult) => boolean, maxAttempts?: number): Promise<KAdefineResult> {
 		return new Promise((resolve, reject) => {
 			let counter = 0;
 			const attempt = () => {
 				try {
-					const data: KAdefineResult = this.KAdefine.require(url);
+					const data: KAdefineResult = getKAdefine().require(url);
 					if (test && !test(data)) {
 						throw new Error("Data failed tests");
 					}
@@ -50,23 +46,20 @@ class RefinedKAdefine {
 			attempt();
 		});
 	}
-}
+};
 
 enum KAScripts {
 	DISCUSSION = "./javascript/discussion-package/discussion.js",
 	KA = "./javascript/shared-package/ka.js"
 }
 
+const getKaid = (): Promise<string | null> => KAdefine.asyncRequire(KAScripts.KA)
+	.then(req => req.getKaid ? req.getKaid() : null);
 
 abstract class Extension {
-	private readonly KAdefine: RefinedKAdefine;
 	private readonly url: string[];
-	public kaid: string | null;
 	constructor () {
 		this.url = window.location.href.split("/");
-		this.KAdefine = new RefinedKAdefine(getKAdefine());
-		const req = this.KAdefine.require(KAScripts.KA);
-		this.kaid = req.getKaid ? req.getKaid() : null;
 	}
 	onDiscussionPage (): void | Promise<void> {
 		console.info("Discussion package loaded");
@@ -82,7 +75,7 @@ abstract class Extension {
 	async init (): Promise<void> {
 		if (window.location.host.includes("khanacademy.org")) {
 			this.onPage();
-			this.KAdefine.asyncRequire(KAScripts.DISCUSSION).then(e => {
+			KAdefine.asyncRequire(KAScripts.DISCUSSION).then(e => {
 				if (e) {
 					this.onDiscussionPage();
 				}
@@ -93,7 +86,7 @@ abstract class Extension {
 				this.onRepliesPage(identifier);
 			}
 
-			this.KAdefine.asyncRequire(KAScripts.DISCUSSION, 100, (data: KAdefineResult) =>
+			KAdefine.asyncRequire(KAScripts.DISCUSSION, 100, (data: KAdefineResult) =>
 				typeof data.data !== "undefined" && typeof data.data.focusId !== "undefined" &&
 				typeof data.data.focusKind !== "undefined").then(e => {
 					if (e.data && e.data.focusId && e.data.focusKind) {
@@ -113,16 +106,15 @@ abstract class Extension {
 				this.onProfilePage(identifier);
 			}
 
-			if (this.kaid !== null) {
+			const kaid = await getKaid();
+			if (kaid !== null) {
 				window.postMessage({
 					type: "kaid",
-					message: {
-						kaid: this.kaid
-					}
+					message: { kaid }
 				}, "*");
 			}
 		}
 	}
 }
 
-export { Extension };
+export { Extension, getKaid };
