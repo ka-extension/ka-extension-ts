@@ -4,7 +4,7 @@ REL="releases/"
 VER=$(grep -oP '"version": "\K(\d.\d.\d)' manifest.json) # extract the version number
 ZIP="$REL$VER.zip"
 
-if [ ! -d "$REL" ]; then # create release folder in needed
+if [ ! -d "$REL" ]; then # create release folder if needed
 	mkdir $REL
 fi
 
