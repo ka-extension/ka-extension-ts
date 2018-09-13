@@ -58,6 +58,10 @@ body .wrap_xyqcvi {
   display: none !important;
 }
 
+.wrapScratchpadInner_poyjc {
+	overflow-x: hidden;
+}
+
 #kae-hide-div {
     text-align: right !important;
     float: right !important;
