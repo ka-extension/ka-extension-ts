@@ -1,7 +1,7 @@
 #!/bin/bash
 
 REL="releases/"
-VER=$(grep -oP '"version": "\K(\d.\d.\d)' manifest.json) # extract the version number
+VER=$(grep -oP '"version"\s*:\s*"\K(\d.\d.\d)' manifest.json) # extract the version number
 ZIP="$REL$VER.zip"
 
 if [ ! -d "$REL" ]; then # create release folder if needed
@@ -20,5 +20,5 @@ if [ -f $ZIP ]; then # overwrite check
 	fi
 fi
 
-zip -r $ZIP dist popup resources styles images manifest.json -x "*ace-themes/*" -q # zip it all up
+zip -r $ZIP dist popup resources styles/general.css images manifest.json -q # zip it all up
 echo "Zipped! $VER is now ready."

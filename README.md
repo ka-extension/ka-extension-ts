@@ -14,11 +14,12 @@ It is actively developed by [Jett Burns](https://github.com/jettburns14), [Ethan
 
 PRs are welcomed!
 
-### Scripts
-* `npm run build` - build the extension in dev mode
+
+### NPM Scripts
+* `npm run build` - build the extension
 * `npm run clean` - clean ./dist
 * `npm run lint` - check for linting errors
-* `./release.sh` - zip extension for release
+* `npm run release` - clean, build, and zip
 
 #### Thanks
 * [Matthias Saihttam](https://github.com/MatthiasSaihttam)

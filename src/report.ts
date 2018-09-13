@@ -2,11 +2,12 @@ import { buildQuery } from "./util/text-util";
 import { Program, UsernameOrKaid } from "./types/data";
 import { QUEUE_ROOT, EXTENSION_ITEM_CLASSNAME } from "./types/names";
 import { DiscussionTypes, getConvo } from "./util/api-util";
-import { Message, MessageTypes, Downloadable } from "./types/message-types";
 import { querySelectorAllPromise } from "./util/promise-util";
 import { getJSON } from "./util/api-util";
 import { UserProfileData, IdType } from "./types/data";
-declare const EXTENSION_ID: string;
+import { FileDownloader } from "./util/download-util";
+
+const downloader = new FileDownloader();
 
 function addReportButton (program: Program, kaid: string) {
 	const buttons: HTMLElement | null = document.querySelector(".buttons_vponqv");
@@ -91,11 +92,7 @@ function addReportButtonDiscussionPosts (focusId: string, focusKind: string) {
 							focusKind: string | null = target.getAttribute("data-focus-kind");
 						if(key && focusId && focusKind) {
 							getConvo(key, focusKind, focusId, DiscussionTypes.COMMENT)
-								.then(e => new Blob([ JSON.stringify(e, null, 4) ], { type: "application/json" }))
-								.then(URL.createObjectURL)
-								.then(url => ({ url, filename: `${id}.json`, saveAs: true } as Downloadable))
-								.then(message => ({ message, type: MessageTypes.DOWNLOAD } as Message))
-								.then(e => chrome.runtime.sendMessage(EXTENSION_ID, e))
+								.then(json => downloader.downloadJSON(json, `${id}.json`, true))
 								.catch(console.error);
 						}
 					});
