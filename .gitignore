@@ -4,3 +4,4 @@ dist
 .cache-loader
 ka-extension-ts.zip
 .env
+releases/
