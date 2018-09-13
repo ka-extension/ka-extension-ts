@@ -1,6 +1,6 @@
 {
 	"name": "ka-extension-ts",
-	"version": "1.0.0",
+	"version": "4.0.0",
 	"description": "A chrome extension for the Khan Academy Computer Programming section",
 	"private": true,
 	"scripts": {
@@ -11,7 +11,7 @@
 		"clean": "rm ./dist/*",
 		"lint": "tslint --project tsconfig.json -c tslint.json \"src/**/*.ts\"",
 		"fix": "tslint --project tsconfig.json -c tslint.json \"src/**/*.ts\" --fix",
-		"zip": "rm ka-extension-ts.zip && pack-zip",
+		"zip": "rm -f ka-extension-ts.zip && pack-zip",
 		"production": "npm run clean && npm run build-prod && npm run zip"
 	},
 	"keywords": [

@@ -1,5 +1,19 @@
 [
     {
+        "version": "4.0.0",
+        "new": [
+            "Complete TypeScript rewrite",
+            "Notifications can now be viewed through the extension popup",
+            "Tips & Thanks threads can now be downloaded as JSON files",
+            "Tips & Thanks can now be reported",
+            "Badge totals have been added to user profiles"
+        ],
+        "fixes": [
+            "Comment edits are now escaped properly",
+            "The KAdefine issue has been sorted out"
+        ]
+    },
+    {
         "version": "3.1.1",
         "new": [
             "Added a hide editor button"
