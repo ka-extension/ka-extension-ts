@@ -1,10 +1,9 @@
 ## Khan Academy Extension
 ### [![Install](https://developer.chrome.com/webstore/images/ChromeWebStore_Badge_v2_206x58.png)](https://chrome.google.com/webstore/detail/the-khan-academy-extensio/gniggljddhajnfbkjndcgnomkddfcial)
-Khan Academy Extension is a chrome extension for the computing section of [khanacademy](https://khanacademy.org).
+Khan Academy Extension is a browser extension for the computing section of [khanacademy](https://khanacademy.org).
 
 
 It is actively developed by [Jett Burns](https://github.com/jettburns14), [Ethan Luis McDonough](https://github.com/EthanLuisMcDonough), and [Luke Krikorian](https://github.com/lukekrikorian).
-We are currently rewriting it in [TypeScript](https://www.typescriptlang.org/). Any PRs to the [old extension](https://github.com/ka-extension/ka-extension/) will probably be ignored.
 
 ### Contributing
 #### Run the extension locally:
@@ -15,10 +14,10 @@ We are currently rewriting it in [TypeScript](https://www.typescriptlang.org/). 
 
 PRs are welcomed!
 
+
 ### NPM Scripts
 * `npm run build` - build the extension
 * `npm run clean` - clean ./dist
-* `npm run zip` - compress the current extension into ka-extension-ts.zip
 * `npm run lint` - check for linting errors
 * `npm run release` - clean, build, and zip
 
