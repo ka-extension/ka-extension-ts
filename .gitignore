@@ -2,6 +2,4 @@ node_modules
 dist
 .DS_Store
 .cache-loader
-ka-extension-ts.zip
-.env
 releases/

@@ -6,13 +6,10 @@
 	"scripts": {
 		"errordetails": "webpack --display-error-details",
 		"build": "webpack",
-		"build-prod": "webpack --env.PROD=1",
 		"watch": "webpack --watch",
 		"clean": "rm ./dist/*",
 		"lint": "tslint --project tsconfig.json -c tslint.json \"src/**/*.ts\"",
-		"fix": "tslint --project tsconfig.json -c tslint.json \"src/**/*.ts\" --fix",
-		"zip": "rm -f ka-extension-ts.zip && pack-zip",
-		"production": "npm run clean && npm run build-prod && npm run zip"
+		"fix": "tslint --project tsconfig.json -c tslint.json \"src/**/*.ts\" --fix"
 	},
 	"keywords": [
 		"Khan Academy",
@@ -43,7 +40,6 @@
 	"dependencies": {
 		"babel-polyfill": "^6.26.0",
 		"bluebird": "^3.5.1",
-		"dotenv": "^6.0.0",
 		"es6-symbol": "^3.1.1",
 		"lodash.flatten": "^4.4.0",
 		"lodash.zipobject": "^4.1.3",
