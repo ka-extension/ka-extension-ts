@@ -2,21 +2,8 @@ import { MessageTypes, Message } from "./types/message-types";
 import { CSRF_HEADER, COOKIE } from "./types/names";
 import { getChromeFkey, getChromeCookies } from "./util/cookie-util";
 import { UserProfileData } from "./types/data";
-declare const EXTENSION_ID: string;
 
 let kaid: string;
-
-console.log(chrome.runtime.id === EXTENSION_ID);
-
-chrome.runtime.onMessageExternal.addListener((arg: any, sender: chrome.runtime.MessageSender) => {
-	console.log("External Message: ", arg);
-	arg = arg as Message;
-	switch (arg.type) {
-		case MessageTypes.DOWNLOAD:
-			chrome.downloads.download(arg.message as chrome.downloads.DownloadOptions);
-			break;
-	}
-});
 
 chrome.runtime.onMessage.addListener((arg: any, sender: chrome.runtime.MessageSender) => {
 	console.log("Internal Message: ", arg);

@@ -12,18 +12,15 @@ We are currently rewriting it in [TypeScript](https://www.typescriptlang.org/). 
 * Make your changes!
 * Run `npm run build` to build the extension.
 * [Run the extension in Developer mode](https://developer.chrome.com/extensions/getstarted#unpacked)
-* Create a file named .env in the root and paste `EXTENSION_ID=<INSERT YOUR EXTENSION ID HERE>` into it
-* Rebuild
 
 PRs are welcomed!
 
 ### NPM Scripts
-* `npm run build` - build the extension in dev mode
-* `npm run build-prod` - build the extension in production mode
+* `npm run build` - build the extension
 * `npm run clean` - clean ./dist
 * `npm run zip` - compress the current extension into ka-extension-ts.zip
 * `npm run lint` - check for linting errors
-* `npm run production` - build the extension in production mode and zip it
+* `npm run release` - clean, build, and zip
 
 #### Thanks
 * [Matthias Saihttam](https://github.com/MatthiasSaihttam)
