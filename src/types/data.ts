@@ -55,6 +55,7 @@ interface Program {
 	flags: string[];
 	url: string;
 	sumVotesIncremented: number;
+	key: string;
 	isProject: boolean;
 	isProjectOrFork: boolean;
 	kaid: string;

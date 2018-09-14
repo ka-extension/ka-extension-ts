@@ -2,6 +2,7 @@ import { Program } from "./types/data";
 import { formatDate } from "./util/text-util";
 import { PREFIX, DARK_THEME } from "./types/names";
 import { querySelectorPromise } from "./util/promise-util";
+import { getCSRF } from "./util/cookie-util";
 import monokai from "../styles/ace-themes/monokai.css";
 import textmate from "../styles/ace-themes/textmate.css";
 
@@ -96,6 +97,66 @@ function hideEditor (program: Program): void {
 	}
 }
 
+//Replace KA's vote button with one that updates after you vote and allows undoing votes
+function replaceVoteButton (program: Program): void {
+	querySelectorPromise(".discussion-meta-controls")
+	.then(wrap => {
+		if (!wrap || !(wrap.firstChild as HTMLElement).innerText.includes("Vote")) {
+			return;
+		}
+
+		wrap = wrap.firstChild!;
+
+		const unvotedClass =    "link_1uvuyao-o_O-computing_77ub1h";
+		const votedClass =      "link_1uvuyao-o_O-computing_1w8n1i8";
+
+		const voteURL = "https://www.khanacademy.org/api/internal/discussions/voteentity";
+
+		let voted = (wrap as HTMLElement).innerText.includes("Voted Up");
+
+		const orgVotes = program.sumVotesIncremented - (voted ? 1 : 0);
+
+		const newWrap = document.createElement("span");
+		const voteButton = document.createElement("a");
+		const voteText = document.createElement("span");
+		voteButton.appendChild(voteText);
+		newWrap.appendChild(voteButton);
+
+		function updateVoteDisplay() {
+			voteText.innerText = (voted ? "Voted Up!" : "Vote Up") + " • " + (orgVotes + (voted ? 1 : 0));
+			voteButton.classList.remove(voted ? unvotedClass : votedClass);
+			voteButton.classList.add(voted ? votedClass : unvotedClass);
+		}
+
+		updateVoteDisplay();
+
+		newWrap.addEventListener("click", function () {
+			voted = !voted;
+			updateVoteDisplay();
+
+			fetch(`${voteURL}?entity_key=${program.key}&vote_type=${voted ? 1 : 0}`, {
+				method: "POST",
+				headers: {	"X-KA-FKey": getCSRF()	}
+			}).then((response: Response): void => {
+				if (response.status !== 204) {
+					response.json().then((res: any): void => {
+						if (res.error) {
+							alert("Failed with error:\n\n" + res.error);
+							voted = !voted;
+							updateVoteDisplay();
+						}
+					});
+				}
+			});
+		});
+
+		if (wrap.parentNode) {
+			wrap.parentNode.insertBefore(newWrap, wrap);
+			wrap.parentNode.removeChild(wrap);
+		}
+	}).catch(console.error);
+}
+
 function keyboardShortcuts (program: Program): void {
 	document.addEventListener("keydown", (e: KeyboardEvent) : void => {
 		if (!e.ctrlKey || !e.altKey) { return; }
@@ -159,4 +220,4 @@ async function darkToggleButton () {
 
 darkTheme();
 
-export { addProgramDates, hideEditor, keyboardShortcuts, darkToggleButton };
+export { addProgramDates, hideEditor, keyboardShortcuts, darkToggleButton, replaceVoteButton };

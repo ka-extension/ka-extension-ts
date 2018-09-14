@@ -4,7 +4,7 @@ import { commentsButtonEventListener, commentsAddEditUI } from "./comment-data";
 import { addProgramFlags } from "./flag";
 import { addReportButton, addReportButtonDiscussionPosts, addProfileReportButton } from "./report";
 import { addUserInfo, addLocationInput } from "./profile";
-import { addProgramDates, hideEditor, keyboardShortcuts, darkToggleButton } from "./project";
+import { addProgramDates, hideEditor, keyboardShortcuts, darkToggleButton, replaceVoteButton } from "./project";
 import { deleteNotifButtons, updateNotifIndicator } from "./notif";
 
 class ExtensionImpl extends Extension {
@@ -13,6 +13,7 @@ class ExtensionImpl extends Extension {
 		addProgramFlags(program, kaid || "");
 		addProgramDates(program, kaid || "");
 		if (kaid) {
+			replaceVoteButton(program);
 			addReportButton(program, kaid);
 		}
 		hideEditor(program);
