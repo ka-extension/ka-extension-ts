@@ -1,4 +1,4 @@
-import { Program } from "./types/data";
+import { Program, UserProfileData } from "./types/data";
 import { formatDate } from "./util/text-util";
 import { PREFIX, DARK_THEME } from "./types/names";
 import { querySelectorPromise } from "./util/promise-util";
@@ -99,20 +99,21 @@ function hideEditor (program: Program): void {
 
 //Replace KA's vote button with one that updates after you vote and allows undoing votes
 function replaceVoteButton (program: Program): void {
-	querySelectorPromise(".discussion-meta-controls")
+	querySelectorPromise(".voting-wrap .discussion-meta-controls span")
 	.then(wrap => {
-		if (!wrap || !(wrap.firstChild as HTMLElement).innerText.includes("Vote")) {
+		if (!(wrap instanceof HTMLElement) || !wrap.innerText.includes("Vote")) {
+			console.log("Voting failed to load.", wrap, wrap.firstChild);
 			return;
 		}
 
-		wrap = wrap.firstChild!;
-
-		const unvotedClass =    "link_1uvuyao-o_O-computing_77ub1h";
-		const votedClass =      "link_1uvuyao-o_O-computing_1w8n1i8";
+		enum buttonClasses {
+			UNVOTED =	"link_1uvuyao-o_O-computing_77ub1h",
+			VOTED =		"link_1uvuyao-o_O-computing_1w8n1i8",
+		}
 
 		const voteURL = "https://www.khanacademy.org/api/internal/discussions/voteentity";
 
-		let voted = (wrap as HTMLElement).innerText.includes("Voted Up");
+		let voted = wrap.innerText.includes("Voted Up");
 
 		const orgVotes = program.sumVotesIncremented - (voted ? 1 : 0);
 
@@ -122,33 +123,44 @@ function replaceVoteButton (program: Program): void {
 		voteButton.appendChild(voteText);
 		newWrap.appendChild(voteButton);
 
-		function updateVoteDisplay() {
+		function updateVoteDisplay () {
 			voteText.innerText = (voted ? "Voted Up!" : "Vote Up") + " • " + (orgVotes + (voted ? 1 : 0));
-			voteButton.classList.remove(voted ? unvotedClass : votedClass);
-			voteButton.classList.add(voted ? votedClass : unvotedClass);
+			voteButton.classList.remove(voted ? buttonClasses.UNVOTED : buttonClasses.VOTED);
+			voteButton.classList.add(voted ? buttonClasses.VOTED : buttonClasses.UNVOTED);
 		}
 
 		updateVoteDisplay();
 
-		newWrap.addEventListener("click", function () {
-			voted = !voted;
-			updateVoteDisplay();
+		const profileData: UserProfileData | undefined = <UserProfileData> (window as any).KA._userProfileData;
+		if (!profileData || profileData.isPhantom) {
+			console.log("Not logged in.", voteButton);
+			voteButton.classList.remove(buttonClasses.VOTED);
+			voteButton.classList.add(buttonClasses.UNVOTED);
+			voteButton.setAttribute("style", "cursor: default !important");
+			voteButton.addEventListener("click", function () {
+				alert("You must be logged in in order to vote.");
+			})
+		}else {
+			newWrap.addEventListener("click", function () {
+				voted = !voted;
+				updateVoteDisplay();
 
-			fetch(`${voteURL}?entity_key=${program.key}&vote_type=${voted ? 1 : 0}`, {
-				method: "POST",
-				headers: {	"X-KA-FKey": getCSRF()	}
-			}).then((response: Response): void => {
-				if (response.status !== 204) {
-					response.json().then((res: any): void => {
-						if (res.error) {
-							alert("Failed with error:\n\n" + res.error);
-							voted = !voted;
-							updateVoteDisplay();
-						}
-					});
-				}
+				fetch(`${voteURL}?entity_key=${program.key}&vote_type=${voted ? 1 : 0}`, {
+					method: "POST",
+					headers: {	"X-KA-FKey": getCSRF()	}
+				}).then((response: Response): void => {
+					if (response.status !== 204) {
+						response.json().then((res: any): void => {
+							if (res.error) {
+								alert("Failed with error:\n\n" + res.error);
+								voted = !voted;
+								updateVoteDisplay();
+							}
+						});
+					}
+				});
 			});
-		});
+		}
 
 		if (wrap.parentNode) {
 			wrap.parentNode.insertBefore(newWrap, wrap);

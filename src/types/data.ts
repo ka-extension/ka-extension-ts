@@ -142,6 +142,7 @@ interface UserProfileData {
 	dateJoined: string;
 	kaid: string;
 	userLocation: UserLocation;
+	isPhantom: boolean;
 }
 
 interface KA {
