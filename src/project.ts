@@ -139,7 +139,7 @@ function replaceVoteButton (program: Program): void {
 			voteButton.setAttribute("style", "cursor: default !important");
 			voteButton.addEventListener("click", function () {
 				alert("You must be logged in in order to vote.");
-			})
+			});
 		}else {
 			newWrap.addEventListener("click", function () {
 				voted = !voted;

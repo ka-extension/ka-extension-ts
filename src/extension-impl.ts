@@ -12,8 +12,8 @@ class ExtensionImpl extends Extension {
 		const kaid = await getKaid();
 		addProgramFlags(program, kaid || "");
 		addProgramDates(program, kaid || "");
+		replaceVoteButton(program);
 		if (kaid) {
-			replaceVoteButton(program);
 			addReportButton(program, kaid);
 		}
 		hideEditor(program);
