@@ -40,22 +40,22 @@ body .wrap_xyqcvi {
 
 /** Hide editor feature **/
 .kae-hide-400 {
-  min-width: 400px !important;
-  width: 400px !important;
+    min-width: 400px !important;
+    width: 400px !important;
 }
 
 .kae-hide-500 {
-  min-width: 500px !important;
-  width: 500px !important;
+    min-width: 500px !important;
+    width: 500px !important;
 }
 
 .kae-hide-600 {
-  min-width: 600px !important;
-  width: 600px !important;
+    min-width: 600px !important;
+    width: 600px !important;
 }
 
-.kae-hide {
-  display: none !important;
+[class*="kae-hide-"] .kae-hide {
+    display: none !important;
 }
 
 .wrapScratchpadInner_poyjc {

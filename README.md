@@ -19,6 +19,7 @@ PRs are welcomed!
 * `npm run build` - build the extension
 * `npm run clean` - clean ./dist
 * `npm run lint` - check for linting errors
+* `npm run fix` - cleans up most linting errors automatically
 * `npm run release` - clean, build, and zip
 
 #### Thanks

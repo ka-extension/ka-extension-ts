@@ -55,6 +55,7 @@ interface Program {
 	flags: string[];
 	url: string;
 	sumVotesIncremented: number;
+	key: string;
 	isProject: boolean;
 	isProjectOrFork: boolean;
 	kaid: string;
@@ -141,6 +142,7 @@ interface UserProfileData {
 	dateJoined: string;
 	kaid: string;
 	userLocation: UserLocation;
+	isPhantom: boolean;
 }
 
 interface KA {
