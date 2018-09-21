@@ -1,4 +1,15 @@
 [
+	{
+		"version": "4.0.1",
+		"new": [
+			"Updated vote button with the ability to undo your votes",
+			"The extension has been released on <a href=\"https://addons.mozilla.org/addon/kae/\">FireFox</a>"
+		],
+		"fixes": [
+			"Fixed the toggle editor button in Chrome",
+			"Removed unused permissions"
+		]
+	},
     {
         "version": "4.0.0",
         "new": [
