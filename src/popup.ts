@@ -31,9 +31,9 @@ const loadingSpinner: HTMLElement | null = document.querySelector(".loading-spin
 const markRead: HTMLElement | null = document.querySelector(".mark-notifications-read");
 const loadMore: HTMLElement | null = document.querySelector(".notifications-button-more");
 
-function elementWithText (tag: string, text: string): HTMLElement {
+function elementWithHTML (tag: string, text: string): HTMLElement {
 	const element: HTMLElement = document.createElement(tag);
-	element.textContent = text;
+	element.innerHTML = text;
 	return element;
 }
 
@@ -46,8 +46,8 @@ function createOption (text: string, value: number): HTMLElement {
 
 function versionPage (i: number): void {
 	newFeatures!.innerHTML = fixes!.innerHTML = "";
-	log[i].new.map(e => elementWithText("li", e)).forEach(e => newFeatures!.appendChild(e));
-	log[i].fixes.map(e => elementWithText("li", e)).forEach(e => fixes!.appendChild(e));
+	log[i].new.map(e => elementWithHTML("li", e)).forEach(e => newFeatures!.appendChild(e));
+	log[i].fixes.map(e => elementWithHTML("li", e)).forEach(e => fixes!.appendChild(e));
 }
 
 function page (i: number): void {
