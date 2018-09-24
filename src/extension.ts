@@ -1,5 +1,6 @@
 import { UsernameOrKaid, Program } from "./types/data";
 import { getProgram } from "./util/api-util";
+import { querySelectorPromise } from "./util/promise-util";
 
 interface KAdefineResult {
 	data?: KAdefineData;
@@ -68,6 +69,7 @@ abstract class Extension {
 		console.info("Detailed discussion page");
 	}
 	abstract onProgramPage (program: Program): void | Promise<void>;
+	abstract onProgramAboutPage (program: Program): void | Promise<void>;
 	abstract onRepliesPage (uok: UsernameOrKaid): void | Promise<void>;
 	abstract onHotlistPage (): void;
 	abstract onProfilePage (uok: UsernameOrKaid): void;
@@ -93,7 +95,13 @@ abstract class Extension {
 					if (e.data && e.data.focusId && e.data.focusKind) {
 						this.onDetailedDiscussionPage(e.data.focusId, e.data.focusKind);
 						if (e.data.focusKind === "scratchpad") {
-							getProgram(e.data.focusId).then(e => this.onProgramPage(e));
+							getProgram(e.data.focusId).then(programData => {
+								this.onProgramPage(programData);
+								this.onProgramAboutPage(programData);
+								querySelectorPromise("#scratchpad-tabs").then(tabs => {
+									tabs.childNodes[0].addEventListener("click", () => this.onProgramAboutPage(programData));
+								});
+							});
 						}
 					}
 				}).catch(console.error);
