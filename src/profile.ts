@@ -94,9 +94,11 @@ function addLocationInput (uok: UsernameOrKaid): void {
 					locationInput.type = "text";
 					locationInput.id = "kae-location-input";
 					locationInput.value = locationData.displayText;
-					locationElement.parentNode && locationElement.parentNode.replaceChild(locationInput, locationElement);
 
-					const submitButton: HTMLAnchorElement = <HTMLAnchorElement>document.querySelectorAll(".modal-footer .kui-button")[1];
+					const parent = locationElement.parentNode as HTMLDivElement;
+					parent.replaceChild(locationInput, locationElement);
+
+					const submitButton: HTMLAnchorElement = <HTMLAnchorElement>document.querySelectorAll(".modal-footer button")[1];
 					submitButton.addEventListener("click", e => {
 						const bioLocation: HTMLDivElement = <HTMLDivElement>document.querySelector(".location-text");
 						bioLocation.textContent = locationInput.value;

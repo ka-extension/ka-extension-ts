@@ -36,6 +36,8 @@ class ExtensionImpl extends Extension {
 			addProfileReportButton(uok, kaid);
 		}
 		addUserInfo(uok);
+	}
+	async onHomePage (uok: UsernameOrKaid) {
 		addLocationInput(uok);
 	}
 	onHotlistPage () {
