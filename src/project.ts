@@ -40,30 +40,33 @@ function tableRow (key: string, val: string, title?: string): HTMLTableRowElemen
 	return tr;
 }
 
-function addProgramDates (program: Program, uok: string): void {
-	const profilePrograms: HTMLAnchorElement | null = <HTMLAnchorElement> document.querySelector(".profile-programs");
-	if (profilePrograms && profilePrograms.nextElementSibling) {
-		const updatedSpan: HTMLSpanElement = <HTMLSpanElement> profilePrograms.nextElementSibling;
-		const table = document.createElement("table");
-		table.className = "kae-table";
+function addProgramInfo (program: Program, uok: string): void {
+	querySelectorPromise(".profile-programs")
+	.then(profileLink => profileLink as HTMLAnchorElement)
+	.then(profileLink => {
+		if (profileLink && profileLink.nextElementSibling) {
+			const updatedSpan: HTMLSpanElement = <HTMLSpanElement> profileLink.nextElementSibling;
+			const table = document.createElement("table");
+			table.className = "kae-table";
 
-		const updated: string = formatDate(program.date);
-		const created: string = formatDate(program.created);
-		const hidden: boolean = program.hideFromHotlist;
-		const approved: boolean = program.definitelyNotSpam;
+			const updated: string = formatDate(program.date);
+			const created: string = formatDate(program.created);
+			const hidden: boolean = program.hideFromHotlist;
+			const approved: boolean = program.definitelyNotSpam;
 
-		if (program.kaid === uok){
-			table.appendChild(tableRow("Flags", program.flags.length.toString(), program.flags.join("\n")));
+			if (program.kaid === uok){
+				table.appendChild(tableRow("Flags", program.flags.length.toString(), program.flags.join("\n")));
+			}
+
+			table.appendChild(tableRow("Hidden from Hotlist", hidden ? "Yes" : "No"));
+			table.appendChild(tableRow("Guardian Approved", approved ? "Yes" : "No"));
+			if (updated !== created) {
+				table.appendChild(tableRow("Updated", updated));
+			}
+			table.appendChild(tableRow("Created", created));
+			updatedSpan.appendChild(table);
 		}
-
-		table.appendChild(tableRow("Hidden from Hotlist", hidden ? "Yes" : "No"));
-		table.appendChild(tableRow("Guardian Approved", approved ? "Yes" : "No"));
-		if (updated !== created) {
-			table.appendChild(tableRow("Updated", updated));
-		}
-		table.appendChild(tableRow("Created", created));
-		updatedSpan.appendChild(table);
-	}
+	});
 }
 
 function hideEditor (program: Program): void {
@@ -232,4 +235,4 @@ async function darkToggleButton () {
 
 darkTheme();
 
-export { addProgramDates, hideEditor, keyboardShortcuts, darkToggleButton, replaceVoteButton };
+export { addProgramInfo, hideEditor, keyboardShortcuts, darkToggleButton, replaceVoteButton };
