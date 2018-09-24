@@ -71,6 +71,7 @@ abstract class Extension {
 	abstract onRepliesPage (uok: UsernameOrKaid): void | Promise<void>;
 	abstract onHotlistPage (): void;
 	abstract onProfilePage (uok: UsernameOrKaid): void;
+	abstract onHomePage (uok: UsernameOrKaid): void;
 	abstract onPage (): void;
 	async init (): Promise<void> {
 		if (window.location.host.includes("khanacademy.org")) {
@@ -104,9 +105,15 @@ abstract class Extension {
 			if (this.url[3] === "profile" && !this.url[6]) {
 				const identifier: UsernameOrKaid = new UsernameOrKaid(this.url[4]);
 				this.onProfilePage(identifier);
+				this.onHomePage(identifier);
 			}
 
 			const kaid = await getKaid();
+			if (this.url.length <= 4) {
+				const identifier: UsernameOrKaid = new UsernameOrKaid(kaid as string);
+				this.onHomePage(identifier);
+			}
+
 			if (kaid !== null) {
 				window.postMessage({
 					type: "kaid",
