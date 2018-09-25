@@ -32,7 +32,7 @@ class ExtensionImpl extends Extension {
 		}
 		addUserInfo(uok);
 	}
-	async onHomePage (uok: UsernameOrKaid) {
+	onHomePage (uok: UsernameOrKaid) {
 		addLocationInput(uok);
 	}
 	onDetailedDiscussionPage (focusId: string, focusKind: string) {
@@ -46,6 +46,9 @@ class ExtensionImpl extends Extension {
 	onPage () {
 		deleteNotifButtons();
 		updateNotifIndicator();
+	}
+	onNewProgramPage () {
+		darkToggleButton();
 	}
 }
 
