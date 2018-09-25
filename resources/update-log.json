@@ -1,4 +1,13 @@
 [
+    {
+        "version": "4.0.2",
+        "new": [ "None" ],
+        "fixes": [
+            "Fixed location text editing",
+            "Dark theme toggle now appears when editing a new program",
+            "Program info now reloads when switching between editor tabs"
+        ]
+    },
 	{
 		"version": "4.0.1",
 		"new": [

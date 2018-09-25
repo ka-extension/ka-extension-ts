@@ -34,5 +34,5 @@ if [ -f $ZIP ]; then # overwrite check
 	rm $ZIP
 fi
 
-zip -r $ZIP dist popup resources styles/general.css images manifest.json -q # zip it all up
+zip -r $ZIP dist popup styles/general.css images manifest.json -q # zip it all up
 echo "Zipped! $MAN_VER is now ready."
