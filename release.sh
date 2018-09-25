@@ -26,6 +26,12 @@ if [ $NOTES_VER != $MAN_VER ]; then # mismatched version check
 	fi
 fi	
 
+if [ $1 == "--source" ]; then
+	git archive -o "$REL$MAN_VER.src.zip" HEAD
+	echo "Source code zipped!"
+	exit 0
+fi
+
 if [ -f $ZIP ]; then # overwrite check
 	check_overwrite "$MAN_VER.zip already exists, have you incremented the version?\nYou can overwrite [y] "
 	if [ $? != 0 ]; then
