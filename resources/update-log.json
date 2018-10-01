@@ -1,5 +1,12 @@
 [
     {
+        "version": "4.0.3",
+        "new": [ "None" ],
+        "fixes": [
+            "Fixed update log issue"
+        ]
+    },
+    {
         "version": "4.0.2",
         "new": [ "None" ],
         "fixes": [
