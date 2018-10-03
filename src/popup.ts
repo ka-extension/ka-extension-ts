@@ -98,7 +98,7 @@ function getAuthorNote (notif: Notification): string {
 		return `New Mission: <b>${escapeHTML(notif.missionName)}</b>`;
 	} else if (notif.translatedDisplayName && notif.class_.includes("RewardNotification")) {
 		/* New Reward (?) */
-		return `Reward Reward: <b>${escapeHTML(notif.translatedDisplayName)}</b>`;
+		return `New Reward: <b>${escapeHTML(notif.translatedDisplayName)}</b>`;
 	} else if (notif.iconSrc && notif.extendedDescription && notif.description) {
 		/* New Badge */
 		return `New Badge: <b>${escapeHTML(notif.description)}</b>`;
