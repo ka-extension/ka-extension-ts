@@ -61,68 +61,84 @@ function page (i: number): void {
 	navButtons![i % 2].setAttribute("style", "border-bottom: none; background: none;");
 }
 
-function isKAEvalPlead (notif: Notification): boolean {
-	return notif.class_.indexOf("PleaseEvalCsNotification") !== -1;
-}
-
-function isKAEvalReplyPlead (notif: Notification): boolean {
-	return notif.class_.indexOf("EvalEachotherNotification") !== -1;
-}
-
 function isModMessage (notif: Notification): boolean {
-	return notif.class_.indexOf("ModNotification") !== -1;
+	return notif.class_.includes("ModNotification");
+}
+
+function getImageSrc (notif: Notification): string {
+	if (isModMessage(notif)) {
+		return "../images/guardian.png";
+	}
+	return notif.iconSrc || notif.authorAvatarSrc || notif.topicIconUrl || notif.imageSource || "../images/hand.png";
+}
+
+function getContent (notif: Notification): string {
+	if (notif.content) {
+		return KAMarkdowntoHTML(escapeHTML(notif.content));
+	} else if (notif.text) {
+		return escapeHTML(notif.text);
+	} else {
+		console.error(`Possible Unhandled notif type: ${JSON.stringify(notif, null, 4)}`);
+		return "";
+	}
+}
+
+function getAuthorNote (notif: Notification): string {
+	if (notif.modNickname) {
+		/* Moderator Message */
+		return `<b>${escapeHTML(notif.modNickname)}</b> send you a guardian message:`;
+	} else if (notif.authorNickname) {
+		/* New Comment or Reply */
+		return `<b>${escapeHTML(notif.authorNickname)}</b> added a comment on <b>${escapeHTML(notif.translatedFocusTitle || notif.translatedScratchpadTitle || "")}</b>`;
+	} else if (notif.coachName && notif.contentTitle) {
+		/* Coach Assignment */
+		return `<b>${escapeHTML(notif.coachName)}</b> assigned you <b>${escapeHTML(notif.contentTitle)}</b>`;
+	} else if (notif.missionName && notif.class_.includes("ClassMissionNotification")) {
+		/* New Mission */
+		return `New Mission: <b>${escapeHTML(notif.missionName)}</b>`;
+	} else if (notif.translatedDisplayName && notif.class_.includes("RewardNotification")) {
+		/* New Reward (?) */
+		return `Reward Reward: <b>${escapeHTML(notif.translatedDisplayName)}</b>`;
+	} else if (notif.iconSrc && notif.extendedDescription && notif.description) {
+		/* New Badge */
+		return `New Badge: <b>${escapeHTML(notif.description)}</b>`;
+	}
+
+	return "";
+}
+
+interface NotifElm {
+	href: string;
+	imgSrc: string;
+	content: string;
+	date: string;
+	authorNote: string;
+}
+
+function genNotif (notif: NotifElm): string {
+	return notif.authorNote && `
+		<div class="new-notif">
+			<a target="_blank" href="${notif.href}">
+				<div class="notif-wrap">
+					<img class="notif-img" src="${notif.imgSrc}">
+					<p class="author-note">${notif.authorNote}</p>
+					${notif.content && `<p class="notif-content">${notif.content}</p>`}
+					<div class="notif-date">${notif.date}</div>
+				</div>
+			</a>
+		<div>
+	`;
 }
 
 function newNotif (notif: Notification): string {
-	// Depending on notification type, "<span> added a comment on </span>" will vary.
-	// See if notifs can have "mark read" button, and somehow mark them read individually.
-	// Unread notifs could have that green dot or have a slightly different style somehow.
-	return notif.notes && notif.notes.length > 0 ? notif.notes.map(newNotif).join("\n") :
-		`<a target="_blank" href="https://www.khanacademy.org/notifications/read?keys=${notif.urlsafeKey}&redirect_url=${notif.url || "/"}">
-			<div class="new-notif">
-				<img class="notif-img" src="${isModMessage(notif) && "../images/guardian.png" || (isKAEvalPlead(notif) ||
-					isKAEvalReplyPlead(notif)) && "../images/hand.png" || notif.iconSrc || notif.authorAvatarSrc ||
-					notif.topicIconUrl || notif.imageSource || "../images/blank.png"}">
-				<p class="notif-content">
-					${(() => {
-						if (isKAEvalPlead(notif)) {
-							return "<strong>Help one of your fellow students learn, evaluate a project today! → →</strong>";
-						} else if (isKAEvalReplyPlead(notif)) {
-							return "<strong>Now that your project has been evaluated, return the favor. Evaluate a peer today! → →</strong>";
-						} else if (notif.modNickname && notif.text) {
-							return `
-								<span><strong>${escapeHTML(notif.modNickname)}</strong> sent you a guardian message:</span><br />
-								<span>${KAMarkdowntoHTML(escapeHTML(notif.text) || "")}</span>`;
-						} else if (notif.authorNickname && (notif.translatedFocusTitle || notif.translatedScratchpadTitle) && notif.content) {
-							// 'added a comment on' should depend on notif type.
-							return `
-								<strong>${escapeHTML(notif.authorNickname)}</strong>
-								<span> added a comment on </span>
-								<strong>${escapeHTML(notif.translatedFocusTitle || notif.translatedScratchpadTitle || "")}</strong>:<br />
-								<span>${KAMarkdowntoHTML(escapeHTML(notif.content) || "")}</span>`;
-						} else if (notif.coachName && notif.contentTitle) {
-							return `
-								<strong>${escapeHTML(notif.coachName)}</strong> assigned you <strong>${escapeHTML(notif.contentTitle)}</strong>`;
-						} else if (notif.missionName && notif.class_.indexOf("ClassMissionNotification") !== -1) {
-							return `<strong>New Mission: ${escapeHTML(notif.missionName)}</strong>`;
-						} else if (notif.translatedDisplayName && notif.class_.indexOf("RewardNotification") !== -1) {
-							return `<strong>Reward Acquired: ${escapeHTML(notif.translatedDisplayName)}</strong>`;
-						} else if (notif.iconSrc && notif.extendedDescription && notif.description) {
-							return `
-								<strong>New Badge</strong>:<br />
-								<span>${escapeHTML(notif.description)}</span>`;
-						} else if (notif.text) {
-							console.info("INFO: Non-specific notif", notif);
-							return `<span>${escapeHTML(notif.text)}</span>`;
-						} else {
-							console.error(`ERROR: Unhandled notif type: ${JSON.stringify(notif, null, 4)}`);
-							return `<strong>Error processing notif.  Check console for details.</strong>`;
-						}
-					})()}
-				</p>
-				<div class="notif-date">${formatDate(notif.date)}</div>
-			</div>
-		</a>`;
+	const notifToReturn: NotifElm = {
+		href: `https://www.khanacademy.org/notifications/read?keys=${notif.urlsafeKey}&redirct_url=${notif.url || "/"}`,
+		imgSrc: getImageSrc(notif),
+		content: getContent(notif),
+		date: formatDate(notif.date),
+		authorNote: getAuthorNote(notif)
+	};
+	return genNotif(notifToReturn);
 }
 
 function fkeyNotFound () {
@@ -138,7 +154,13 @@ function displayNotifs (notifJson: NotifObj) {
 
 	loadingSpinner!.style.display = "none";
 	notifJson.notifications.forEach((notif: Notification) => {
-		notifsContainer!.innerHTML += newNotif(notif);
+		if (notif.notes) {
+			notif.notes.forEach((note: Notification) => {
+				notifsContainer!.innerHTML += newNotif(note);
+			});
+		} else {
+			notifsContainer!.innerHTML += newNotif(notif);
+		}
 	});
 	loadMore!.style.display = "block";
 }
@@ -184,7 +206,9 @@ generalNav!.addEventListener("click", e => currentPage > 0 && page(--currentPage
 notifsNav!.addEventListener("click", e => {
 	if (currentPage > log.length - 1) { return; }
 	page(++currentPage);
-	getNotifs();
+	if (document.getElementsByClassName("new-notif").length < 1) {
+		getNotifs();
+	}
 });
 loadMore!.addEventListener("click", e => {
 	getNotifs();

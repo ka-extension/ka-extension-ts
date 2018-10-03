@@ -4,7 +4,7 @@
     "module": "commonjs",
     "strict": true,
     "noImplicitAny": true,
-    "lib": [ "dom", "esnext.asynciterable", "es2015" ],
+    "lib": [ "dom", "esnext.asynciterable", "es2017" ],
     "esModuleInterop": true,
     "downlevelIteration": true,
     "outDir": "./dist/",

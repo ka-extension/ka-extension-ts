@@ -40,8 +40,6 @@ body {
 #header img {
     display: inline;
     vertical-align: -50%;
-    width: 30px;
-    height: 30px;
 }
 
 #header h2 {
@@ -116,10 +114,8 @@ li {
 
 .new-notif {
     padding: 10px;
+    padding-top: 2px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-flow: row wrap;
-    align-items: center;
 }
 
 .new-notif:hover {
@@ -131,16 +127,23 @@ li {
     margin-right: 10px;
     width: 40px;
     height: 40px;
+    float: left;
 }
 
 .notif-content {
-    flex: 1 0;
     font-weight: 10;
+    padding-left: 50px;
+}
+
+.author-note {
+    margin-bottom: -6px;
 }
 
 .notif-date {
-    flex: 1 100%;
     margin-left: 50px;
+    color: rgb(83, 83, 83);
+    font-size: 12px;
+    margin-top: 10px;
 }
 
 .loading-spinner {
