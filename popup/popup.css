@@ -10,13 +10,7 @@ body {
 }
 
 #header {
-    /* background: #1fab54; */
-    /* padding: 3% 4%; */
-    /* color: #FFFFFF; */
-    /* box-shadow: 1px 1px 2px #a5a5a5; */
     display: flex;
-    /* align-items: center; */
-    /* justify-content: space-between; */
 }
 
 #header .nav.button {
@@ -99,6 +93,7 @@ li {
 }
 .mark-notifications-read:hover {
     background: #3c9324;
+    cursor: pointer;
 }
 
 .unread-number {
@@ -116,6 +111,7 @@ li {
     padding: 10px;
     padding-top: 2px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    min-height: 56px;
 }
 
 .new-notif:hover {
@@ -133,17 +129,42 @@ li {
 .notif-content {
     font-weight: 10;
     padding-left: 50px;
+    color: #212121
 }
 
 .author-note {
-    margin-bottom: -6px;
+    margin-bottom: -10px;
+}
+
+.reply-text {
+    width: 88%;
+    margin-left: 50px;
+    margin-top: 5px;
+    resize: vertical;
+    min-height: 40px;
+    font-family: "Roboto", "arial", sans-serif;
+}
+
+.reply-button {
+    color: forestgreen !important;
+    margin-left: 50px;
+    font-size: 12px;
+}
+
+.reply-button:hover {
+    color: green !important;
+    cursor: pointer;
+}
+
+.hide {
+    display: none;
 }
 
 .notif-date {
     margin-left: 50px;
     color: rgb(83, 83, 83);
     font-size: 12px;
-    margin-top: 10px;
+    margin-top: -7px;
 }
 
 .loading-spinner {
