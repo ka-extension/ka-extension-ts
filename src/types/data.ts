@@ -155,10 +155,33 @@ interface NotifObj {
 	has_more: boolean;
 }
 
+interface FeedbackReply {
+	key: string;
+}
+
+interface FeedbackFocus {
+	topicUrl: string;
+}
+
+interface Feedback {
+	feedback: FeedbackReply[];
+	focus: FeedbackFocus;
+}
+
+interface NotifElm {
+	href: string;
+	imgSrc: string;
+	content: string;
+	date: string;
+	authorNote: string;
+	isComment: boolean;
+	programID: string;
+	feedback: string;
+}
 
 export {
 	InvalidUsernameOrKaid, IdType, UsernameOrKaid,
 	CommentSortType, Program, Notification,
 	Scratchpads, KA, UserLocation, UserProfileData,
-	NotifObj
+	NotifObj, Feedback, NotifElm
 };

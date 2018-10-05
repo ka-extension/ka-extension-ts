@@ -1,8 +1,8 @@
 import * as updateLog from "../resources/update-log.json";
 import { getChromeCookies, getChromeFkey } from "./util/cookie-util";
 import { formatDate, escapeHTML, KAMarkdowntoHTML } from "./util/text-util";
-import { CSRF_HEADER, COOKIE } from "./types/names";
-import { Notification, NotifObj } from "./types/data";
+import { CSRF_HEADER, COOKIE, API_ORIGIN } from "./types/names";
+import { Notification, NotifObj, Feedback, NotifElm } from "./types/data";
 
 interface LogEntry {
 	version: string;
@@ -77,6 +77,8 @@ function getContent (notif: Notification): string {
 		return KAMarkdowntoHTML(escapeHTML(notif.content));
 	} else if (notif.text) {
 		return escapeHTML(notif.text);
+	} else if (notif.extendedDescription) {
+		return escapeHTML(notif.extendedDescription);
 	} else {
 		console.error(`Possible Unhandled notif type: ${JSON.stringify(notif, null, 4)}`);
 		return "";
@@ -107,14 +109,6 @@ function getAuthorNote (notif: Notification): string {
 	return "";
 }
 
-interface NotifElm {
-	href: string;
-	imgSrc: string;
-	content: string;
-	date: string;
-	authorNote: string;
-}
-
 function genNotif (notif: NotifElm): string {
 	return notif.authorNote && `
 		<div class="new-notif">
@@ -126,8 +120,15 @@ function genNotif (notif: NotifElm): string {
 					<div class="notif-date">${notif.date}</div>
 				</div>
 			</a>
-		<div>
-	`;
+			${(() => {
+				if (!notif.isComment) { return ""; }
+				return `
+				<div class="reply" programID="${notif.programID}" feedback="${notif.feedback}">
+					<a class="reply-button">Reply</a>
+					<textarea class="reply-text hide"></textarea>
+				</div>`;
+			})()}
+		<div>`;
 }
 
 function newNotif (notif: Notification): string {
@@ -136,9 +137,68 @@ function newNotif (notif: Notification): string {
 		imgSrc: getImageSrc(notif),
 		content: getContent(notif),
 		date: formatDate(notif.date),
-		authorNote: getAuthorNote(notif)
+		authorNote: getAuthorNote(notif),
+		isComment: notif.feedbackIsComment || notif.feedbackIsReply || false,
+		programID: (() => {
+			const matches = notif.url.match(/(\d{10,16})/);
+			return matches ? matches[0] : "";
+		})(),
+		feedback: notif.feedback || ""
 	};
 	return genNotif(notifToReturn);
+}
+
+function addReplyListeners (): void {
+	const comments = document.getElementsByClassName("reply") as HTMLCollectionOf<HTMLDivElement>;
+	Array.from(comments).forEach(replyDiv => {
+		const replyButton = replyDiv.firstElementChild as HTMLAnchorElement;
+
+		replyButton.addEventListener("click", () => {
+
+			const buttonState = replyButton.textContent,
+						content = (replyDiv.lastElementChild as HTMLTextAreaElement).value,
+						notifProgram = replyDiv.getAttribute("programID"),
+						feedbackKey = replyDiv.getAttribute("feedback");
+
+			(replyDiv.lastElementChild as HTMLTextAreaElement).classList.toggle("hide");
+			if (buttonState !== "Send") { return replyButton.textContent = "Send"; }
+
+			replyButton.textContent = "Sending...";
+
+			fetch(`${API_ORIGIN}/discussions/scratchpad/${notifProgram}/comment?qa_expand_key=${feedbackKey}`)
+			.then(resp => resp.json())
+			.then(resp => resp as Feedback)
+			.then(resp => {
+				if (resp.feedback.length < 1) { return; }
+				const parentComment = resp.feedback[0],
+							parentFocus = resp.focus;
+
+				getChromeFkey().then(fkey => {
+					fetch(`${API_ORIGIN}/discussions/${parentComment.key}/replies`, {
+						method: "POST",
+						headers: {
+							[CSRF_HEADER]: fkey.toString(),
+							[COOKIE]: getChromeCookies(),
+							"content-type": "application/json"
+						},
+						body: JSON.stringify({
+							text: content,
+							topicSlug: parentFocus.topicUrl.replace("/", ""),
+						}),
+						credentials: "same-origin"
+					}).then(resp => {
+
+						if (resp.status !== 200) { return; }
+						replyButton.textContent = "Sent!";
+						setTimeout(() => {
+							replyButton.textContent = "Reply";
+						}, 1000);
+
+					}).catch(console.error);
+				}).catch(console.error);
+			}).catch(console.error);
+		});
+	});
 }
 
 function fkeyNotFound () {
@@ -180,6 +240,7 @@ function getNotifs () {
 		}).then((data: NotifObj): void => {
 			loadMore!.removeAttribute("disabled");
 			displayNotifs(data);
+			addReplyListeners();
 		}).catch(e => {
 			console.error(e);
 			loadMore!.removeAttribute("disabled");
