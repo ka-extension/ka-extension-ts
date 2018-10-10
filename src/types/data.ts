@@ -107,7 +107,7 @@ interface Notification {
 	read: boolean;
 	translatedFocusTitle?: string;
 	translatedScratchpadTitle?: string;
-	url: string;
+	url?: string;
 	urlsafeKey: string;
 	userId: string;
 	modNickname?: string;
