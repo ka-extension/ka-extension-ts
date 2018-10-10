@@ -29,7 +29,8 @@ const unreadNumber: HTMLElement | null = document.querySelector(".unread-number"
 const notifsContainer: HTMLElement | null = document.querySelector(".notifs-container");
 const loadingSpinner: HTMLElement | null = document.querySelector(".loading-spinner");
 const markRead: HTMLElement | null = document.querySelector(".mark-notifications-read");
-const loadMore: HTMLElement | null = document.querySelector(".notifications-button-more");
+
+const notifsPage: HTMLElement | null = document.querySelector(".notifications");
 
 function elementWithHTML (tag: string, text: string): HTMLElement {
 	const element: HTMLElement = document.createElement(tag);
@@ -140,6 +141,7 @@ function newNotif (notif: Notification): string {
 		authorNote: getAuthorNote(notif),
 		isComment: notif.feedbackIsComment || notif.feedbackIsReply || false,
 		programID: (() => {
+			if (!notif.url) { return ""; }
 			const matches = notif.url.match(/(\d{10,16})/);
 			return matches ? matches[0] : "";
 		})(),
@@ -222,11 +224,9 @@ function displayNotifs (notifJson: NotifObj) {
 			notifsContainer!.innerHTML += newNotif(notif);
 		}
 	});
-	loadMore!.style.display = "block";
 }
 
 function getNotifs () {
-	loadMore!.setAttribute("disabled", "true");
 	getChromeFkey().then(fkey => {
 		fetch(`https://www.khanacademy.org/api/internal/user/notifications/readable?cursor=${currentCursor}&casing=camel`, {
 			method: "GET",
@@ -238,12 +238,10 @@ function getNotifs () {
 		}).then((res: Response): (Promise<NotifObj> | NotifObj) => {
 			return res.json();
 		}).then((data: NotifObj): void => {
-			loadMore!.removeAttribute("disabled");
 			displayNotifs(data);
 			addReplyListeners();
 		}).catch(e => {
 			console.error(e);
-			loadMore!.removeAttribute("disabled");
 		});
 	}).catch(fkeyNotFound);
 }
@@ -271,9 +269,15 @@ notifsNav!.addEventListener("click", e => {
 		getNotifs();
 	}
 });
-loadMore!.addEventListener("click", e => {
-	getNotifs();
-});
+
+if (notifsPage) {
+	notifsPage.addEventListener("scroll", () => {
+		if (currentPage > 0 && notifsPage.scrollTop === (notifsPage.scrollHeight - notifsPage.offsetHeight)) {
+			getNotifs();
+		}
+	});
+}
+
 markRead!.addEventListener("click", e => {
 	markNotifsRead();
 });
