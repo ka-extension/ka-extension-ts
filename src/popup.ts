@@ -164,7 +164,7 @@ function addReplyListeners (): void {
 
 			(replyDiv.lastElementChild as HTMLTextAreaElement).classList.toggle("hide");
 			if (buttonState !== "Send") { return replyButton.textContent = "Send"; }
-
+			if (content.length < 1) { return replyButton.textContent = "Reply"; }
 			replyButton.textContent = "Sending...";
 
 			fetch(`${API_ORIGIN}/discussions/scratchpad/${notifProgram}/comment?qa_expand_key=${feedbackKey}`)
