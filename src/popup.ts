@@ -134,7 +134,7 @@ function genNotif (notif: NotifElm): string {
 
 function newNotif (notif: Notification): string {
 	const notifToReturn: NotifElm = {
-		href: `https://www.khanacademy.org/notifications/read?keys=${notif.urlsafeKey}&redirct_url=${notif.url || "/"}`,
+		href: `https://www.khanacademy.org/notifications/read?keys=${notif.urlsafeKey}&redirect_url=${notif.url || "/"}`,
 		imgSrc: getImageSrc(notif),
 		content: getContent(notif),
 		date: formatDate(notif.date),
