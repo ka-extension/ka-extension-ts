@@ -1,5 +1,16 @@
 [
     {
+        "version": "4.1.0",
+        "new": [
+            "You can now reply to notifications from within the popup",
+            "Overhaul of the notification page, with new styling and layout",
+            "Notifications page now uses infinite scrolling instead of the load more button"
+        ],
+        "fixes": [
+            "None"
+        ]
+    },
+    {
         "version": "4.0.3",
         "new": [ "None" ],
         "fixes": [

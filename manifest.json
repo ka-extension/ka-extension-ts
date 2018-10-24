@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "The Khan Academy Extension",
     "short_name": "The KA Extension",
-    "version": "4.0.3",
+    "version": "4.1.0",
     "description": "A Browser Extension for Khan Academy that adds more features to the site",
     "minimum_chrome_version": "33.0.1750",
     "icons": {
