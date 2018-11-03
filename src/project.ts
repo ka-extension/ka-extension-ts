@@ -114,8 +114,6 @@ function replaceVoteButton (program: Program): void {
 			return;
 		}
 
-
-
 		const voteURL = "https://www.khanacademy.org/api/internal/discussions/voteentity";
 
 		let voted = wrap.innerText.includes("Voted Up");
@@ -192,16 +190,16 @@ function addLinkButton (program: Program): void {
 			if ((window.navigator as any).clipboard) {
 				(window.navigator as any).clipboard.writeText(`https://khanacademy.org/cs/i/${program.id}`).catch((err: Error) => {
 					alert("Copying failed with error:\n" + err);
-				})
+				});
 			}else {
 				try {
-					var textArea = document.createElement("textarea");
+					const textArea = document.createElement("textarea");
 					textArea.value = `https://khanacademy.org/cs/i/${program.id}`;
 					copyLinkButton.parentElement!.insertBefore(textArea, copyLinkButton);
 					textArea.focus();
 					textArea.select();
 
-					document.execCommand('copy');
+					document.execCommand("copy");
 
 					copyLinkButton.parentElement!.removeChild(textArea);
 				} catch (err) {
@@ -211,15 +209,15 @@ function addLinkButton (program: Program): void {
 
 			copyLinkButton.classList.replace(BUTTON_CLASSES.default, BUTTON_CLASSES.active);
 			setTimeout(() => {
-				copyLinkButton.setAttribute('style', "transition: all 0.75s !important");
+				copyLinkButton.setAttribute("style", "transition: all 0.75s !important");
 				copyLinkButton.classList.replace(BUTTON_CLASSES.active, BUTTON_CLASSES.default);
 
-				setTimeout(() => copyLinkButton.setAttribute('style', ""), 0.75 * 1000);
+				setTimeout(() => copyLinkButton.setAttribute("style", ""), 0.75 * 1000);
 			}, 0.25 * 1000);
-		})
+		});
 
 		buttons.insertBefore(copyLinkButton, buttons.children[buttons.children.length-1]);
-	})
+	});
 }
 
 function keyboardShortcuts (program: Program): void {
