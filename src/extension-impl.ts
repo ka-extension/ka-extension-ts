@@ -4,7 +4,7 @@ import { commentsButtonEventListener, commentsAddEditUI } from "./comment-data";
 import { addProgramFlags } from "./flag";
 import { addReportButton, addReportButtonDiscussionPosts, addProfileReportButton } from "./report";
 import { addUserInfo, addLocationInput } from "./profile";
-import { addProgramInfo, hideEditor, keyboardShortcuts, darkToggleButton, replaceVoteButton } from "./project";
+import { addProgramInfo, hideEditor, keyboardShortcuts, darkToggleButton, addLinkButton, replaceVoteButton } from "./project";
 import { deleteNotifButtons, updateNotifIndicator } from "./notif";
 
 class ExtensionImpl extends Extension {
@@ -18,6 +18,7 @@ class ExtensionImpl extends Extension {
 		addReportButton(program, kaid);
 		addProgramInfo(program, kaid);
 		addProgramFlags(program, kaid);
+		addLinkButton(program);
 		replaceVoteButton(program);
 	}
 	async onRepliesPage (uok: UsernameOrKaid) {

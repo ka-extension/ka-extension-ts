@@ -8,6 +8,11 @@ import textmate from "../styles/ace-themes/textmate.css";
 
 const themes: { [key: string]: string } = {};
 
+const enum BUTTON_CLASSES {
+	default	= "link_1uvuyao-o_O-computing_77ub1h",
+	active	= "link_1uvuyao-o_O-computing_1w8n1i8",
+}
+
 const aceThemes = {
 	addTheme (themeName: string, css: string) {
 		themes[themeName] = css.replace(new RegExp("\\.ace-" + themeName, "ig"), ".ace-tm");
@@ -84,7 +89,7 @@ function hideEditor (program: Program): void {
 		hideDiv.id = "kae-hide-div";
 		hideButton.id = "kae-hide-button";
 		hideButton.href = "javascript:void(0)";
-		hideButton.className = "link_1uvuyao-o_O-computing_1w8n1i8";
+		hideButton.className = BUTTON_CLASSES.active;
 		hideButton.textContent = "Toggle Editor";
 		hideButton.addEventListener("click", () : void => {
 			lsEditorVal = lsEditorVal === "true" ? "false" : "true";
@@ -109,10 +114,7 @@ function replaceVoteButton (program: Program): void {
 			return;
 		}
 
-		enum buttonClasses {
-			UNVOTED =	"link_1uvuyao-o_O-computing_77ub1h",
-			VOTED =		"link_1uvuyao-o_O-computing_1w8n1i8",
-		}
+
 
 		const voteURL = "https://www.khanacademy.org/api/internal/discussions/voteentity";
 
@@ -128,8 +130,8 @@ function replaceVoteButton (program: Program): void {
 
 		function updateVoteDisplay () {
 			voteText.innerText = (voted ? "Voted Up!" : "Vote Up") + " • " + (orgVotes + (voted ? 1 : 0));
-			voteButton.classList.remove(voted ? buttonClasses.UNVOTED : buttonClasses.VOTED);
-			voteButton.classList.add(voted ? buttonClasses.VOTED : buttonClasses.UNVOTED);
+			voteButton.classList.remove(voted ? BUTTON_CLASSES.default : BUTTON_CLASSES.active);
+			voteButton.classList.add(voted ? BUTTON_CLASSES.active : BUTTON_CLASSES.default);
 		}
 
 		updateVoteDisplay();
@@ -137,8 +139,8 @@ function replaceVoteButton (program: Program): void {
 		const profileData: UserProfileData | undefined = <UserProfileData> (window as any).KA._userProfileData;
 		if (!profileData || profileData.isPhantom) {
 			console.log("Not logged in.", voteButton);
-			voteButton.classList.remove(buttonClasses.VOTED);
-			voteButton.classList.add(buttonClasses.UNVOTED);
+			voteButton.classList.remove(BUTTON_CLASSES.active);
+			voteButton.classList.add(BUTTON_CLASSES.default);
 			voteButton.setAttribute("style", "cursor: default !important");
 			voteButton.addEventListener("click", function () {
 				alert("You must be logged in in order to vote.");
@@ -170,6 +172,54 @@ function replaceVoteButton (program: Program): void {
 			wrap.parentNode.removeChild(wrap);
 		}
 	}).catch(console.error);
+}
+
+//Add a "Copy Link" button
+function addLinkButton (program: Program): void {
+	querySelectorPromise(".buttons_vponqv")
+	.then(buttons => buttons as HTMLDivElement)
+	.then(buttons => {
+		console.log(buttons);
+		const copyLinkButton: HTMLAnchorElement = document.createElement("a");
+		copyLinkButton.id = "kae-link-button";
+
+		copyLinkButton.setAttribute("role", "button");
+		copyLinkButton.innerHTML = "<span>Copy Link</span>";
+
+		copyLinkButton.classList.add(BUTTON_CLASSES.default);
+
+		copyLinkButton.addEventListener("click", function () {
+			if ((window.navigator as any).clipboard) {
+				(window.navigator as any).clipboard.writeText(`https://khanacademy.org/cs/i/${program.id}`).catch((err: Error) => {
+					alert("Copying failed with error:\n" + err);
+				})
+			}else {
+				try {
+					var textArea = document.createElement("textarea");
+					textArea.value = `https://khanacademy.org/cs/i/${program.id}`;
+					copyLinkButton.parentElement!.insertBefore(textArea, copyLinkButton);
+					textArea.focus();
+					textArea.select();
+
+					document.execCommand('copy');
+
+					copyLinkButton.parentElement!.removeChild(textArea);
+				} catch (err) {
+					alert("Copying failed with error:\n" + err);
+				}
+			}
+
+			copyLinkButton.classList.replace(BUTTON_CLASSES.default, BUTTON_CLASSES.active);
+			setTimeout(() => {
+				copyLinkButton.setAttribute('style', "transition: all 0.75s !important");
+				copyLinkButton.classList.replace(BUTTON_CLASSES.active, BUTTON_CLASSES.default);
+
+				setTimeout(() => copyLinkButton.setAttribute('style', ""), 0.75 * 1000);
+			}, 0.25 * 1000);
+		})
+
+		buttons.insertBefore(copyLinkButton, buttons.children[buttons.children.length-1]);
+	})
 }
 
 function keyboardShortcuts (program: Program): void {
@@ -235,4 +285,4 @@ async function darkToggleButton () {
 
 darkTheme();
 
-export { addProgramInfo, hideEditor, keyboardShortcuts, darkToggleButton, replaceVoteButton };
+export { addProgramInfo, hideEditor, keyboardShortcuts, darkToggleButton, replaceVoteButton, addLinkButton};
