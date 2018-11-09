@@ -41,31 +41,28 @@ function tableRow (key: string, val: string, title?: string): HTMLTableRowElemen
 }
 
 function addProgramInfo (program: Program, uok: string): void {
-	querySelectorPromise(".profile-programs")
-	.then(profileLink => profileLink as HTMLAnchorElement)
-	.then(profileLink => {
-		if (profileLink && profileLink.nextElementSibling) {
-			const updatedSpan: HTMLSpanElement = <HTMLSpanElement> profileLink.nextElementSibling;
-			const table = document.createElement("table");
-			table.className = "kae-table";
+	querySelectorPromise(".lastUpdated_9qi1wc")
+	.then(updatedSpan => updatedSpan as HTMLSpanElement)
+	.then(updatedSpan => {
+		const table = document.createElement("table");
+		table.className = "kae-table";
 
-			const updated: string = formatDate(program.date);
-			const created: string = formatDate(program.created);
-			const hidden: boolean = program.hideFromHotlist;
-			const approved: boolean = program.definitelyNotSpam;
+		const updated: string = formatDate(program.date);
+		const created: string = formatDate(program.created);
+		const hidden: boolean = program.hideFromHotlist;
+		const approved: boolean = program.definitelyNotSpam;
 
-			if (program.kaid === uok){
-				table.appendChild(tableRow("Flags", program.flags.length.toString(), program.flags.join("\n")));
-			}
-
-			table.appendChild(tableRow("Hidden from Hotlist", hidden ? "Yes" : "No"));
-			table.appendChild(tableRow("Guardian Approved", approved ? "Yes" : "No"));
-			if (updated !== created) {
-				table.appendChild(tableRow("Updated", updated));
-			}
-			table.appendChild(tableRow("Created", created));
-			updatedSpan.appendChild(table);
+		if (program.kaid === uok){
+			table.appendChild(tableRow("Flags", program.flags.length.toString(), program.flags.join("\n")));
 		}
+
+		table.appendChild(tableRow("Hidden from Hotlist", hidden ? "Yes" : "No"));
+		table.appendChild(tableRow("Guardian Approved", approved ? "Yes" : "No"));
+		if (updated !== created) {
+			table.appendChild(tableRow("Updated", updated));
+		}
+		table.appendChild(tableRow("Created", created));
+		updatedSpan.appendChild(table);
 	});
 }
 
