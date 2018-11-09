@@ -1,4 +1,5 @@
 import { Program } from "./types/data";
+import { KAdefine } from "./extension";
 import { formatDate } from "./util/text-util";
 import { PREFIX, DARK_THEME } from "./types/names";
 import { querySelectorPromise } from "./util/promise-util";
@@ -38,6 +39,20 @@ function tableRow (key: string, val: string, title?: string): HTMLTableRowElemen
 	tr.appendChild(valElm);
 
 	return tr;
+}
+
+function addProgramAuthorHoverCard (program: Program): void {
+	KAdefine.asyncRequire("./javascript/hover-card-package/hover-card.js").then(HoverCard => {
+		querySelectorPromise(".lastUpdated_9qi1wc").then((updatedSpan) => {
+			const nicknameAnchor = (updatedSpan.parentNode as HTMLDivElement).getElementsByClassName("shared_ko2ejt-o_O-default_1bzye1z")[0];
+			nicknameAnchor.addEventListener("mouseenter", function (this: HTMLAnchorElement) {
+				HoverCard.createHoverCardQtip!(this, {
+					my: "top left",
+					at: "bottom left"
+				});
+			});
+		});
+	});
 }
 
 function addProgramInfo (program: Program, uok: string): void {
@@ -160,4 +175,4 @@ async function darkToggleButton () {
 
 darkTheme();
 
-export { addProgramInfo, hideEditor, keyboardShortcuts, darkToggleButton };
+export { addProgramInfo, hideEditor, keyboardShortcuts, darkToggleButton, addProgramAuthorHoverCard };

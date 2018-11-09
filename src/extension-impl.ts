@@ -4,7 +4,7 @@ import { commentsButtonEventListener, commentsAddEditUI } from "./comment-data";
 import { addProgramFlags } from "./flag";
 import { addReportButton, addReportButtonDiscussionPosts, addProfileReportButton } from "./report";
 import { addUserInfo, addLocationInput } from "./profile";
-import { addProgramInfo, hideEditor, keyboardShortcuts, darkToggleButton } from "./project";
+import { addProgramInfo, hideEditor, keyboardShortcuts, darkToggleButton, addProgramAuthorHoverCard } from "./project";
 import { addLinkButton, replaceVoteButton } from "./buttons";
 import { deleteNotifButtons, updateNotifIndicator } from "./notif";
 
@@ -12,6 +12,7 @@ class ExtensionImpl extends Extension {
 	async onProgramPage (program: Program) {
 		hideEditor(program);
 		keyboardShortcuts(program);
+		addProgramAuthorHoverCard(program);
 		darkToggleButton();
 	}
 	async onProgramAboutPage (program: Program) {
