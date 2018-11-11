@@ -134,6 +134,29 @@ function darkTheme () {
 	document.body.appendChild(s);
 }
 
+function checkHiddenOrDeleted () {
+	const idMatch = window.location.href.split("/")[5].match(/^\d{10,16}/g);
+	if (!idMatch) return;
+	const id = idMatch[0];
+
+	const PROGRAM_API = "https://www.khanacademy.org/api/internal/scratchpads";
+
+	const textWrap = document.querySelector("#four-oh-four .textContainer_d4i2v")!;
+
+	const msg = document.createElement("div");
+	msg.style.marginTop = "25px";
+	msg.innerHTML = "Checking program...";
+	textWrap.appendChild(msg);
+	fetch(`${PROGRAM_API}/${id}?projection={}`).then((response: Response): void => {
+		if (response.status === 200) {
+			msg.innerHTML =  "This program actually exists.<br>";
+			msg.innerHTML += `<a style="color: white" href="${PROGRAM_API}/${id}?format=pretty">View API Data</a>`;
+		}else if (response.status === 404) {
+			msg.innerHTML = "This program is actually deleted.";
+		}
+	}).catch(console.error);
+}
+
 /*** Add a "Toggle Darkmode" button for programs ***/
 async function darkToggleButton () {
 	const rightArea = await querySelectorPromise(".right_piqaq3");
@@ -160,4 +183,4 @@ async function darkToggleButton () {
 
 darkTheme();
 
-export { addProgramInfo, hideEditor, keyboardShortcuts, darkToggleButton };
+export { addProgramInfo, hideEditor, keyboardShortcuts, darkToggleButton, checkHiddenOrDeleted };

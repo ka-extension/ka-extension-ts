@@ -76,6 +76,7 @@ abstract class Extension {
 	abstract onHomePage (uok: UsernameOrKaid): void;
 	abstract onNewProgramPage (): void;
 	abstract onPage (): void;
+	abstract onProgram404Page (): void;
 	async init (): Promise<void> {
 		if (window.location.host.includes("khanacademy.org")) {
 			this.onPage();
@@ -110,6 +111,17 @@ abstract class Extension {
 						}
 					}
 				}).catch(console.error);
+
+			if (/^\d{10,16}/.test(this.url[5])) {
+				console.log("Possible program");
+				querySelectorPromise("#page-container-inner", 100)
+				.then(pageContent => pageContent as HTMLDivElement)
+				.then(pageContent => {
+					if (pageContent.querySelector("#four-oh-four")) {
+						this.onProgram404Page();
+					}
+				}).catch(console.error);
+			}
 
 			if (this.url[5] === "browse") {
 				this.onHotlistPage();
