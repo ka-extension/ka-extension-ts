@@ -56,8 +56,25 @@ function addProgramInfo (program: Program, uok: string): void {
 			table.appendChild(tableRow("Flags", program.flags.length.toString(), program.flags.join("\n")));
 		}
 
-		table.appendChild(tableRow("Hidden from Hotlist", hidden ? "Yes" : "No"));
-		table.appendChild(tableRow("Guardian Approved", approved ? "Yes" : "No"));
+		//Hidden		 No | From Hotlist | Completely | Guardian Approved
+		const hiddenRow = table.appendChild(tableRow("Hidden?", hidden ? "From Hotlist" : (approved ? "Guardian Approved" : "No")));
+
+		const statusTd = hiddenRow.querySelector(".kae-td:last-child") as HTMLElement;
+		if (hidden) {
+			const programShowAPI = "https://www.khanacademy.org/api/internal/show_scratchpad?projection={}&scratchpad_id=";
+
+			fetch(programShowAPI + program.id).then((response: Response): void => {
+				if (response.status === 404) {
+					statusTd.innerHTML = "Completely";
+					statusTd.style.color = "red";
+				}
+			}).catch(console.error);
+
+			statusTd.style.color = "orange";
+		}else if (approved) {
+			statusTd.style.color = "green";
+		}
+
 		if (updated !== created) {
 			table.appendChild(tableRow("Updated", updated));
 		}
