@@ -153,7 +153,9 @@ function darkTheme () {
 
 function checkHiddenOrDeleted () {
 	const idMatch = window.location.href.split("/")[5].match(/^\d{10,16}/g);
-	if (!idMatch) return;
+	if (!idMatch) {
+		return;
+	}
 	const id = idMatch[0];
 
 	const PROGRAM_API = "https://www.khanacademy.org/api/internal/scratchpads";
