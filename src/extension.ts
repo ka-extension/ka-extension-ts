@@ -2,8 +2,14 @@ import { UsernameOrKaid, Program } from "./types/data";
 import { getProgram } from "./util/api-util";
 import { querySelectorPromise } from "./util/promise-util";
 
+interface HoverQtipOptions {
+	my: string;
+	at: string;
+}
+
 interface KAdefineResult {
 	data?: KAdefineData;
+	createHoverCardQtip?: (target: HTMLElement, options: HoverQtipOptions) => void;
 	getKaid? (): string;
 }
 
@@ -149,4 +155,4 @@ abstract class Extension {
 	}
 }
 
-export { Extension, getKaid };
+export { Extension, getKaid, KAdefine };
