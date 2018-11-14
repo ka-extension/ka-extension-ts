@@ -30,17 +30,12 @@ function replaceVoteButton (program: Program): void {
 
 		function updateVoteDisplay () {
 			voteText.innerText = (voted ? "Voted Up!" : "Vote Up") + " • " + (orgVotes + (voted ? 1 : 0));
-			voteButton.classList.remove(voted ? BUTTON_CLASSES.default : BUTTON_CLASSES.active);
-			voteButton.classList.add(voted ? BUTTON_CLASSES.active : BUTTON_CLASSES.default);
 		}
-
 		updateVoteDisplay();
 
 		const profileData: UserProfileData | undefined = <UserProfileData> (window as any).KA._userProfileData;
 		if (!profileData || profileData.isPhantom) {
 			console.log("Not logged in.", voteButton);
-			voteButton.classList.remove(BUTTON_CLASSES.active);
-			voteButton.classList.add(BUTTON_CLASSES.default);
 			voteButton.setAttribute("style", "cursor: default !important");
 			voteButton.addEventListener("click", function () {
 				alert("You must be logged in in order to vote.");
@@ -86,8 +81,6 @@ function addLinkButton (program: Program): void {
 		copyLinkButton.setAttribute("role", "button");
 		copyLinkButton.innerHTML = "<span>Copy Link</span>";
 
-		copyLinkButton.classList.add(BUTTON_CLASSES.default);
-
 		copyLinkButton.addEventListener("click", function () {
 			if ((window.navigator as any).clipboard) {
 				(window.navigator as any).clipboard.writeText(`https://khanacademy.org/cs/i/${program.id}`).catch((err: Error) => {
@@ -109,13 +102,6 @@ function addLinkButton (program: Program): void {
 				}
 			}
 
-			copyLinkButton.classList.replace(BUTTON_CLASSES.default, BUTTON_CLASSES.active);
-			setTimeout(() => {
-				copyLinkButton.setAttribute("style", "transition: all 0.75s !important");
-				copyLinkButton.classList.replace(BUTTON_CLASSES.active, BUTTON_CLASSES.default);
-
-				setTimeout(() => copyLinkButton.setAttribute("style", ""), 0.75 * 1000);
-			}, 0.25 * 1000);
 		});
 
 		buttons.insertBefore(copyLinkButton, buttons.children[buttons.children.length-1]);
