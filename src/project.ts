@@ -71,8 +71,25 @@ function addProgramInfo (program: Program, uok: string): void {
 			table.appendChild(tableRow("Flags", program.flags.length.toString(), program.flags.join("\n")));
 		}
 
-		table.appendChild(tableRow("Hidden from Hotlist", hidden ? "Yes" : "No"));
-		table.appendChild(tableRow("Guardian Approved", approved ? "Yes" : "No"));
+		//Hidden		 No | From Hotlist | Completely | Guardian Approved
+		const hiddenRow = table.appendChild(tableRow("Hidden?", hidden ? "From Hotlist" : (approved ? "Guardian Approved" : "No")));
+
+		const statusTd = hiddenRow.querySelector(".kae-td:last-child") as HTMLElement;
+		if (hidden) {
+			const programShowAPI = "https://www.khanacademy.org/api/internal/show_scratchpad?projection={}&scratchpad_id=";
+
+			fetch(programShowAPI + program.id).then((response: Response): void => {
+				if (response.status === 404) {
+					statusTd.innerHTML = "Completely";
+					statusTd.style.color = "red";
+				}
+			}).catch(console.error);
+
+			statusTd.style.color = "orange";
+		}else if (approved) {
+			statusTd.style.color = "green";
+		}
+
 		if (updated !== created) {
 			table.appendChild(tableRow("Updated", updated));
 		}
@@ -149,6 +166,31 @@ function darkTheme () {
 	document.body.appendChild(s);
 }
 
+function checkHiddenOrDeleted () {
+	const idMatch = window.location.href.split("/")[5].match(/^\d{10,16}/g);
+	if (!idMatch) {
+		return;
+	}
+	const id = idMatch[0];
+
+	const PROGRAM_API = "https://www.khanacademy.org/api/internal/scratchpads";
+
+	const textWrap = document.querySelector("#four-oh-four .textContainer_d4i2v")!;
+
+	const msg = document.createElement("div");
+	msg.style.marginTop = "25px";
+	msg.innerHTML = "Checking program...";
+	textWrap.appendChild(msg);
+	fetch(`${PROGRAM_API}/${id}?projection={}`).then((response: Response): void => {
+		if (response.status === 200) {
+			msg.innerHTML =  "This program actually exists.<br>";
+			msg.innerHTML += `<a style="color: white" href="${PROGRAM_API}/${id}?format=pretty">View API Data</a>`;
+		}else if (response.status === 404) {
+			msg.innerHTML = "This program is actually deleted.";
+		}
+	}).catch(console.error);
+}
+
 /*** Add a "Toggle Darkmode" button for programs ***/
 async function darkToggleButton () {
 	const rightArea = await querySelectorPromise(".right_piqaq3");
@@ -175,4 +217,4 @@ async function darkToggleButton () {
 
 darkTheme();
 
-export { addProgramInfo, hideEditor, keyboardShortcuts, darkToggleButton, addProgramAuthorHoverCard };
+export { addProgramInfo, hideEditor, keyboardShortcuts, darkToggleButton, checkHiddenOrDeleted, addProgramAuthorHoverCard };

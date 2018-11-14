@@ -4,7 +4,7 @@ import { commentsButtonEventListener, commentsAddEditUI } from "./comment-data";
 import { addProgramFlags } from "./flag";
 import { addReportButton, addReportButtonDiscussionPosts, addProfileReportButton } from "./report";
 import { addUserInfo, addLocationInput } from "./profile";
-import { addProgramInfo, hideEditor, keyboardShortcuts, darkToggleButton, addProgramAuthorHoverCard } from "./project";
+import { addProgramInfo, hideEditor, keyboardShortcuts, darkToggleButton, checkHiddenOrDeleted, addProgramAuthorHoverCard } from "./project";
 import { addLinkButton, replaceVoteButton } from "./buttons";
 import { deleteNotifButtons, updateNotifIndicator } from "./notif";
 
@@ -52,6 +52,9 @@ class ExtensionImpl extends Extension {
 	}
 	onNewProgramPage () {
 		darkToggleButton();
+	}
+	onProgram404Page () {
+		checkHiddenOrDeleted();
 	}
 }
 
