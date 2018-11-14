@@ -1,24 +1,47 @@
 #!/bin/bash
 
 REL="releases/"
-VER=$(grep -oP '"version"\s*:\s*"\K(\d.\d.\d)' manifest.json) # extract the version number
-ZIP="$REL$VER.zip"
+NOTES_VER=$(jq -r .[0].version resources/update-log.json) # update log version
+MAN_VER=$(jq -r .version manifest.json) # manifest version
+ZIP="$REL$MAN_VER.zip"
 
-if [ ! -d "$REL" ]; then # create release folder if needed
+if [ ! -d "$REL" ]; then # release folder check
 	mkdir $REL
 fi
 
-if [ -f $ZIP ]; then # overwrite check
-	printf "$VER.zip already exists, have you incremented the version? You can overwrite [y] "
-	read -r overwrite
-	if [ $overwrite == "y" ]; then
-		rm $ZIP
-		echo "$VER overwritten"
+check_overwrite () {
+	printf "$1"
+	read -r response
+	if [ $response == "y" ]; then
+		return 0
 	else
-		echo "Overwrite cancelled"
+		return 1
+	fi
+}
+
+if [ $NOTES_VER != $MAN_VER ]; then # mismatched version check
+	check_overwrite "Manifest and update log version numbers are mismatched, are they incremented?\nYou can overwrite [y] "
+	if [ $? != 0 ]; then
 		exit 1
+	fi
+fi	
+
+if [ $1 ]; then 
+	if [ $1 == "--source" ]; then
+		git archive -o "$REL$MAN_VER.src.zip" HEAD
+		echo "Source code zipped!"
+		exit 0
 	fi
 fi
 
-zip -r $ZIP dist popup resources styles/general.css images manifest.json -q # zip it all up
-echo "Zipped! $VER is now ready."
+
+if [ -f $ZIP ]; then # overwrite check
+	check_overwrite "$MAN_VER.zip already exists, have you incremented the version?\nYou can overwrite [y] "
+	if [ $? != 0 ]; then
+		exit 1
+	fi
+	rm $ZIP
+fi
+
+zip -r $ZIP dist popup styles/general.css images manifest.json -q # zip it all up
+echo "Zipped! $MAN_VER is now ready."

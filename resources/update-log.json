@@ -1,5 +1,43 @@
 [
     {
+        "version": "4.1.0",
+        "new": [
+            "You can now reply to notifications from within the popup",
+            "Overhaul of the notification page, with new styling and layout",
+            "Notifications page now uses infinite scrolling instead of the load more button"
+        ],
+        "fixes": [
+            "None"
+        ]
+    },
+    {
+        "version": "4.0.3",
+        "new": [ "None" ],
+        "fixes": [
+            "Fixed update log issue"
+        ]
+    },
+    {
+        "version": "4.0.2",
+        "new": [ "None" ],
+        "fixes": [
+            "Fixed location text editing",
+            "Dark theme toggle now appears when editing a new program",
+            "Program info now reloads when switching between editor tabs"
+        ]
+    },
+	{
+		"version": "4.0.1",
+		"new": [
+			"Updated vote button with the ability to undo your votes",
+			"The extension has been released on <a href=\"https://addons.mozilla.org/addon/kae/\">FireFox</a>"
+		],
+		"fixes": [
+			"Fixed the toggle editor button in Chrome",
+			"Removed unused permissions"
+		]
+	},
+    {
         "version": "4.0.0",
         "new": [
             "Complete TypeScript rewrite",

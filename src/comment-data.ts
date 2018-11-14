@@ -44,17 +44,17 @@ class CommentLinker {
 		return typeof this.comments[id] === "object" ?
 			`${this.comments[id].focusUrl}?qa_expand_key=${this.comments[id].expandKey}` : undefined;
 	}
-	getFlags (id: string) : string[] | undefined {
+	getFlags (id: string): string[] | undefined {
 		return typeof this.comments[id] === "object" ? this.comments[id].flags : undefined;
 	}
-	getAuthorKaid (id: string) : string | undefined {
+	getAuthorKaid (id: string): string | undefined {
 		return typeof this.comments[id] === "object" ? this.comments[id].authorKaid : undefined;
 	}
-	getFocusId (id: string) : string | undefined {
+	getFocusId (id: string): string | undefined {
 		return typeof this.comments[id] === "object"
 			? this.comments[id].focus.id : undefined;
 	}
-	getFocusType (id: string) : string | undefined {
+	getFocusType (id: string): string | undefined {
 		return typeof this.comments[id] === "object"
 			? this.comments[id].focus.kind : undefined;
 	}
@@ -72,15 +72,15 @@ function commentsButtonEventListener (uok: UsernameOrKaid, viewerKaid: string | 
 			commentLinkGenerator.next();
 			setInterval(() => {
 				const unalteredComments = document.querySelectorAll(`.discussion-item.reply:not(.${EXTENSION_COMMENT_CLASSNAME})`);
-				for(let i = 0; i < unalteredComments.length; i++) {
+				for (let i = 0; i < unalteredComments.length; i++) {
 					const comment = unalteredComments[i];
 					const metaControls = comment.querySelector(".discussion-meta-controls");
 					const flagControls = comment.querySelector(".flag-show");
 					const url = commentLinkGenerator.getUrl(comment.id);
 					const flags = commentLinkGenerator.getFlags(comment.id);
-					const focusId =  commentLinkGenerator.getFocusId(comment.id);
-					const focusType =  commentLinkGenerator.getFocusType(comment.id);
-					if(url && metaControls) {
+					const focusId = commentLinkGenerator.getFocusId(comment.id);
+					const focusType = commentLinkGenerator.getFocusType(comment.id);
+					if (url && metaControls) {
 						const separator = document.createElement("span");
 						separator.className = "discussion-meta-separator";
 						separator.textContent = "• ";
@@ -95,7 +95,7 @@ function commentsButtonEventListener (uok: UsernameOrKaid, viewerKaid: string | 
 						comment.className += ` ${EXTENSION_COMMENT_CLASSNAME}`;
 					}
 					if (flagControls && flags) {
-						flagControls.textContent =  `${flagControls.textContent === "Flagged" ?
+						flagControls.textContent = `${flagControls.textContent === "Flagged" ?
 							"Flagged" : "Flag"} (${flags.length})`;
 						flagControls.setAttribute("title", flags.join("\n"));
 					}
@@ -121,7 +121,7 @@ function commentsAddEditLink (focusId: string, focusKind: string, element: Eleme
 	const metaControls = element.getElementsByClassName("discussion-meta-controls")[0],
 		modTools = element.getElementsByClassName("mod-tools")[0];
 
-	if(!element || !element.className.includes("reply") || !metaControls || !modTools) { return; }
+	if (!element || !element.className.includes("reply") || !metaControls || !modTools) { return; }
 
 	const commentEditLink = document.createElement("a");
 
@@ -169,7 +169,7 @@ function commentsAddEditLink (focusId: string, focusKind: string, element: Eleme
 	const floatrights = [floatRightSpan.cloneNode(), floatRightSpan.cloneNode(), floatRightSpan.cloneNode()];
 	const correspondingElements = [cancel, orDivide, editBtn];
 
-	for(let i = 0; i < floatrights.length; i++) {
+	for (let i = 0; i < floatrights.length; i++) {
 		floatrights[i].appendChild(correspondingElements[i]);
 		discussionControl.appendChild(floatrights[i]);
 	}

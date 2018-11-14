@@ -22,12 +22,11 @@ body .wrap_xyqcvi {
     max-width: none !important;
 }
 
-/** Report button under programs **/
+/** Report button under programs and on profile pages **/
 #kae-report-button {
     text-decoration: none !important;
-    background: white;
-    border: 1px solid #ac3939;
-    color: #ac3939;
+    background: #c93f3f !important;
+    color: white !important;
     border-radius: 4px !important;
     display: inline-block !important;
     font-size: 15px !important;
@@ -38,24 +37,28 @@ body .wrap_xyqcvi {
     cursor: pointer;
 }
 
+#kae-report-button:hover {
+    background: #ac3030 !important;
+}
+
 /** Hide editor feature **/
 .kae-hide-400 {
-  min-width: 400px !important;
-  width: 400px !important;
+    min-width: 400px !important;
+    width: 400px !important;
 }
 
 .kae-hide-500 {
-  min-width: 500px !important;
-  width: 500px !important;
+    min-width: 500px !important;
+    width: 500px !important;
 }
 
 .kae-hide-600 {
-  min-width: 600px !important;
-  width: 600px !important;
+    min-width: 600px !important;
+    width: 600px !important;
 }
 
-.kae-hide {
-  display: none !important;
+[class*="kae-hide-"] .kae-hide {
+    display: none !important;
 }
 
 .wrapScratchpadInner_poyjc {
@@ -124,4 +127,26 @@ body .wrap_xyqcvi {
     background: #656565;
     -webkit-transition: 0.1s all;
     -webkit-user-select: none;
+}
+
+.link_1uvuyao-o_O-computing_1w8n1i8, .link_1uvuyao-o_O-computing_77ub1h {
+    border: 1px solid transparent !important;
+}
+
+.link_1uvuyao-o_O-computing_1w8n1i8, .link_1uvuyao-o_O-computing_77ub1h {
+    color: white !important;
+    background: #1865f2 !important;
+}
+
+.link_1uvuyao-o_O-computing_1w8n1i8:hover, .link_1uvuyao-o_O-computing_77ub1h:hover {
+    color: white !important;
+    background: #0f52cf !important;
+}
+
+.link_1uvuyao-o_O-computing_1uwg40u {
+    color: #1865f2 !important;
+}
+
+.link_1uvuyao-o_O-computing_1uwg40u:hover {
+    color: #0f52cf !important;
 }

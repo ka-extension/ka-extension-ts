@@ -1,5 +1,5 @@
 ## Khan Academy Extension
-### [![Install](https://developer.chrome.com/webstore/images/ChromeWebStore_Badge_v2_206x58.png)](https://chrome.google.com/webstore/detail/the-khan-academy-extensio/gniggljddhajnfbkjndcgnomkddfcial)
+### [![Install](https://developer.chrome.com/webstore/images/ChromeWebStore_Badge_v2_206x58.png)](https://chrome.google.com/webstore/detail/the-khan-academy-extensio/gniggljddhajnfbkjndcgnomkddfcial) [![Install](https://addons.cdn.mozilla.net/static/img/addons-buttons/AMO-button_1.png)](https://addons.mozilla.org/addon/kae)
 Khan Academy Extension is a browser extension for the computing section of [khanacademy](https://khanacademy.org).
 
 
@@ -19,7 +19,8 @@ PRs are welcomed!
 * `npm run build` - build the extension
 * `npm run clean` - clean ./dist
 * `npm run lint` - check for linting errors
-* `npm run release` - clean, build, and zip
+* `npm run fix` - cleans up most linting errors automatically
+* `npm run release` - clean, build, and zip (requires [jq](https://github.com/stedolan/jq))
 
 #### Thanks
 * [Matthias Saihttam](https://github.com/MatthiasSaihttam)

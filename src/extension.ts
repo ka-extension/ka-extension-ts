@@ -1,8 +1,15 @@
 import { UsernameOrKaid, Program } from "./types/data";
 import { getProgram } from "./util/api-util";
+import { querySelectorPromise } from "./util/promise-util";
+
+interface HoverQtipOptions {
+	my: string;
+	at: string;
+}
 
 interface KAdefineResult {
 	data?: KAdefineData;
+	createHoverCardQtip?: (target: HTMLElement, options: HoverQtipOptions) => void;
 	getKaid? (): string;
 }
 
@@ -68,10 +75,14 @@ abstract class Extension {
 		console.info("Detailed discussion page");
 	}
 	abstract onProgramPage (program: Program): void | Promise<void>;
+	abstract onProgramAboutPage (program: Program): void | Promise<void>;
 	abstract onRepliesPage (uok: UsernameOrKaid): void | Promise<void>;
 	abstract onHotlistPage (): void;
 	abstract onProfilePage (uok: UsernameOrKaid): void;
+	abstract onHomePage (uok: UsernameOrKaid): void;
+	abstract onNewProgramPage (): void;
 	abstract onPage (): void;
+	abstract onProgram404Page (): void;
 	async init (): Promise<void> {
 		if (window.location.host.includes("khanacademy.org")) {
 			this.onPage();
@@ -86,16 +97,37 @@ abstract class Extension {
 				this.onRepliesPage(identifier);
 			}
 
+			if (this.url[4] === "new" && /webpage|pjs|sql/ig.test(this.url[5])) {
+				this.onNewProgramPage();
+			}
+
 			KAdefine.asyncRequire(KAScripts.DISCUSSION, 100, (data: KAdefineResult) =>
 				typeof data.data !== "undefined" && typeof data.data.focusId !== "undefined" &&
 				typeof data.data.focusKind !== "undefined").then(e => {
 					if (e.data && e.data.focusId && e.data.focusKind) {
 						this.onDetailedDiscussionPage(e.data.focusId, e.data.focusKind);
 						if (e.data.focusKind === "scratchpad") {
-							getProgram(e.data.focusId).then(e => this.onProgramPage(e));
+							getProgram(e.data.focusId).then(programData => {
+								this.onProgramPage(programData);
+								this.onProgramAboutPage(programData);
+								querySelectorPromise("#scratchpad-tabs").then(tabs => {
+									tabs.childNodes[0].addEventListener("click", () => this.onProgramAboutPage(programData));
+								});
+							});
 						}
 					}
 				}).catch(console.error);
+
+			if (/^\d{10,16}/.test(this.url[5])) {
+				console.log("Possible program");
+				querySelectorPromise("#page-container-inner", 100)
+					.then(pageContent => pageContent as HTMLDivElement)
+					.then(pageContent => {
+						if (pageContent.querySelector("#four-oh-four")) {
+							this.onProgram404Page();
+						}
+					}).catch(console.error);
+			}
 
 			if (this.url[5] === "browse") {
 				this.onHotlistPage();
@@ -104,9 +136,15 @@ abstract class Extension {
 			if (this.url[3] === "profile" && !this.url[6]) {
 				const identifier: UsernameOrKaid = new UsernameOrKaid(this.url[4]);
 				this.onProfilePage(identifier);
+				this.onHomePage(identifier);
 			}
 
 			const kaid = await getKaid();
+			if (this.url.length <= 4) {
+				const identifier: UsernameOrKaid = new UsernameOrKaid(kaid as string);
+				this.onHomePage(identifier);
+			}
+
 			if (kaid !== null) {
 				window.postMessage({
 					type: "kaid",
@@ -117,4 +155,4 @@ abstract class Extension {
 	}
 }
 
-export { Extension, getKaid };
+export { Extension, getKaid, KAdefine };
