@@ -26,6 +26,7 @@ function replaceVoteButton (program: Program): void {
 			const voteButton = document.createElement("a");
 			const voteText = document.createElement("span");
 			voteButton.appendChild(voteText);
+			voteButton.classList.add(BUTTON_CLASSES.default);
 			newWrap.appendChild(voteButton);
 
 			function updateVoteDisplay () {
@@ -80,7 +81,7 @@ function addLinkButton (program: Program): void {
 
 			copyLinkButton.setAttribute("role", "button");
 			copyLinkButton.innerHTML = "<span>Copy Link</span>";
-
+			copyLinkButton.classList.add(BUTTON_CLASSES.default);
 			copyLinkButton.addEventListener("click", function () {
 				if ((window.navigator as any).clipboard) {
 					(window.navigator as any).clipboard.writeText(`https://khanacademy.org/cs/i/${program.id}`).catch((err: Error) => {
