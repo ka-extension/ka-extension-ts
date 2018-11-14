@@ -40,10 +40,10 @@ function deleteNotifButtons (): void {
 
 function updateNotifIndicator (): void {
 	querySelectorPromise(".notificationsBadge_1j1j5ke")
-	.then(greenCircle => {
-		const notifs: number = (window as any).KA._userProfileData.countBrandNewNotifications;
-		greenCircle.textContent = notifs.toString();
-	}).catch(console.error);
+		.then(greenCircle => {
+			const notifs: number = (window as any).KA._userProfileData.countBrandNewNotifications;
+			greenCircle.textContent = notifs.toString();
+		}).catch(console.error);
 }
 
 export { deleteNotifButtons, updateNotifIndicator };

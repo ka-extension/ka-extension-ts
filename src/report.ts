@@ -11,21 +11,21 @@ const downloader = new FileDownloader();
 
 function addReportButton (program: Program, kaid: string) {
 	querySelectorPromise(".buttons_vponqv")
-	.then(buttons => buttons as HTMLDivElement)
-	.then(buttons => {
-		if (kaid !== program.kaid) {
-			const reportButton: HTMLAnchorElement = document.createElement("a");
-			reportButton.id = "kae-report-button";
-			reportButton.href = `${QUEUE_ROOT}submit?${buildQuery({
-				type: "program",
-				id: program.id.toString(),
-				callback: window.location.href
-			})}`;
-			reportButton.setAttribute("role", "button");
-			reportButton.innerHTML = "<span>Report</span>";
-			buttons.insertBefore(reportButton, buttons.children[1]);
-		}
-	});
+		.then(buttons => buttons as HTMLDivElement)
+		.then(buttons => {
+			if (kaid !== program.kaid) {
+				const reportButton: HTMLAnchorElement = document.createElement("a");
+				reportButton.id = "kae-report-button";
+				reportButton.href = `${QUEUE_ROOT}submit?${buildQuery({
+					type: "program",
+					id: program.id.toString(),
+					callback: window.location.href
+				})}`;
+				reportButton.setAttribute("role", "button");
+				reportButton.innerHTML = "<span>Report</span>";
+				buttons.insertBefore(reportButton, buttons.children[1]);
+			}
+		});
 }
 
 async function addProfileReportButton (uok: UsernameOrKaid, loggedInKaid: string) {
@@ -58,13 +58,13 @@ function addReportButtonDiscussionPosts (focusId: string, focusKind: string) {
 	const items: NodeListOf<HTMLDivElement> = document.querySelectorAll(
 		`.question:not(.${EXTENSION_ITEM_CLASSNAME}),
 		.comment:not(.${EXTENSION_ITEM_CLASSNAME})`);
-	for(let i = 0; i < items.length; i++) {
+	for (let i = 0; i < items.length; i++) {
 		const item: HTMLDivElement = items[i];
 		const id: string = item.id;
-		if(id.length > 0) {
+		if (id.length > 0) {
 			const meta: HTMLDivElement | null = item.getElementsByClassName("discussion-meta-controls")
-				[0] as HTMLDivElement;
-			if(meta) {
+			[0] as HTMLDivElement;
+			if (meta) {
 				const separator: HTMLSpanElement = document.createElement("span");
 				separator.className = "discussion-meta-separator";
 				separator.textContent = "•";
@@ -79,7 +79,7 @@ function addReportButtonDiscussionPosts (focusId: string, focusKind: string) {
 				meta.appendChild(separator);
 				meta.appendChild(report);
 
-				if(item.classList.contains("comment") && typeof Blob !== "undefined" && typeof URL !== "undefined") {
+				if (item.classList.contains("comment") && typeof Blob !== "undefined" && typeof URL !== "undefined") {
 					meta.appendChild(separator.cloneNode(true));
 					const download: HTMLAnchorElement = document.createElement("a");
 					download.href = "#";
@@ -93,7 +93,7 @@ function addReportButtonDiscussionPosts (focusId: string, focusKind: string) {
 						const key: string | null = target.getAttribute("data-key"),
 							focusId: string | null = target.getAttribute("data-focus-id"),
 							focusKind: string | null = target.getAttribute("data-focus-kind");
-						if(key && focusId && focusKind) {
+						if (key && focusId && focusKind) {
 							getConvo(key, focusKind, focusId, DiscussionTypes.COMMENT)
 								.then(json => downloader.downloadJSON(json, `${id}.json`, true))
 								.catch(console.error);

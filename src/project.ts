@@ -24,14 +24,14 @@ aceThemes.addTheme("tm", textmate);
 function tableRow (key: string, val: string, title?: string): HTMLTableRowElement {
 	const tr = document.createElement("tr");
 
-	const keyElm: HTMLTableDataCellElement = <HTMLTableDataCellElement> document.createElement("td");
+	const keyElm: HTMLTableDataCellElement = <HTMLTableDataCellElement>document.createElement("td");
 	keyElm.className = "kae-td";
 
-	const valElm: HTMLTableDataCellElement = <HTMLTableCellElement> keyElm.cloneNode();
+	const valElm: HTMLTableDataCellElement = <HTMLTableCellElement>keyElm.cloneNode();
 	keyElm.textContent = key;
 	valElm.textContent = val;
 
-	if(title){
+	if (title) {
 		valElm.title = title;
 	}
 
@@ -57,71 +57,71 @@ function addProgramAuthorHoverCard (program: Program): void {
 
 function addProgramInfo (program: Program, uok: string): void {
 	querySelectorPromise(".lastUpdated_9qi1wc")
-	.then(updatedSpan => updatedSpan as HTMLSpanElement)
-	.then(updatedSpan => {
-		const table = document.createElement("table");
-		table.className = "kae-table";
+		.then(updatedSpan => updatedSpan as HTMLSpanElement)
+		.then(updatedSpan => {
+			const table = document.createElement("table");
+			table.className = "kae-table";
 
-		const updated: string = formatDate(program.date);
-		const created: string = formatDate(program.created);
-		const hidden: boolean = program.hideFromHotlist;
-		const approved: boolean = program.definitelyNotSpam;
+			const updated: string = formatDate(program.date);
+			const created: string = formatDate(program.created);
+			const hidden: boolean = program.hideFromHotlist;
+			const approved: boolean = program.definitelyNotSpam;
 
-		if (program.kaid === uok){
-			table.appendChild(tableRow("Flags", program.flags.length.toString(), program.flags.join("\n")));
-		}
+			if (program.kaid === uok) {
+				table.appendChild(tableRow("Flags", program.flags.length.toString(), program.flags.join("\n")));
+			}
 
-		//Hidden		 No | From Hotlist | Completely | Guardian Approved
-		const hiddenRow = table.appendChild(tableRow("Hidden?", hidden ? "From Hotlist" : (approved ? "Guardian Approved" : "No")));
+			//Hidden		 No | From Hotlist | Completely | Guardian Approved
+			const hiddenRow = table.appendChild(tableRow("Hidden?", hidden ? "From Hotlist" : (approved ? "Guardian Approved" : "No")));
 
-		const statusTd = hiddenRow.querySelector(".kae-td:last-child") as HTMLElement;
-		if (hidden) {
-			const programShowAPI = "https://www.khanacademy.org/api/internal/show_scratchpad?projection={}&scratchpad_id=";
+			const statusTd = hiddenRow.querySelector(".kae-td:last-child") as HTMLElement;
+			if (hidden) {
+				const programShowAPI = "https://www.khanacademy.org/api/internal/show_scratchpad?projection={}&scratchpad_id=";
 
-			fetch(programShowAPI + program.id).then((response: Response): void => {
-				if (response.status === 404) {
-					statusTd.innerHTML = "Completely";
-					statusTd.style.color = "red";
-				}
-			}).catch(console.error);
+				fetch(programShowAPI + program.id).then((response: Response): void => {
+					if (response.status === 404) {
+						statusTd.innerHTML = "Completely";
+						statusTd.style.color = "red";
+					}
+				}).catch(console.error);
 
-			statusTd.style.color = "orange";
-		}else if (approved) {
-			statusTd.style.color = "green";
-		}
+				statusTd.style.color = "orange";
+			} else if (approved) {
+				statusTd.style.color = "green";
+			}
 
-		if (updated !== created) {
-			table.appendChild(tableRow("Updated", updated));
-		}
-		table.appendChild(tableRow("Created", created));
-		updatedSpan.appendChild(table);
-	});
+			if (updated !== created) {
+				table.appendChild(tableRow("Updated", updated));
+			}
+			table.appendChild(tableRow("Created", created));
+			updatedSpan.appendChild(table);
+		});
 }
 
 function hideEditor (program: Program): void {
-	const wrap: HTMLDivElement | null = <HTMLDivElement> document.querySelector(".wrapScratchpad_1jkna7i");
+	const wrap: HTMLDivElement | null = <HTMLDivElement>document.querySelector(".wrapScratchpad_1jkna7i");
 	if (wrap && program.userAuthoredContentType !== "webpage") {
-		const editor: HTMLDivElement = <HTMLDivElement> document.querySelector(".scratchpad-editor-wrap");
+		const editor: HTMLDivElement = <HTMLDivElement>document.querySelector(".scratchpad-editor-wrap");
 		const lsEditorId: string = `${PREFIX}editor-hide`;
-		let lsEditorVal: string | null = <string> localStorage.getItem(lsEditorId);
+		let lsEditorVal: string | null = <string>localStorage.getItem(lsEditorId);
 		if (lsEditorVal && lsEditorVal === "true") {
 			editor.classList.toggle("kae-hide");
 			wrap.classList.toggle(`kae-hide-${program.width.toString()}`);
 		}
-		const hideDiv: HTMLDivElement = <HTMLDivElement> document.createElement("div");
-		const hideButton: HTMLAnchorElement = <HTMLAnchorElement> document.createElement("a");
+		const hideDiv: HTMLDivElement = <HTMLDivElement>document.createElement("div");
+		const hideButton: HTMLAnchorElement = <HTMLAnchorElement>document.createElement("a");
 		hideDiv.id = "kae-hide-div";
 		hideButton.id = "kae-hide-button";
 		hideButton.href = "javascript:void(0)";
 		hideButton.className = BUTTON_CLASSES.active;
 		hideButton.textContent = "Toggle Editor";
-		hideButton.addEventListener("click", () : void => {
+		hideButton.addEventListener("click", (): void => {
 			lsEditorVal = lsEditorVal === "true" ? "false" : "true";
 			localStorage.setItem(lsEditorId, lsEditorVal);
 			editor.classList.toggle("kae-hide");
 			wrap.classList.toggle(`kae-hide-${program.width.toString()}`);
 		});
-		const wrapParent: HTMLDivElement | null = <HTMLDivElement> wrap.parentNode;
+		const wrapParent: HTMLDivElement | null = <HTMLDivElement>wrap.parentNode;
 		if (wrapParent) {
 			hideDiv.appendChild(hideButton);
 			wrapParent.insertBefore(hideDiv, wrap);
@@ -130,16 +130,16 @@ function hideEditor (program: Program): void {
 }
 
 function keyboardShortcuts (program: Program): void {
-	document.addEventListener("keydown", (e: KeyboardEvent) : void => {
+	document.addEventListener("keydown", (e: KeyboardEvent): void => {
 		if (!e.ctrlKey || !e.altKey) { return; }
 		e.preventDefault();
-		switch(e.which) {
+		switch (e.which) {
 			case 82: // R - Restart program
-				const restartButton: HTMLAnchorElement | null = <HTMLAnchorElement> document.querySelector("#restart-code");
+				const restartButton: HTMLAnchorElement | null = <HTMLAnchorElement>document.querySelector("#restart-code");
 				if (restartButton) { restartButton.click(); }
 				break;
 			case 68: // D - Toggle documentation
-				const firstLink: HTMLAnchorElement | null = <HTMLAnchorElement> document.querySelector(".link_1uvuyao-o_O-tabTrigger_pbokdw-o_O-inactiveTab_1t8hj6j");
+				const firstLink: HTMLAnchorElement | null = <HTMLAnchorElement>document.querySelector(".link_1uvuyao-o_O-tabTrigger_pbokdw-o_O-inactiveTab_1t8hj6j");
 				if (firstLink) { firstLink.click(); }
 				break;
 			case 80: // P - Go to the profile of program creator
@@ -183,9 +183,9 @@ function checkHiddenOrDeleted () {
 	textWrap.appendChild(msg);
 	fetch(`${PROGRAM_API}/${id}?projection={}`).then((response: Response): void => {
 		if (response.status === 200) {
-			msg.innerHTML =  "This program actually exists.<br>";
+			msg.innerHTML = "This program actually exists.<br>";
 			msg.innerHTML += `<a style="color: white" href="${PROGRAM_API}/${id}?format=pretty">View API Data</a>`;
-		}else if (response.status === 404) {
+		} else if (response.status === 404) {
 			msg.innerHTML = "This program is actually deleted.";
 		}
 	}).catch(console.error);

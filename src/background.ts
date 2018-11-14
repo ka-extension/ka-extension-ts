@@ -41,26 +41,26 @@ setInterval((): void => {
 		fetch(`https://www.khanacademy.org/api/internal/user/profile?kaid=${kaid}&projection=${JSON.stringify({
 			countBrandNewNotifications: 1
 		})}`, {
-			method: "GET",
-			headers: {
-				[CSRF_HEADER]: fkey.toString(),
-				[COOKIE]: getChromeCookies()
-			},
-			credentials: "same-origin"
-		})
-		.then(res => res.json())
-		.then(data => data as UserProfileData)
-		.then(data => {
-			if(data.countBrandNewNotifications > 0){
+				method: "GET",
+				headers: {
+					[CSRF_HEADER]: fkey.toString(),
+					[COOKIE]: getChromeCookies()
+				},
+				credentials: "same-origin"
+			})
+			.then(res => res.json())
+			.then(data => data as UserProfileData)
+			.then(data => {
+				if (data.countBrandNewNotifications > 0) {
+					chrome.browserAction.setBadgeText({
+						text: data.countBrandNewNotifications.toString()
+					});
+					return;
+				}
 				chrome.browserAction.setBadgeText({
-					text: data.countBrandNewNotifications.toString()
+					text: ""
 				});
-				return;
-			}
-			chrome.browserAction.setBadgeText({
-				text: ""
-			});
-		}).catch(console.error);
+			}).catch(console.error);
 	}).catch(console.error);
 
 }, 750);

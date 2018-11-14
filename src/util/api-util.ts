@@ -4,7 +4,7 @@ import { getCSRF } from "./cookie-util";
 import { buildQuery } from "./text-util";
 import { UsernameOrKaid, CommentSortType, Program } from "../types/data";
 
-async function getJSON (url: URL | string, projection?: object) : Promise<object> {
+async function getJSON (url: URL | string, projection?: object): Promise<object> {
 	url = new URL(url.toString());
 	if (projection) {
 		url.searchParams.append("projection", JSON.stringify(projection));
@@ -18,7 +18,7 @@ async function getJSON (url: URL | string, projection?: object) : Promise<object
 	})
 		.then((response: Response): (Promise<Response> | Response) =>
 			response.status >= 200 && response.status < 300 ?
-			response : Promise.reject(response))
+				response : Promise.reject(response))
 		.catch((e => void console.error(e)));
 	if (response === undefined) {
 		throw new Error(`Error fetching ${url}`);
@@ -32,7 +32,7 @@ async function getJSON (url: URL | string, projection?: object) : Promise<object
 	return body;
 }
 
-async function putPostJSON (url: URL | string, json: object = {}, method: "PUT" | "POST" = "POST") : Promise<object> {
+async function putPostJSON (url: URL | string, json: object = {}, method: "PUT" | "POST" = "POST"): Promise<object> {
 	url = new URL(url.toString());
 
 	const response: Response | undefined = await fetch(url.toString(), {
@@ -46,7 +46,7 @@ async function putPostJSON (url: URL | string, json: object = {}, method: "PUT" 
 	})
 		.then((response: Response): (Promise<Response> | Response) =>
 			response.status >= 200 && response.status < 300 ?
-			response : Promise.reject(response))
+				response : Promise.reject(response))
 		.catch((e => void console.error(e)));
 	if (response === undefined) {
 		throw new Error(`Error fetching ${url}`);
@@ -96,7 +96,7 @@ if (Symbol.asyncIterator === undefined) {
 
 async function* commentDataGenerator (user: UsernameOrKaid, sort: CommentSortType = CommentSortType.TOP, limit: number = 10): AsyncIterator<CommentData[]> {
 	let page: number = 0;
-	for (;;) {
+	for (; ;) {
 		const body: CommentData[] | undefined = await getJSON(`${window.location.origin}/api/internal/user/replies?${buildQuery({
 			casing: "camel",
 			[user.type]: user.toString(),
@@ -106,21 +106,21 @@ async function* commentDataGenerator (user: UsernameOrKaid, sort: CommentSortTyp
 			page: (page++).toString(),
 			_: Date.now().toString()
 		})}`, [
-			{
-				normal: {
-					focusUrl: 1,
-					expandKey: 1,
-					key: 1,
-					flags: 1,
-					authorKaid: 1,
-					focus: {
-						id: 1,
-						kind: 1
+				{
+					normal: {
+						focusUrl: 1,
+						expandKey: 1,
+						key: 1,
+						flags: 1,
+						authorKaid: 1,
+						focus: {
+							id: 1,
+							kind: 1
+						}
 					}
 				}
-			}
-		]).then(e => e as CommentData[]).catch(e => void console.error(e));
-		if(!body) {
+			]).then(e => e as CommentData[]).catch(e => void console.error(e));
+		if (!body) {
 			return;
 		} else {
 			yield body;
@@ -175,21 +175,21 @@ function getConvo (key: string, focusKind: string, focusId: string, discussionTy
 			lang: "en",
 			_: Date.now() + ""
 		})}`, {
-			focus: {
-				relativeUrl: 1
-			},
-			feedback: [
-				{
-					normal: {
-						authorKaid: 1,
-						authorNickname: 1,
-						content: 1,
-						date: 1,
-						key: 1
+				focus: {
+					relativeUrl: 1
+				},
+				feedback: [
+					{
+						normal: {
+							authorKaid: 1,
+							authorNickname: 1,
+							content: 1,
+							date: 1,
+							key: 1
+						}
 					}
-				}
-			]
-		}).then(e => e as ConvoTATRaw),
+				]
+			}).then(e => e as ConvoTATRaw),
 		getJSON(`${window.location.origin}/api/internal/discussions/${key}/replies`, [
 			{
 				normal: {

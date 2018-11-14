@@ -121,12 +121,12 @@ abstract class Extension {
 			if (/^\d{10,16}/.test(this.url[5])) {
 				console.log("Possible program");
 				querySelectorPromise("#page-container-inner", 100)
-				.then(pageContent => pageContent as HTMLDivElement)
-				.then(pageContent => {
-					if (pageContent.querySelector("#four-oh-four")) {
-						this.onProgram404Page();
-					}
-				}).catch(console.error);
+					.then(pageContent => pageContent as HTMLDivElement)
+					.then(pageContent => {
+						if (pageContent.querySelector("#four-oh-four")) {
+							this.onProgram404Page();
+						}
+					}).catch(console.error);
 			}
 
 			if (this.url[5] === "browse") {

@@ -122,13 +122,13 @@ function genNotif (notif: NotifElm): string {
 				</div>
 			</a>
 			${(() => {
-				if (!notif.isComment) { return ""; }
-				return `
+			if (!notif.isComment) { return ""; }
+			return `
 				<div class="reply" programID="${notif.programID}" feedback="${notif.feedback}">
 					<a class="reply-button">Reply</a>
 					<textarea class="reply-text hide"></textarea>
 				</div>`;
-			})()}
+		})()}
 		<div>`;
 }
 
@@ -158,9 +158,9 @@ function addReplyListeners (): void {
 		replyButton.addEventListener("click", () => {
 
 			const buttonState = replyButton.textContent,
-						content = (replyDiv.lastElementChild as HTMLTextAreaElement).value,
-						notifProgram = replyDiv.getAttribute("programID"),
-						feedbackKey = replyDiv.getAttribute("feedback");
+				content = (replyDiv.lastElementChild as HTMLTextAreaElement).value,
+				notifProgram = replyDiv.getAttribute("programID"),
+				feedbackKey = replyDiv.getAttribute("feedback");
 
 			(replyDiv.lastElementChild as HTMLTextAreaElement).classList.toggle("hide");
 			if (buttonState !== "Send") { return replyButton.textContent = "Send"; }
@@ -168,37 +168,37 @@ function addReplyListeners (): void {
 			replyButton.textContent = "Sending...";
 
 			fetch(`${API_ORIGIN}/discussions/scratchpad/${notifProgram}/comment?qa_expand_key=${feedbackKey}`)
-			.then(resp => resp.json())
-			.then(resp => resp as Feedback)
-			.then(resp => {
-				if (resp.feedback.length < 1) { return; }
-				const parentComment = resp.feedback[0],
-							parentFocus = resp.focus;
+				.then(resp => resp.json())
+				.then(resp => resp as Feedback)
+				.then(resp => {
+					if (resp.feedback.length < 1) { return; }
+					const parentComment = resp.feedback[0],
+						parentFocus = resp.focus;
 
-				getChromeFkey().then(fkey => {
-					fetch(`${API_ORIGIN}/discussions/${parentComment.key}/replies`, {
-						method: "POST",
-						headers: {
-							[CSRF_HEADER]: fkey.toString(),
-							[COOKIE]: getChromeCookies(),
-							"content-type": "application/json"
-						},
-						body: JSON.stringify({
-							text: content,
-							topicSlug: parentFocus.topicUrl.replace("/", ""),
-						}),
-						credentials: "same-origin"
-					}).then(resp => {
+					getChromeFkey().then(fkey => {
+						fetch(`${API_ORIGIN}/discussions/${parentComment.key}/replies`, {
+							method: "POST",
+							headers: {
+								[CSRF_HEADER]: fkey.toString(),
+								[COOKIE]: getChromeCookies(),
+								"content-type": "application/json"
+							},
+							body: JSON.stringify({
+								text: content,
+								topicSlug: parentFocus.topicUrl.replace("/", ""),
+							}),
+							credentials: "same-origin"
+						}).then(resp => {
 
-						if (resp.status !== 200) { return; }
-						replyButton.textContent = "Sent!";
-						setTimeout(() => {
-							replyButton.textContent = "Reply";
-						}, 1000);
+							if (resp.status !== 200) { return; }
+							replyButton.textContent = "Sent!";
+							setTimeout(() => {
+								replyButton.textContent = "Reply";
+							}, 1000);
 
+						}).catch(console.error);
 					}).catch(console.error);
 				}).catch(console.error);
-			}).catch(console.error);
 		});
 	});
 }
@@ -284,7 +284,7 @@ markRead!.addEventListener("click", e => {
 
 log.forEach((e, i) => version!.appendChild(createOption(e.version, i)));
 version!.onchange = function (e): void {
-	versionPage(+(<HTMLInputElement> e.target).value);
+	versionPage(+(<HTMLInputElement>e.target).value);
 };
 
 versionPage(0);
