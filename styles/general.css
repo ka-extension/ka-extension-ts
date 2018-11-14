@@ -2,8 +2,14 @@
 body .video-discussion {
     float: left !important;
     margin: 0px !important;
+    margin-left: 25% !important;
     width: 50% !important;
+    max-width: unset !important;
     display: block;
+}
+
+.scratchpad-page .video-discussion .tab, .scratchpad-page .video-discussion .video-discussion-header {
+    max-width: unset !important;
 }
 
 body .footer_crtwg {
@@ -12,7 +18,7 @@ body .footer_crtwg {
 
 body .main-discussion-guidelines.discussion-guidelines {
     float: right !important;
-    width: 25% !important;
+    width: 20% !important;
     display: block !important;
     margin-top: 0px !important;
 }
