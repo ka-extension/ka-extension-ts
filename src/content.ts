@@ -3,17 +3,18 @@ import { MessageTypes } from "./types/message-types";
 (() => {
 	console.log("content.js fired");
 
-	const scriptTag: HTMLScriptElement = <HTMLScriptElement> document.createElement("script");
-	const firstScriptTag: HTMLScriptElement = <HTMLScriptElement> document.getElementsByTagName("script")[0];
+	const scriptTag: HTMLScriptElement = <HTMLScriptElement>document.createElement("script");
+	const firstScriptTag: HTMLScriptElement = <HTMLScriptElement>document.getElementsByTagName("script")[0];
 	scriptTag.src = chrome.extension.getURL("./dist/index.js");
 	scriptTag.type = "text/javascript";
 	firstScriptTag!.parentNode!.insertBefore(scriptTag, firstScriptTag);
 
-	const style: HTMLLinkElement = <HTMLLinkElement> document.createElement("link");
+	const style: HTMLLinkElement = <HTMLLinkElement>document.createElement("link");
 	style.rel = "stylesheet";
 	style.type = "text/css";
 	style.href = chrome.extension.getURL("styles/general.css");
-	(document.head || document.documentElement).appendChild(style);
+	const root = document.head || document.documentElement;
+	if (root) { root.appendChild(style); }
 
 	chrome.runtime.sendMessage({
 		type: MessageTypes.COLOUR_ICON
@@ -26,7 +27,7 @@ import { MessageTypes } from "./types/message-types";
 	});
 
 	window.addEventListener("message", e => {
-		if (!e.data.type){ return; }
+		if (!e.data.type) { return; }
 		console.log(e);
 		chrome.runtime.sendMessage({
 			type: e.data.type,

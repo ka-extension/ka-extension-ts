@@ -1,6 +1,6 @@
 function HTMLtoKAMarkdown (html: string): string {
 	return html
-		.replace(/<pre>\s*<code>([.\s\S]*?)<\/code>\s*<\/pre>/ig, (match, one) =>  "```\n" + one + "\n```")
+		.replace(/<pre>\s*<code>([.\s\S]*?)<\/code>\s*<\/pre>/ig, (match, one) => "```\n" + one + "\n```")
 		.replace(/<code>(.*?)<\/code>/ig, (match, one) => "`" + one + "`")
 		.replace(/<b>(.*?)<\/b>/ig, (match, one) => `*${one}*`)
 		.replace(/<em>(.*?)<\/em>/ig, (match, one) => `_${one}_`)
@@ -35,9 +35,9 @@ function urlUnencode (str: string): { [name: string]: string[]; } {
 	const params: { [name: string]: string[]; } = {};
 	const pairs: string[][] = str.split("&")
 		.map((e: string): string[] => e.split(/=(.+)/)
-		.filter((e: string): boolean => e.length > 0)
-		.map((e: string): string => decodeURIComponent(e.trim())));
-	pairs.forEach((e: string[]): void => void(params[e.shift() + ""] = e[0].split(",")));
+			.filter((e: string): boolean => e.length > 0)
+			.map((e: string): string => decodeURIComponent(e.trim())));
+	pairs.forEach((e: string[]): void => void (params[e.shift() + ""] = e[0].split(",")));
 	return params;
 }
 
