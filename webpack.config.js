@@ -29,6 +29,14 @@ module.exports = {
 					path.resolve(__dirname, "node_modules")
 				],
 				include: path.resolve(__dirname, "styles"),
+			},
+			{
+				test: /\.js$/,
+				use: ["cache-loader"],
+				exclude: [
+					path.resolve(__dirname, "node_modules")
+				],
+				include: path.resolve(__dirname, "scripts"),
 			}
 		]
 	},

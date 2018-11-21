@@ -1,25 +1,10 @@
 import { Program } from "./types/data";
 import { KAdefine } from "./extension";
 import { formatDate } from "./util/text-util";
-import { PREFIX, DARK_THEME } from "./types/names";
+import { PREFIX } from "./types/names";
 import { querySelectorPromise } from "./util/promise-util";
 import { BUTTON_CLASSES } from "./buttons";
-import monokai from "../styles/ace-themes/monokai.css";
-import textmate from "../styles/ace-themes/textmate.css";
-
-const themes: { [key: string]: string } = {};
-
-const aceThemes = {
-	addTheme (themeName: string, css: string) {
-		themes[themeName] = css.replace(new RegExp("\\.ace-" + themeName, "ig"), ".ace-tm");
-	},
-	getThemeCSS (themeName: string): string | null {
-		return themes[themeName];
-	}
-};
-
-aceThemes.addTheme("monokai", monokai);
-aceThemes.addTheme("tm", textmate);
+import { initSpade } from "../scripts/ace-spade.js";
 
 function tableRow (key: string, val: string, title?: string): HTMLTableRowElement {
 	const tr = document.createElement("tr");
@@ -149,23 +134,6 @@ function keyboardShortcuts (program: Program): void {
 	});
 }
 
-function darkTheme () {
-	const sid = "ka-extension-ace-override";
-
-	const prevStyle = document.getElementById(sid);
-	if (document.getElementById(sid) && prevStyle) {
-		document.body.removeChild(prevStyle);
-	}
-
-	const s = document.createElement("style");
-	s.id = sid;
-
-	const currentInd = parseInt(localStorage.getItem(DARK_THEME) || "0", 10);
-	s.innerHTML = aceThemes.getThemeCSS(currentInd ? "monokai" : "tm") || "";
-
-	document.body.appendChild(s);
-}
-
 function checkHiddenOrDeleted () {
 	const idMatch = window.location.href.split("/")[5].match(/^\d{10,16}/g);
 	if (!idMatch) {
@@ -191,30 +159,50 @@ function checkHiddenOrDeleted () {
 	}).catch(console.error);
 }
 
-/*** Add a "Toggle Darkmode" button for programs ***/
-async function darkToggleButton () {
+/*** Add a button to toggle Spade for programs ***/
+async function addSpade () {
 	const rightArea = await querySelectorPromise(".right_piqaq3");
+
+	const ace = (window as any).ace;
+
+	ace.config.set("basePath", "https://cdn.jsdelivr.net/gh/ajaxorg/ace-builds@1.1.4/src-min-noconflict");
+
+	if (!ace.require("ace/ext/language_tools")) {
+		var scriptEl = document.createElement("script");
+		scriptEl.setAttribute("src", "https://cdn.jsdelivr.net/gh/ajaxorg/ace-builds@1.1.4/src-min-noconflict/ext-language_tools.js");
+		scriptEl.addEventListener("load", function () {
+			ace.require("ace/ext/language_tools")
+		});
+		document.head.appendChild(scriptEl);
+	}else {
+		(window as any).ScratchpadAutosuggest.enableLiveCompletion = function () {};
+	}
 
 	const outerButtonSpan = document.createElement("span");
 	outerButtonSpan.className = "pull-right";
 
 	const innerButtonLink: HTMLAnchorElement = document.createElement("a");
-	innerButtonLink.id = "kae-toggle-dark";
-	innerButtonLink.href = "javascript:void(0)";
-	innerButtonLink.textContent = "Toggle Dark Theme";
-	innerButtonLink.addEventListener("mouseover", () => innerButtonLink.style.background = "#484848");
-	innerButtonLink.addEventListener("mouseout", () => innerButtonLink.style.background = "#656565");
-	innerButtonLink.addEventListener("click", () => {
-		const currentInd = parseInt(localStorage.getItem(DARK_THEME) || "0", 10);
-		const next = currentInd ^ 1;
-		localStorage.setItem(DARK_THEME, next.toString());
-		darkTheme();
-	});
+	innerButtonLink.id = "kae-toggle-spade";
+	innerButtonLink.classList.add("link_1uvuyao-o_O-computing_1w8n1i8");
+	innerButtonLink.innerHTML = "Toggle Editor Settings"
+
+	const editor = document.querySelector(".scratchpad-ace-editor") as HTMLElement;
+	ace.edit(editor).getSession().setMode(new (ace.require("ace/mode/javascript").Mode)());
+
+	const spade = initSpade(innerButtonLink, editor);
+
+	function repos () {
+		const pos = innerButtonLink.getBoundingClientRect();
+		spade.style.left = pos.left + pageXOffset + "px";
+		spade.style.top = pos.top + pageYOffset - 10 + "px";
+	}
+	innerButtonLink.addEventListener("click", repos);
+	window.addEventListener("resize", repos);
 
 	outerButtonSpan.appendChild(innerButtonLink);
 	rightArea.appendChild(outerButtonSpan);
+
+	document.body.appendChild(spade);
 }
 
-darkTheme();
-
-export { addProgramInfo, hideEditor, keyboardShortcuts, darkToggleButton, checkHiddenOrDeleted, addProgramAuthorHoverCard };
+export { addProgramInfo, hideEditor, keyboardShortcuts, addSpade, checkHiddenOrDeleted, addProgramAuthorHoverCard };
