@@ -167,3 +167,7 @@ body .wrap_xyqcvi {
     border: 1px solid #0f52cf !important;
     border-radius: 4px !important;
 }
+
+.kui-survey.session-survey {
+    display: none;
+}
