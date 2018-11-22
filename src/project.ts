@@ -168,10 +168,10 @@ async function addSpade () {
 	ace.config.set("basePath", "https://cdn.jsdelivr.net/gh/ajaxorg/ace-builds@1.1.4/src-min-noconflict");
 
 	if (!ace.require("ace/ext/language_tools")) {
-		var scriptEl = document.createElement("script");
+		const scriptEl = document.createElement("script");
 		scriptEl.setAttribute("src", "https://cdn.jsdelivr.net/gh/ajaxorg/ace-builds@1.1.4/src-min-noconflict/ext-language_tools.js");
 		scriptEl.addEventListener("load", function () {
-			ace.require("ace/ext/language_tools")
+			ace.require("ace/ext/language_tools");
 		});
 		document.head.appendChild(scriptEl);
 	}else {
@@ -184,7 +184,7 @@ async function addSpade () {
 	const innerButtonLink: HTMLAnchorElement = document.createElement("a");
 	innerButtonLink.id = "kae-toggle-spade";
 	innerButtonLink.classList.add("link_1uvuyao-o_O-computing_1w8n1i8");
-	innerButtonLink.innerHTML = "Toggle Editor Settings"
+	innerButtonLink.innerHTML = "Toggle Editor Settings";
 
 	const editor = document.querySelector(".scratchpad-ace-editor") as HTMLElement;
 	ace.edit(editor).getSession().setMode(new (ace.require("ace/mode/javascript").Mode)());
