@@ -187,7 +187,8 @@ async function addSpade () {
 	innerButtonLink.innerHTML = "Toggle Editor Settings";
 
 	const editor = document.querySelector(".scratchpad-ace-editor") as HTMLElement;
-	ace.edit(editor).getSession().setMode(new (ace.require("ace/mode/javascript").Mode)());
+	const session = ace.edit(editor).getSession();
+	session.setMode(new (ace.require(session.getMode().$id).Mode)());
 
 	const spade = addEditorSettings(innerButtonLink, editor);
 
