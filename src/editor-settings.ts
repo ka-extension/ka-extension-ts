@@ -11,20 +11,16 @@ const DEFAULT_SETTINGS = {
 };
 
 interface Option {
-	key: string | string[];
 	valueLabels?: string[];
 	values?: boolean[] | boolean[][] | string[] | number[];
 	label?: string;
 }
 
 class BoolRadio implements Option {
-	key: string;
 	valueLabels: string[];
 	values: boolean[];
 
-	constructor (key: string, values: { [valueLabel:string]: boolean }) {
-		this.key = key;
-
+	constructor (values: { [valueLabel:string]: boolean }) {
 		this.values = [];
 		this.valueLabels = [];
 		for (const valueLabel in values) {
@@ -35,13 +31,11 @@ class BoolRadio implements Option {
 }
 
 class Select implements Option {
-	key: string;
 	label: string;
 	valueLabels: string[];
 	values: boolean[] | boolean[][] | string[] | number[];
 
-	constructor (key:string, label: string) {
-		this.key = key;
+	constructor (label: string) {
 		this.label = label;
 
 		this.valueLabels = [];
@@ -53,8 +47,8 @@ class Select implements Option {
 class BoolSelect extends Select {
 	values: boolean[];
 
-	constructor (key:string, label: string, values: { [valueLabel:string]: boolean }) {
-		super(key, label);
+	constructor (label: string, values: { [valueLabel:string]: boolean }) {
+		super(label);
 
 		this.values = [];
 		for (const valueLabel in values) {
@@ -67,8 +61,8 @@ class BoolSelect extends Select {
 class TextSelect extends Select {
 	values: string[];
 
-	constructor (key:string, label: string, values: { [valueLabel:string]: string }) {
-		super(key, label);
+	constructor (label: string, values: { [valueLabel:string]: string }) {
+		super(label);
 
 		this.values = [];
 		for (const valueLabel in values) {
@@ -81,8 +75,8 @@ class TextSelect extends Select {
 class BoolSelectMultikey extends Select {
 	values: boolean[][];
 
-	constructor (key:string[], label: string, values: { [valueLabel:string]: boolean[] }) {
-		super(key.join(" "), label);
+	constructor (label: string, values: { [valueLabel:string]: boolean[] }) {
+		super(label);
 
 		this.values = [];
 		for (const valueLabel in values) {
@@ -96,8 +90,8 @@ class NumSelect extends Select {
 	valueLabels:string[];
 	values: number[];
 
-	constructor (key:string, label: string, values: number[]) {
-		super(key, label);
+	constructor (label: string, values: number[]) {
+		super(label);
 
 		this.values = values;
 		this.valueLabels = values.map((n:number) => n.toString());
@@ -105,32 +99,30 @@ class NumSelect extends Select {
 }
 
 class TextInput implements Option {
-	key: string;
 	label: string;
 	placeholder: string;
 
-	constructor (key:string, options: {label:string, placeholder:string}) {
-		this.key = key;
+	constructor (options: {label:string, placeholder:string}) {
 		this.label = options.label;
 		this.placeholder = options.placeholder;
 	}
 }
 
 const POSSIBLE_OPTIONS:{ [key:string]: Option } = {
-	wrap: new BoolRadio("wrap", {
+	wrap: new BoolRadio({
 		"Wrap": true,
 		"Scroll": false,
 	}),
-	useSoftTabs: new BoolRadio("useSoftTabs", {
+	useSoftTabs: new BoolRadio({
 		"Spaces": true,
 		"Tabs": false,
 	}),
-	tabSize: new NumSelect("tabSize", "Tab Width", [2, 4, 8]),
-	showInvisibles: new BoolSelect("showInvisibles", "Show Invisibles", {
+	tabSize: new NumSelect("Tab Width", [2, 4, 8]),
+	showInvisibles: new BoolSelect("Show Invisibles", {
 		"No": false,
 		"Yes": true
 	}),
-	"enableBasicAutocompletion enableLiveAutocompletion": new BoolSelectMultikey(["enableBasicAutocompletion", "enableLiveAutocompletion"],
+	"enableBasicAutocompletion enableLiveAutocompletion": new BoolSelectMultikey(
 		"Auto completion", {
 			"Off": [false, false],
 			"With ctrl+space": [true, false],
@@ -138,19 +130,19 @@ const POSSIBLE_OPTIONS:{ [key:string]: Option } = {
 		}),
 	//Double ", (, {, etc. KA screws with this a bit, which is why we create a new edit mode
 	//wrapBehaviours are when you select a word, then press " and it puts quotes around the word
-	"behavioursEnabled wrapBehavioursEnabled": new BoolSelectMultikey(["behavioursEnabled", "wrapBehavioursEnabled"],
+	"behavioursEnabled wrapBehavioursEnabled": new BoolSelectMultikey(
 		"Character pairs", {
 			"Off" : [false, false],
 			"Match Pair": [true, false],
 			"Match Pair and Wrap Selection": [true, true],
 		}),
-	theme: new TextSelect("theme", "Theme", {
+	theme: new TextSelect("Theme", {
 			"Textmate (Default)": "ace/theme/textmate",
 			"Tomorrow": "ace/theme/tomorrow",
 			"Tomorrow Night": "ace/theme/tomorrow_night",
 			"Monokai (Dark)": "ace/theme/monokai"
 		}),
-	fontFamily: new TextInput("fontFamily", {
+	fontFamily: new TextInput({
 		label: "Font",
 		placeholder: "fontFamily css"
 	}),
