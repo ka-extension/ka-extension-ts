@@ -4,7 +4,7 @@ import { formatDate } from "./util/text-util";
 import { PREFIX } from "./types/names";
 import { querySelectorPromise } from "./util/promise-util";
 import { BUTTON_CLASSES } from "./buttons";
-import { initSpade } from "../scripts/ace-spade.js";
+import { initSpade } from "./editor-settings";
 
 function tableRow (key: string, val: string, title?: string): HTMLTableRowElement {
 	const tr = document.createElement("tr");
