@@ -156,18 +156,18 @@ const POSSIBLE_OPTIONS:{ [key:string]: Option } = {
 	}),
 };
 
-let spadeCount = 0; //Used to give each instance an index, so that element id's don't conflict
+let editorSettingsCount = 0; //Used to give each instance an index, so that element id's don't conflict
 
 function loadOptions () {
 	try {
-		return JSON.parse(window.localStorage.spadeOptions);
+		return JSON.parse(window.localStorage.kaeEditorSettings);
 	}catch (e) {
 		return DEFAULT_SETTINGS;
 	}
 }
 
-function initSpade (toggleButton: HTMLElement, editor: HTMLElement) {
-	const spadeIndex = spadeCount++;
+function addEditorSettings (toggleButton: HTMLElement, editor: HTMLElement) {
+	const editorSettingsId = editorSettingsCount++;
 
 	const aceEditor = (window as any).ace.edit(editor);
 	const currentOptions = loadOptions();
@@ -175,10 +175,10 @@ function initSpade (toggleButton: HTMLElement, editor: HTMLElement) {
 	let toggledOn = false;
 	const container = createContainer();
 
-	function spadeUpdate (this: HTMLInputElement) {
+	function updateEditorSettings (this: HTMLInputElement) {
 		const row = this.parentNode!.parentNode as HTMLElement;
 
-		const option = row.dataset.spadeOption!;
+		const option = row.dataset.kaeEditorOption!;
 
 		const optionObj = POSSIBLE_OPTIONS[option];
 
@@ -204,7 +204,7 @@ function initSpade (toggleButton: HTMLElement, editor: HTMLElement) {
 			currentOptions[option] = value;
 		}
 
-		window.localStorage.spadeOptions = JSON.stringify(currentOptions);
+		window.localStorage.kaeEditorSettings = JSON.stringify(currentOptions);
 	}
 
 	function createContainer () {
@@ -216,7 +216,7 @@ function initSpade (toggleButton: HTMLElement, editor: HTMLElement) {
 
 			const optionObj = POSSIBLE_OPTIONS[option];
 			const rowEl = document.createElement("tr");
-			rowEl.dataset.spadeOption = option;
+			rowEl.dataset.kaeEditorOption = option;
 
 			if (optionObj.label) {
 				const tdEl = document.createElement("td");
@@ -225,8 +225,7 @@ function initSpade (toggleButton: HTMLElement, editor: HTMLElement) {
 
 				if (optionObj instanceof Select) {
 					const selectEl = document.createElement("select");
-					// selectEl.dataset.spadeType = optionObj.type || "TEXT_SELECT";
-					selectEl.addEventListener("change", spadeUpdate);
+					selectEl.addEventListener("change", updateEditorSettings);
 					let selectedIndex: number;
 
 					if (optionObj instanceof NumSelect) {
@@ -274,7 +273,7 @@ function initSpade (toggleButton: HTMLElement, editor: HTMLElement) {
 					inputEl.type = "text";
 					inputEl.placeholder = optionObj.placeholder;
 					inputEl.value = currentOptions[option];
-					inputEl.addEventListener("change", spadeUpdate);
+					inputEl.addEventListener("change", updateEditorSettings);
 					rowEl.appendChild(document.createElement("td")).appendChild(inputEl);
 				}
 			}else if (optionObj instanceof BoolRadio){
@@ -282,17 +281,16 @@ function initSpade (toggleButton: HTMLElement, editor: HTMLElement) {
 					const td = document.createElement("td");
 					const labelEl = document.createElement("label");
 					labelEl.innerHTML = optionObj.valueLabels[i];
-					labelEl.setAttribute("for", "spade-" + spadeIndex + "-" + optionObj.valueLabels[i].toLowerCase());
+					labelEl.setAttribute("for", `kae-es${editorSettingsId}-${optionObj.valueLabels[i].toLowerCase()}`);
 					const inputEl = document.createElement("input");
 					inputEl.value = optionObj.values[i].toString();
 					inputEl.type = "radio";
-					inputEl.id = "spade-" + spadeIndex + "-" + optionObj.valueLabels[i].toLowerCase();
-					inputEl.dataset.spadeType = "BOOL_SELECT";
-					inputEl.name = "spade-" + spadeIndex + "-" + option;
+					inputEl.id = `kae-es${editorSettingsId}-${optionObj.valueLabels[i].toLowerCase()}`;
+					inputEl.name = `kae-es${editorSettingsId}-${option}`;
 					if (currentOptions[option] === optionObj.values[i]) {
 						inputEl.checked = true;
 					}
-					inputEl.addEventListener("change", spadeUpdate);
+					inputEl.addEventListener("change", updateEditorSettings);
 					td.appendChild(inputEl);
 					rowEl.appendChild(td).appendChild(labelEl);
 				}
@@ -322,4 +320,4 @@ function initSpade (toggleButton: HTMLElement, editor: HTMLElement) {
 	return container;
 }
 
-export { initSpade };
+export { addEditorSettings };

@@ -4,7 +4,7 @@ import { formatDate } from "./util/text-util";
 import { PREFIX } from "./types/names";
 import { querySelectorPromise } from "./util/promise-util";
 import { BUTTON_CLASSES } from "./buttons";
-import { initSpade } from "./editor-settings";
+import { addEditorSettings } from "./editor-settings";
 
 function tableRow (key: string, val: string, title?: string): HTMLTableRowElement {
 	const tr = document.createElement("tr");
@@ -189,7 +189,7 @@ async function addSpade () {
 	const editor = document.querySelector(".scratchpad-ace-editor") as HTMLElement;
 	ace.edit(editor).getSession().setMode(new (ace.require("ace/mode/javascript").Mode)());
 
-	const spade = initSpade(innerButtonLink, editor);
+	const spade = addEditorSettings(innerButtonLink, editor);
 
 	function repos () {
 		const pos = innerButtonLink.getBoundingClientRect();
