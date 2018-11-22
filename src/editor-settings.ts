@@ -166,38 +166,6 @@ function loadOptions () {
     }
 }
 
-var s = document.createElement("style");
-s.innerHTML = "\
-.spade-container {\
-    display: block;\
-    position: absolute;\
-    border: 2px solid #D6D8DA;\
-    color: black;\
-    transform: translateY(-100%);\
-    text-align: left;\
-    border-radius: 2px;\
-    padding: 5px;\
-    background: #fff;\
-}\
-.spade-container table {\
-    border-collapse: separate;\
-    border-spacing: 5px;\
-}\
-.spade-container:before {\
-    border-top-color: transparent;\
-    background: #fff;\
-    padding: 8px;\
-    content: \"\";\
-    position: absolute;\
-    top: 100%;\
-    border-radius: 2px;\
-    border: 2px solid #D6D8DA;\
-    border-top-color: transparent;\
-    border-top-left-radius: 0;\
-    border-top-right-radius: 0;\
-}";
-document.head.appendChild(s);
-
 function initSpade (toggleButton: HTMLElement, editor: HTMLElement) {
     const spadeIndex = spadeCount++;
 
@@ -241,7 +209,7 @@ function initSpade (toggleButton: HTMLElement, editor: HTMLElement) {
 
     function createContainer () {
         var container = document.createElement("div");
-        container.classList.add("spade-container");
+        container.classList.add("kae-editor-settings");
         var table = document.createElement("table");
         for (var option in POSSIBLE_OPTIONS) {
             if (!POSSIBLE_OPTIONS.hasOwnProperty(option)) continue;
