@@ -39,9 +39,9 @@ class Select implements Option {
     key: string;
     label: string;
     valueLabels: string[];
-    values: boolean[] | string[];
+    values: boolean[] | boolean[][] | string[] | number[];
 
-    constructor(key:string, label: string, values: { [valueLabel:string]: boolean|string }) {
+    constructor(key:string, label: string) {
         this.key = key;
         this.label = label;
 
@@ -55,10 +55,9 @@ class BoolSelect extends Select {
     values: boolean[];
 
     constructor(key:string, label: string, values: { [valueLabel:string]: boolean }) {
-        super(key, label, values);
+        super(key, label);
 
         this.values = [];
-        this.valueLabels = [];
         for (const valueLabel in values) {
             this.values.push(values[valueLabel]);
             this.valueLabels.push(valueLabel);
@@ -70,10 +69,9 @@ class TextSelect extends Select {
     values: string[];
 
     constructor(key:string, label: string, values: { [valueLabel:string]: string }) {
-        super(key, label, values);
+        super(key, label);
 
         this.values = [];
-        this.valueLabels = [];
         for (const valueLabel in values) {
             this.values.push(values[valueLabel]);
             this.valueLabels.push(valueLabel);
@@ -81,18 +79,13 @@ class TextSelect extends Select {
     }
 }
 
-class BoolSelectMultikey implements Option {
-    key: string[];
-    label: string;
-    valueLabels: string[];
+class BoolSelectMultikey extends Select {
     values: boolean[][];
 
     constructor(key:string[], label: string, values: { [valueLabel:string]: boolean[] }) {
-        this.key = key;
-        this.label = label;
+        super(key.join(" "), label);
 
         this.values = [];
-        this.valueLabels = [];
         for (const valueLabel in values) {
             this.values.push(values[valueLabel]);
             this.valueLabels.push(valueLabel);
@@ -100,17 +93,13 @@ class BoolSelectMultikey implements Option {
     }
 }
 
-
-
-class NumSelect implements Option {
-    key: string;
-    label: string;
+class NumSelect extends Select {
     valueLabels:string[];
     values: number[];
 
     constructor(key:string, label: string, values: number[]) {
-        this.key = key;
-        this.label = label;
+        super(key, label);
+
         this.values = values;
         this.valueLabels = values.map((n:number) => n.toString());
     }
@@ -277,6 +266,7 @@ function initSpade (toggleButton: HTMLElement, editor: HTMLElement) {
                     // selectEl.dataset.spadeType = optionObj.type || "TEXT_SELECT";
                     selectEl.addEventListener("change", spadeUpdate);
                     let selectedIndex: number;
+
                     if (optionObj instanceof NumSelect) {
                         for (var i = 0; i < optionObj.values.length; i++) {
                             var optionEl = document.createElement("option");
@@ -292,7 +282,7 @@ function initSpade (toggleButton: HTMLElement, editor: HTMLElement) {
                             var optionEl = document.createElement("option");
                             optionEl.innerHTML = optionObj.valueLabels[i];
 
-                            optionEl.value = optionObj.key.join(" ");
+                            optionEl.value = optionObj.key;
 
                             //This reduce handles checking if the current values for the ace options controlled by the multiselect
                             //  match the values for the current possible value for the multiselect
