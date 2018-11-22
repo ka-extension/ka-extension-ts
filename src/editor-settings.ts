@@ -17,7 +17,6 @@ interface Option {
     label?: string;
 }
 
-
 class BoolRadio implements Option {
     key: string;
     valueLabels: string[];
@@ -159,16 +158,6 @@ const POSSIBLE_OPTIONS:{ [key:string]: Option } = {
 
 var spadeCount = 0; //Used to give each instance an index, so that element id's don't conflict
 
-function parseValue (type: string, value: string) {
-    switch (type) {
-        case "BOOL_SELECT":
-            return value === "true";
-        case "NUM_SELECT":
-            return parseFloat(value);
-    }
-    return value;
-}
-
 function loadOptions () {
     try {
         return JSON.parse(window.localStorage.spadeOptions);
@@ -223,9 +212,9 @@ function initSpade (toggleButton: HTMLElement, editor: HTMLElement) {
 
         var option = row.dataset.spadeOption!;
 
-        var type = this.dataset.spadeType;
+        const optionObj = POSSIBLE_OPTIONS[option];
 
-        if (type === "BOOL_SELECT_MULTIKEY") {
+        if (optionObj instanceof BoolSelectMultikey) {
             var values = this.value.split(" ");
             var options = option.split(" ");
 
@@ -235,7 +224,12 @@ function initSpade (toggleButton: HTMLElement, editor: HTMLElement) {
                 currentOptions[options[i]] = values[i] === "true";
             }
         }else {
-            var value = parseValue(type!, this.value);
+            let value:number|string|boolean = this.value;
+            if (optionObj instanceof NumSelect) {
+                value = parseFloat(value);
+            }else if (optionObj instanceof BoolSelect || optionObj instanceof BoolRadio) {
+                value = value === "true";
+            }
 
             aceEditor.setOption(option, value);
 
@@ -282,7 +276,7 @@ function initSpade (toggleButton: HTMLElement, editor: HTMLElement) {
                             var optionEl = document.createElement("option");
                             optionEl.innerHTML = optionObj.valueLabels[i];
 
-                            optionEl.value = optionObj.key;
+                            optionEl.value = optionObj.values[i].join(" ");
 
                             //This reduce handles checking if the current values for the ace options controlled by the multiselect
                             //  match the values for the current possible value for the multiselect
