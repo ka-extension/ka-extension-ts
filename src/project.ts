@@ -159,8 +159,8 @@ function checkHiddenOrDeleted () {
 	}).catch(console.error);
 }
 
-/*** Add a button to toggle Spade for programs ***/
-async function addSpade () {
+/*** Add a button to toggle the Editor Settings popup for programs ***/
+async function addEditorSettingsButton () {
 	const rightArea = await querySelectorPromise(".right_piqaq3");
 
 	const ace = (window as any).ace;
@@ -182,7 +182,7 @@ async function addSpade () {
 	outerButtonSpan.className = "pull-right";
 
 	const innerButtonLink: HTMLAnchorElement = document.createElement("a");
-	innerButtonLink.id = "kae-toggle-spade";
+	innerButtonLink.id = "kae-toggle-editor-settings";
 	innerButtonLink.classList.add("link_1uvuyao-o_O-computing_1w8n1i8");
 	innerButtonLink.innerHTML = "Toggle Editor Settings";
 
@@ -190,12 +190,12 @@ async function addSpade () {
 	const session = ace.edit(editor).getSession();
 	session.setMode(new (ace.require(session.getMode().$id).Mode)());
 
-	const spade = addEditorSettings(innerButtonLink, editor);
+	const editorSettings = addEditorSettings(innerButtonLink, editor);
 
 	function repos () {
 		const pos = innerButtonLink.getBoundingClientRect();
-		spade.style.left = pos.left + pageXOffset + "px";
-		spade.style.top = pos.top + pageYOffset - 10 + "px";
+		editorSettings.style.left = pos.left + pageXOffset + "px";
+		editorSettings.style.top = pos.top + pageYOffset - 10 + "px";
 	}
 	innerButtonLink.addEventListener("click", repos);
 	window.addEventListener("resize", repos);
@@ -203,7 +203,7 @@ async function addSpade () {
 	outerButtonSpan.appendChild(innerButtonLink);
 	rightArea.appendChild(outerButtonSpan);
 
-	document.body.appendChild(spade);
+	document.body.appendChild(editorSettings);
 }
 
-export { addProgramInfo, hideEditor, keyboardShortcuts, addSpade, checkHiddenOrDeleted, addProgramAuthorHoverCard };
+export { addProgramInfo, hideEditor, keyboardShortcuts, addEditorSettingsButton, checkHiddenOrDeleted, addProgramAuthorHoverCard };
