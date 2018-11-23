@@ -16,7 +16,7 @@ function replaceVoteButton (program: Program): void {
 				return;
 			}
 
-			const VOTE_URL = "https://www.khanacademy.org/api/internal/discussions/voteentity";
+			const VOTE_URL = "/api/internal/discussions/voteentity";
 
 			let voted = wrap.innerText.includes("Voted Up");
 
