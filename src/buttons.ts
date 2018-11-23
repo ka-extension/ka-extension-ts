@@ -56,10 +56,11 @@ function replaceVoteButton (program: Program): void {
 								if (res.error) {
 									alert("Failed with error:\n\n" + res.error);
 								}
+							}).catch(() => {
+								alert(`Voting failed with status ${response.status}`);
 							});
 							voted = !voted;
 							updateVoteDisplay();
-							alert(`Voting failed with status ${response.status}`);
 						}
 					}).catch(console.error);
 				});
