@@ -48,7 +48,8 @@ function replaceVoteButton (program: Program): void {
 
 					fetch(`${VOTE_URL}?entity_key=${program.key}&vote_type=${voted ? 1 : 0}`, {
 						method: "POST",
-						headers: { "X-KA-FKey": getCSRF() }
+						headers: { "X-KA-FKey": getCSRF() },
+						credentials: "same-origin"
 					}).then((response: Response): void => {
 						if (response.status !== 204) {
 							response.json().then((res: any): void => {
