@@ -55,10 +55,11 @@ function replaceVoteButton (program: Program): void {
 							response.json().then((res: any): void => {
 								if (res.error) {
 									alert("Failed with error:\n\n" + res.error);
-									voted = !voted;
-									updateVoteDisplay();
 								}
 							});
+							voted = !voted;
+							updateVoteDisplay();
+							alert(`Voting failed with status ${response.status}`);
 						}
 					}).catch(console.error);
 				});
