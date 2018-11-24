@@ -162,7 +162,7 @@ body .wrap_xyqcvi {
     text-align: center !important;
 }
 
-.link_1uvuyao-o_O-computing_77ub1h-o_O-disabled_2gos5 {
+.link_1uvuyao-o_O-computing_77ub1h-o_O-disabled_2gos5, .link_1uvuyao-o_O-computing_1w8n1i8-o_O-disabled_2gos5 {
     color: #0f52cf !important;
     border: 1px solid #0f52cf !important;
     border-radius: 4px !important;
@@ -170,4 +170,33 @@ body .wrap_xyqcvi {
 
 .kui-survey.session-survey {
     display: none;
+}
+
+.kae-editor-settings {
+    display: block;
+    position: absolute;
+    border: 2px solid #D6D8DA;
+    color: black;
+    transform: translateY(-100%);
+    text-align: left;
+    border-radius: 2px;
+    padding: 5px;
+    background: #fff;
+}
+.kae-editor-settings table {
+    border-collapse: separate;
+    border-spacing: 5px;
+}
+.kae-editor-settings:before {
+    border-top-color: transparent;
+    background: #fff;
+    padding: 8px;
+    content: "";
+    position: absolute;
+    top: 100%;
+    border-radius: 2px;
+    border: 2px solid #D6D8DA;
+    border-top-color: transparent;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 }

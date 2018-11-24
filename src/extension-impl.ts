@@ -4,7 +4,7 @@ import { commentsButtonEventListener, commentsAddEditUI } from "./comment-data";
 import { addProgramFlags } from "./flag";
 import { addReportButton, addReportButtonDiscussionPosts, addProfileReportButton } from "./report";
 import { addUserInfo, addLocationInput } from "./profile";
-import { addProgramInfo, hideEditor, keyboardShortcuts, darkToggleButton, checkHiddenOrDeleted, addProgramAuthorHoverCard } from "./project";
+import { addProgramInfo, hideEditor, keyboardShortcuts, addEditorSettingsButton, checkHiddenOrDeleted, addProgramAuthorHoverCard } from "./project";
 import { addLinkButton, replaceVoteButton } from "./buttons";
 import { deleteNotifButtons, updateNotifIndicator } from "./notif";
 
@@ -13,7 +13,7 @@ class ExtensionImpl extends Extension {
 		hideEditor(program);
 		keyboardShortcuts(program);
 		addProgramAuthorHoverCard(program);
-		darkToggleButton();
+		addEditorSettingsButton();
 	}
 	async onProgramAboutPage (program: Program) {
 		const kaid = await getKaid() as string;
@@ -51,7 +51,7 @@ class ExtensionImpl extends Extension {
 		updateNotifIndicator();
 	}
 	onNewProgramPage () {
-		darkToggleButton();
+		addEditorSettingsButton();
 	}
 	onProgram404Page () {
 		checkHiddenOrDeleted();
