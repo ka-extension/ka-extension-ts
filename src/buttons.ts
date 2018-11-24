@@ -16,7 +16,7 @@ function replaceVoteButton (program: Program): void {
 				return;
 			}
 
-			const VOTE_URL = "https://www.khanacademy.org/api/internal/discussions/voteentity";
+			const VOTE_URL = "/api/internal/discussions/voteentity";
 
 			let voted = wrap.innerText.includes("Voted Up");
 
@@ -48,16 +48,19 @@ function replaceVoteButton (program: Program): void {
 
 					fetch(`${VOTE_URL}?entity_key=${program.key}&vote_type=${voted ? 1 : 0}`, {
 						method: "POST",
-						headers: { "X-KA-FKey": getCSRF() }
+						headers: { "X-KA-FKey": getCSRF() },
+						credentials: "same-origin"
 					}).then((response: Response): void => {
 						if (response.status !== 204) {
 							response.json().then((res: any): void => {
 								if (res.error) {
 									alert("Failed with error:\n\n" + res.error);
-									voted = !voted;
-									updateVoteDisplay();
 								}
+							}).catch(() => {
+								alert(`Voting failed with status ${response.status}`);
 							});
+							voted = !voted;
+							updateVoteDisplay();
 						}
 					}).catch(console.error);
 				});
