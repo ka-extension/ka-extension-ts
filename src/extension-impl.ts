@@ -5,7 +5,7 @@ import { addProgramFlags } from "./flag";
 import { addReportButton, addReportButtonDiscussionPosts, addProfileReportButton } from "./report";
 import { addUserInfo, addLocationInput } from "./profile";
 import { addProgramInfo, hideEditor, keyboardShortcuts, addEditorSettingsButton, checkHiddenOrDeleted, addProgramAuthorHoverCard } from "./project";
-import { addLinkButton, replaceVoteButton } from "./buttons";
+import { addLinkButton, replaceVoteButton, evenlySpaceButtons } from "./buttons";
 import { deleteNotifButtons, updateNotifIndicator } from "./notif";
 
 class ExtensionImpl extends Extension {
@@ -22,6 +22,7 @@ class ExtensionImpl extends Extension {
 		addProgramFlags(program, kaid);
 		addLinkButton(program);
 		replaceVoteButton(program);
+		evenlySpaceButtons();
 	}
 	async onRepliesPage (uok: UsernameOrKaid) {
 		const kaid = await getKaid();
