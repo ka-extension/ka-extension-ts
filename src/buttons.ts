@@ -112,4 +112,17 @@ function addLinkButton (program: Program): void {
 		});
 }
 
-export { BUTTON_CLASSES, addLinkButton, replaceVoteButton };
+//Remove the text nodes that make the buttons unevenly spaced
+function evenlySpaceButtons ():void {
+	querySelectorPromise(".buttons_vponqv")
+		.then(buttons => buttons as HTMLDivElement)
+		.then(buttons => {
+			Array.from(buttons.childNodes).forEach(node => {
+				if (node.nodeType === Node.TEXT_NODE && node.textContent && /^\s+$/.test(node.textContent)) {
+					buttons.removeChild(node);
+				}
+			});
+		});
+}
+
+export { BUTTON_CLASSES, addLinkButton, replaceVoteButton, evenlySpaceButtons };
