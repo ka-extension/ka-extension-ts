@@ -123,6 +123,12 @@ function evenlySpaceButtons ():void {
 				}
 			});
 		});
+
+	querySelectorPromise(".voting-wrap .discussion-meta .discussion-meta-separator")
+		.then(separator => separator.parentElement as HTMLSpanElement)
+		.then(separator => {
+			separator.parentNode!.removeChild(separator);
+		});
 }
 
 export { BUTTON_CLASSES, addLinkButton, replaceVoteButton, evenlySpaceButtons };
