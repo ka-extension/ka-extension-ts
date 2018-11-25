@@ -135,37 +135,39 @@ body .wrap_xyqcvi {
     -webkit-user-select: none;
 }
 
-.link_1uvuyao-o_O-computing_1w8n1i8, .link_1uvuyao-o_O-computing_77ub1h {
+/* Make program buttons blue */
+/* 1w8n1i8 was the filled in buttons, 77ub1h was the outlined buttons; now they're filled in unless they're disabled */
+#page-container .link_1uvuyao-o_O-computing_1w8n1i8, #page-container .link_1uvuyao-o_O-computing_77ub1h {
     border: 1px solid transparent !important;
-}
-
-.link_1uvuyao-o_O-computing_1w8n1i8, .link_1uvuyao-o_O-computing_77ub1h {
     color: white !important;
     background: #1865f2 !important;
 }
 
-.link_1uvuyao-o_O-computing_1w8n1i8:hover, .link_1uvuyao-o_O-computing_77ub1h:hover {
+#page-container .link_1uvuyao-o_O-computing_1w8n1i8:hover, #page-container .link_1uvuyao-o_O-computing_77ub1h:hover {
     color: white !important;
     background: #0f52cf !important;
 }
 
-.link_1uvuyao-o_O-computing_1uwg40u {
+/* The color for the disabled elements gets handled by KA setting opacity 0.5 (here and below) */
+#page-container .link_1uvuyao-o_O-computing_77ub1h-o_O-disabled_2gos5, #page-container .link_1uvuyao-o_O-computing_1w8n1i8-o_O-disabled_2gos5 {
+    color: #0f52cf !important;
+    border: 1px solid #0f52cf !important;
+    border-radius: 4px !important;
+    background: white !important;
+}
+
+/* Make the sort selecting elements on the browse projects page blue */
+#page-container .link_1uvuyao-o_O-computing_1uwg40u, #page-container .link_1uvuyao-o_O-computing_1uwg40u-o_O-disabled_2gos5 {
     color: #1865f2 !important;
 }
 
-.link_1uvuyao-o_O-computing_1uwg40u:hover {
+#page-container .link_1uvuyao-o_O-computing_1uwg40u:hover {
     color: #0f52cf !important;
 }
 
 .scratchpad-page .titleAndLogo_1em9xw1 {
     display: block !important;
     text-align: center !important;
-}
-
-.link_1uvuyao-o_O-computing_77ub1h-o_O-disabled_2gos5, .link_1uvuyao-o_O-computing_1w8n1i8-o_O-disabled_2gos5 {
-    color: #0f52cf !important;
-    border: 1px solid #0f52cf !important;
-    border-radius: 4px !important;
 }
 
 .kui-survey.session-survey {
