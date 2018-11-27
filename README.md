@@ -3,7 +3,7 @@
 Khan Academy Extension is a browser extension for the computing section of [khanacademy](https://khanacademy.org).
 
 
-It is actively developed by [Jett Burns](https://github.com/jettburns14), [Ethan Luis McDonough](https://github.com/EthanLuisMcDonough), and [Luke Krikorian](https://github.com/lukekrikorian).
+It is actively developed by [Jett Burns](https://github.com/jettburns14), [Ethan Luis McDonough](https://github.com/EthanLuisMcDonough), [Matthias Saihttam](https://github.com/MatthiasSaihttam) and [Luke Krikorian](https://github.com/lukekrikorian).
 
 ### Contributing
 #### Run the extension locally:
@@ -23,6 +23,5 @@ PRs are welcomed!
 * `npm run release` - clean, build, and zip (requires [jq](https://github.com/stedolan/jq))
 
 #### Thanks
-* [Matthias Saihttam](https://github.com/MatthiasSaihttam)
 * [Scott Schraeder](https://github.com/CosignCosine)
 * [Literally Void](https://github.com/LiterallyVoid)
