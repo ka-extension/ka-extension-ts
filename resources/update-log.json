@@ -1,5 +1,16 @@
 [
     {
+        "version": "4.3.0",
+        "new": [
+            "New editor settings tab, with several different customizable editor settings",
+            "Extension now hides old KA user survey popup"
+        ],
+        "fixes": [
+            "Improved button styling for Chrome",
+            "Vote button fixes for early versions of Chrome"
+        ]
+    },
+    {
         "version": "4.2.0",
         "new": [
             "Copy link button on program pages copies a shortened link to the program",
