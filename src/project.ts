@@ -161,7 +161,7 @@ function checkHiddenOrDeleted () {
 
 /*** Add a button to toggle the Editor Settings popup for programs ***/
 async function addEditorSettingsButton () {
-	const rightArea = await querySelectorPromise(".right_piqaq3");
+	const leftArea = await querySelectorPromise(".default_olfzxm-o_O-leftColumn_qf2u39");
 
 	const ace = (window as any).ace;
 
@@ -178,12 +178,9 @@ async function addEditorSettingsButton () {
 		(window as any).ScratchpadAutosuggest.enableLiveCompletion = function () {};
 	}
 
-	const outerButtonSpan = document.createElement("span");
-	outerButtonSpan.className = "pull-right";
-
 	const innerButtonLink: HTMLAnchorElement = document.createElement("a");
 	innerButtonLink.id = "kae-toggle-editor-settings";
-	innerButtonLink.classList.add("link_1uvuyao-o_O-computing_1w8n1i8");
+	innerButtonLink.classList.add("button_1eqj1ga-o_O-shared_acgh35-o_O-default_9fm203-o_O-toolbarButton_em2kam");
 	innerButtonLink.innerHTML = "Toggle Editor Settings";
 
 	const editor = document.querySelector(".scratchpad-ace-editor") as HTMLElement;
@@ -200,8 +197,7 @@ async function addEditorSettingsButton () {
 	innerButtonLink.addEventListener("click", repos);
 	window.addEventListener("resize", repos);
 
-	outerButtonSpan.appendChild(innerButtonLink);
-	rightArea.appendChild(outerButtonSpan);
+	leftArea.appendChild(innerButtonLink);
 
 	document.body.appendChild(editorSettings);
 }
