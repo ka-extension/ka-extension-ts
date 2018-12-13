@@ -91,20 +91,19 @@ function hideEditor (program: Program): void {
 		let lsEditorVal: string | null = <string>localStorage.getItem(lsEditorId);
 		if (lsEditorVal && lsEditorVal === "true") {
 			editor.classList.toggle("kae-hide");
-			wrap.classList.toggle(`kae-hide-${program.width.toString()}`);
+			wrap.classList.toggle("kae-hide-wrap");
 		}
 		const hideDiv: HTMLDivElement = <HTMLDivElement>document.createElement("div");
 		const hideButton: HTMLAnchorElement = <HTMLAnchorElement>document.createElement("a");
 		hideDiv.id = "kae-hide-div";
 		hideButton.id = "kae-hide-button";
-		hideButton.href = "javascript:void(0)";
-		hideButton.className = BUTTON_CLASSES.active;
+		hideButton.className = BUTTON_CLASSES.default;
 		hideButton.textContent = "Toggle Editor";
 		hideButton.addEventListener("click", (): void => {
 			lsEditorVal = lsEditorVal === "true" ? "false" : "true";
 			localStorage.setItem(lsEditorId, lsEditorVal);
 			editor.classList.toggle("kae-hide");
-			wrap.classList.toggle(`kae-hide-${program.width.toString()}`);
+			wrap.classList.toggle("kae-hide-wrap");
 		});
 		const wrapParent: HTMLDivElement | null = <HTMLDivElement>wrap.parentNode;
 		if (wrapParent) {
