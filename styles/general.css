@@ -48,23 +48,29 @@ body .wrap_xyqcvi {
 }
 
 /** Hide editor feature **/
-.kae-hide-400 {
-    min-width: 400px !important;
-    width: 400px !important;
+.kae-hide-wrap .wrapScratchpadInner_poyjc-o_O-wrapScratchpadInnerBorder_1b0rgvs {
+    display: block !important;
+    text-align: center;
 }
 
-.kae-hide-500 {
-    min-width: 500px !important;
-    width: 500px !important;
+.kae-hide-wrap .scratchpad-canvas-wrap {
+    display: inline-block !important;
+    border-left: 1px solid rgba(33, 37, 45, 0.16) !important;
+    border-right: 1px solid rgba(33, 37, 45, 0.16) !important;
 }
 
-.kae-hide-600 {
-    min-width: 600px !important;
-    width: 600px !important;
-}
-
-[class*="kae-hide-"] .kae-hide {
+.kae-hide {
     display: none !important;
+}
+
+/** Make Error Buddy play better with other buttons in his half of the bar **/
+#page-container .errorBuddyContainer_1o6y302-o_O-buttonOnLeft_1tyzswu {
+    width: auto !important;
+    margin-right: 0 !important;
+}
+
+.scratchpad-wrap .error-buddy-resting .error-buddy-happy, .scratchpad-wrap .error-buddy-resting .error-buddy-thinking {
+    position: static;
 }
 
 .wrapScratchpadInner_poyjc {
@@ -113,28 +119,6 @@ body .wrap_xyqcvi {
     background: #dddddd;
 }
 
-#kae-toggle-dark {
-    background-color: transparent;
-    color: #FFFFFF;
-    text-decoration: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    border-radius: 4px;
-    cursor: pointer;
-    display: inline-block;
-    font-family: inherit;
-    font-size: 15px;
-    font-weight: 400;
-    margin-right: 3px;
-    padding: 8px 8px;
-    text-align: center;
-    transition: 0.1s all;
-    user-select: none;
-    background: #656565;
-    -webkit-transition: 0.1s all;
-    -webkit-user-select: none;
-}
-
 /* Make program buttons blue */
 /* 1w8n1i8 was the filled in buttons, 77ub1h was the outlined buttons; now they're filled in unless they're disabled */
 #page-container .link_1uvuyao-o_O-computing_1w8n1i8, #page-container .link_1uvuyao-o_O-computing_77ub1h {
@@ -174,8 +158,13 @@ body .wrap_xyqcvi {
     display: none;
 }
 
-.pull-right {
-    margin-right: 0 !important;
+#kae-toggle-editor-settings {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+#kae-toggle-editor-settings:hover {
+    box-shadow: 0 0 0 1px #ffffff, 0 0 0 3px #1865f2;
 }
 
 .kae-editor-settings {

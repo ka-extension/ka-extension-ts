@@ -4,7 +4,6 @@ import { getCSRF } from "./util/cookie-util";
 
 const enum BUTTON_CLASSES {
 	default = "link_1uvuyao-o_O-computing_77ub1h",
-	active = "link_1uvuyao-o_O-computing_1w8n1i8",
 }
 
 //Replace KA's vote button with one that updates after you vote and allows undoing votes
