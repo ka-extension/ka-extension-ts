@@ -1,25 +1,10 @@
 import { Program } from "./types/data";
 import { KAdefine } from "./extension";
 import { formatDate } from "./util/text-util";
-import { PREFIX, DARK_THEME } from "./types/names";
+import { PREFIX } from "./types/names";
 import { querySelectorPromise } from "./util/promise-util";
 import { BUTTON_CLASSES } from "./buttons";
-import monokai from "../styles/ace-themes/monokai.css";
-import textmate from "../styles/ace-themes/textmate.css";
-
-const themes: { [key: string]: string } = {};
-
-const aceThemes = {
-	addTheme (themeName: string, css: string) {
-		themes[themeName] = css.replace(new RegExp("\\.ace-" + themeName, "ig"), ".ace-tm");
-	},
-	getThemeCSS (themeName: string): string | null {
-		return themes[themeName];
-	}
-};
-
-aceThemes.addTheme("monokai", monokai);
-aceThemes.addTheme("tm", textmate);
+import { addEditorSettings } from "./editor-settings";
 
 function tableRow (key: string, val: string, title?: string): HTMLTableRowElement {
 	const tr = document.createElement("tr");
@@ -106,20 +91,19 @@ function hideEditor (program: Program): void {
 		let lsEditorVal: string | null = <string>localStorage.getItem(lsEditorId);
 		if (lsEditorVal && lsEditorVal === "true") {
 			editor.classList.toggle("kae-hide");
-			wrap.classList.toggle(`kae-hide-${program.width.toString()}`);
+			wrap.classList.toggle("kae-hide-wrap");
 		}
 		const hideDiv: HTMLDivElement = <HTMLDivElement>document.createElement("div");
 		const hideButton: HTMLAnchorElement = <HTMLAnchorElement>document.createElement("a");
 		hideDiv.id = "kae-hide-div";
 		hideButton.id = "kae-hide-button";
-		hideButton.href = "javascript:void(0)";
-		hideButton.className = BUTTON_CLASSES.active;
+		hideButton.className = BUTTON_CLASSES.default;
 		hideButton.textContent = "Toggle Editor";
 		hideButton.addEventListener("click", (): void => {
 			lsEditorVal = lsEditorVal === "true" ? "false" : "true";
 			localStorage.setItem(lsEditorId, lsEditorVal);
 			editor.classList.toggle("kae-hide");
-			wrap.classList.toggle(`kae-hide-${program.width.toString()}`);
+			wrap.classList.toggle("kae-hide-wrap");
 		});
 		const wrapParent: HTMLDivElement | null = <HTMLDivElement>wrap.parentNode;
 		if (wrapParent) {
@@ -221,23 +205,6 @@ function keyboardShortcuts (program: Program): void {
 	});
 }
 
-function darkTheme () {
-	const sid = "ka-extension-ace-override";
-
-	const prevStyle = document.getElementById(sid);
-	if (document.getElementById(sid) && prevStyle) {
-		document.body.removeChild(prevStyle);
-	}
-
-	const s = document.createElement("style");
-	s.id = sid;
-
-	const currentInd = parseInt(localStorage.getItem(DARK_THEME) || "0", 10);
-	s.innerHTML = aceThemes.getThemeCSS(currentInd ? "monokai" : "tm") || "";
-
-	document.body.appendChild(s);
-}
-
 function checkHiddenOrDeleted () {
 	const idMatch = window.location.href.split("/")[5].match(/^\d{10,16}/g);
 	if (!idMatch) {
@@ -263,30 +230,47 @@ function checkHiddenOrDeleted () {
 	}).catch(console.error);
 }
 
-/*** Add a "Toggle Darkmode" button for programs ***/
-async function darkToggleButton () {
-	const rightArea = await querySelectorPromise(".right_piqaq3");
+/*** Add a button to toggle the Editor Settings popup for programs ***/
+async function addEditorSettingsButton () {
+	const leftArea = await querySelectorPromise(".default_olfzxm-o_O-leftColumn_qf2u39");
 
-	const outerButtonSpan = document.createElement("span");
-	outerButtonSpan.className = "pull-right";
+	const ace = (window as any).ace;
+
+	ace.config.set("basePath", "https://cdn.jsdelivr.net/gh/ajaxorg/ace-builds@1.1.4/src-min-noconflict");
+
+	if (!ace.require("ace/ext/language_tools")) {
+		const scriptEl = document.createElement("script");
+		scriptEl.setAttribute("src", "https://cdn.jsdelivr.net/gh/ajaxorg/ace-builds@1.1.4/src-min-noconflict/ext-language_tools.js");
+		scriptEl.addEventListener("load", function () {
+			ace.require("ace/ext/language_tools");
+		});
+		document!.head!.appendChild(scriptEl);
+	}else {
+		(window as any).ScratchpadAutosuggest.enableLiveCompletion = function () {};
+	}
 
 	const innerButtonLink: HTMLAnchorElement = document.createElement("a");
-	innerButtonLink.id = "kae-toggle-dark";
-	innerButtonLink.href = "javascript:void(0)";
-	innerButtonLink.textContent = "Toggle Dark Theme";
-	innerButtonLink.addEventListener("mouseover", () => innerButtonLink.style.background = "#484848");
-	innerButtonLink.addEventListener("mouseout", () => innerButtonLink.style.background = "#656565");
-	innerButtonLink.addEventListener("click", () => {
-		const currentInd = parseInt(localStorage.getItem(DARK_THEME) || "0", 10);
-		const next = currentInd ^ 1;
-		localStorage.setItem(DARK_THEME, next.toString());
-		darkTheme();
-	});
+	innerButtonLink.id = "kae-toggle-editor-settings";
+	innerButtonLink.classList.add("button_1eqj1ga-o_O-shared_acgh35-o_O-default_9fm203-o_O-toolbarButton_em2kam");
+	innerButtonLink.innerHTML = "Toggle Editor Settings";
 
-	outerButtonSpan.appendChild(innerButtonLink);
-	rightArea.appendChild(outerButtonSpan);
+	const editor = document.querySelector(".scratchpad-ace-editor") as HTMLElement;
+	const session = ace.edit(editor).getSession();
+	session.setMode(new (ace.require(session.getMode().$id).Mode)());
+
+	const editorSettings = addEditorSettings(innerButtonLink, editor);
+
+	function repos () {
+		const pos = innerButtonLink.getBoundingClientRect();
+		editorSettings.style.left = pos.left + pageXOffset + "px";
+		editorSettings.style.top = pos.top + pageYOffset - 10 + "px";
+	}
+	innerButtonLink.addEventListener("click", repos);
+	window.addEventListener("resize", repos);
+
+	leftArea.appendChild(innerButtonLink);
+
+	document.body.appendChild(editorSettings);
 }
 
-darkTheme();
-
-export { addProgramInfo, hideEditor, keyboardShortcuts, darkToggleButton, checkHiddenOrDeleted, addProgramAuthorHoverCard };
+export { addProgramInfo, hideEditor, keyboardShortcuts, addEditorSettingsButton, checkHiddenOrDeleted, addProgramAuthorHoverCard };

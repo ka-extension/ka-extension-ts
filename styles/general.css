@@ -2,8 +2,14 @@
 body .video-discussion {
     float: left !important;
     margin: 0px !important;
+    margin-left: 25% !important;
     width: 50% !important;
+    max-width: unset !important;
     display: block;
+}
+
+.scratchpad-page .video-discussion .tab, .scratchpad-page .video-discussion .video-discussion-header {
+    max-width: unset !important;
 }
 
 body .footer_crtwg {
@@ -12,7 +18,7 @@ body .footer_crtwg {
 
 body .main-discussion-guidelines.discussion-guidelines {
     float: right !important;
-    width: 25% !important;
+    width: 20% !important;
     display: block !important;
     margin-top: 0px !important;
 }
@@ -42,23 +48,29 @@ body .wrap_xyqcvi {
 }
 
 /** Hide editor feature **/
-.kae-hide-400 {
-    min-width: 400px !important;
-    width: 400px !important;
+.kae-hide-wrap .wrapScratchpadInner_poyjc-o_O-wrapScratchpadInnerBorder_1b0rgvs {
+    display: block !important;
+    text-align: center;
 }
 
-.kae-hide-500 {
-    min-width: 500px !important;
-    width: 500px !important;
+.kae-hide-wrap .scratchpad-canvas-wrap {
+    display: inline-block !important;
+    border-left: 1px solid rgba(33, 37, 45, 0.16) !important;
+    border-right: 1px solid rgba(33, 37, 45, 0.16) !important;
 }
 
-.kae-hide-600 {
-    min-width: 600px !important;
-    width: 600px !important;
-}
-
-[class*="kae-hide-"] .kae-hide {
+.kae-hide {
     display: none !important;
+}
+
+/** Make Error Buddy play better with other buttons in his half of the bar **/
+#page-container .errorBuddyContainer_1o6y302-o_O-buttonOnLeft_1tyzswu {
+    width: auto !important;
+    margin-right: 0 !important;
+}
+
+.scratchpad-wrap .error-buddy-resting .error-buddy-happy, .scratchpad-wrap .error-buddy-resting .error-buddy-thinking {
+    position: static;
 }
 
 .wrapScratchpadInner_poyjc {
@@ -107,46 +119,79 @@ body .wrap_xyqcvi {
     background: #dddddd;
 }
 
-#kae-toggle-dark {
-    background-color: transparent;
-    color: #FFFFFF;
-    text-decoration: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    border-radius: 4px;
-    cursor: pointer;
-    display: inline-block;
-    font-family: inherit;
-    font-size: 15px;
-    font-weight: 400;
-    margin-right: 3px;
-    padding: 8px 8px;
-    text-align: center;
-    transition: 0.1s all;
-    user-select: none;
-    background: #656565;
-    -webkit-transition: 0.1s all;
-    -webkit-user-select: none;
-}
-
-.link_1uvuyao-o_O-computing_1w8n1i8, .link_1uvuyao-o_O-computing_77ub1h {
+/* Make program buttons blue */
+/* 1w8n1i8 was the filled in buttons, 77ub1h was the outlined buttons; now they're filled in unless they're disabled */
+#page-container .link_1uvuyao-o_O-computing_1w8n1i8, #page-container .link_1uvuyao-o_O-computing_77ub1h {
     border: 1px solid transparent !important;
-}
-
-.link_1uvuyao-o_O-computing_1w8n1i8, .link_1uvuyao-o_O-computing_77ub1h {
     color: white !important;
     background: #1865f2 !important;
 }
 
-.link_1uvuyao-o_O-computing_1w8n1i8:hover, .link_1uvuyao-o_O-computing_77ub1h:hover {
+#page-container .link_1uvuyao-o_O-computing_1w8n1i8:hover, #page-container .link_1uvuyao-o_O-computing_77ub1h:hover {
     color: white !important;
     background: #0f52cf !important;
 }
 
-.link_1uvuyao-o_O-computing_1uwg40u {
+/* The color for the disabled elements gets handled by KA setting opacity 0.5 (here and below) */
+#page-container .link_1uvuyao-o_O-computing_77ub1h-o_O-disabled_2gos5, #page-container .link_1uvuyao-o_O-computing_1w8n1i8-o_O-disabled_2gos5 {
+    color: #0f52cf !important;
+    border: 1px solid #0f52cf !important;
+    border-radius: 4px !important;
+    background: white !important;
+}
+
+/* Make the sort selecting elements on the browse projects page blue */
+#page-container .link_1uvuyao-o_O-computing_1uwg40u, #page-container .link_1uvuyao-o_O-computing_1uwg40u-o_O-disabled_2gos5 {
     color: #1865f2 !important;
 }
 
-.link_1uvuyao-o_O-computing_1uwg40u:hover {
+#page-container .link_1uvuyao-o_O-computing_1uwg40u:hover {
     color: #0f52cf !important;
+}
+
+.scratchpad-page .titleAndLogo_1em9xw1 {
+    display: block !important;
+    text-align: center !important;
+}
+
+.kui-survey.session-survey {
+    display: none;
+}
+
+#kae-toggle-editor-settings {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+#kae-toggle-editor-settings:hover {
+    box-shadow: 0 0 0 1px #ffffff, 0 0 0 3px #1865f2;
+}
+
+.kae-editor-settings {
+    display: block;
+    position: absolute;
+    border: 2px solid #D6D8DA;
+    color: black;
+    transform: translateY(-100%);
+    text-align: left;
+    border-radius: 2px;
+    padding: 5px;
+    background: #fff;
+}
+.kae-editor-settings table {
+    border-collapse: separate;
+    border-spacing: 5px;
+}
+.kae-editor-settings:before {
+    border-top-color: transparent;
+    background: #fff;
+    padding: 8px;
+    content: "";
+    position: absolute;
+    top: 100%;
+    border-radius: 2px;
+    border: 2px solid #D6D8DA;
+    border-top-color: transparent;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 }

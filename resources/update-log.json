@@ -1,5 +1,37 @@
 [
     {
+        "version": "4.4.0",
+        "new": [
+            "Nothing"
+        ],
+        "fixes": [
+            "Fixes the editor settings panel for the new KA user interface"
+        ]
+    },
+    {
+        "version": "4.3.0",
+        "new": [
+            "New editor settings tab, with several different customizable editor settings",
+            "Extension now hides old KA user survey popup"
+        ],
+        "fixes": [
+            "Improved button styling for Chrome",
+            "Vote button fixes for early versions of Chrome"
+        ]
+    },
+    {
+        "version": "4.2.0",
+        "new": [
+            "Copy link button on program pages copies a shortened link to the program",
+            "You can now tell if your program has been hidden from the hotlist, from everywhere, or is guardian approved from the program stats section",
+            "Program titles are now centred in the middle of the page",
+            "Program page is now themed blue, like the rest of KA's ui"
+        ],
+        "fixes": [
+            "Hovercards have now been added back to project pages"
+        ]
+    },
+    {
         "version": "4.1.0",
         "new": [
             "You can now reply to notifications from within the popup",

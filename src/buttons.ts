@@ -4,7 +4,6 @@ import { getCSRF } from "./util/cookie-util";
 
 const enum BUTTON_CLASSES {
 	default = "link_1uvuyao-o_O-computing_77ub1h",
-	active = "link_1uvuyao-o_O-computing_1w8n1i8",
 }
 
 //Replace KA's vote button with one that updates after you vote and allows undoing votes
@@ -16,7 +15,7 @@ function replaceVoteButton (program: Program): void {
 				return;
 			}
 
-			const VOTE_URL = "https://www.khanacademy.org/api/internal/discussions/voteentity";
+			const VOTE_URL = "/api/internal/discussions/voteentity";
 
 			let voted = wrap.innerText.includes("Voted Up");
 
@@ -26,6 +25,7 @@ function replaceVoteButton (program: Program): void {
 			const voteButton = document.createElement("a");
 			const voteText = document.createElement("span");
 			voteButton.appendChild(voteText);
+			voteButton.classList.add(BUTTON_CLASSES.default);
 			newWrap.appendChild(voteButton);
 
 			function updateVoteDisplay () {
@@ -47,16 +47,19 @@ function replaceVoteButton (program: Program): void {
 
 					fetch(`${VOTE_URL}?entity_key=${program.key}&vote_type=${voted ? 1 : 0}`, {
 						method: "POST",
-						headers: { "X-KA-FKey": getCSRF() }
+						headers: { "X-KA-FKey": getCSRF() },
+						credentials: "same-origin"
 					}).then((response: Response): void => {
 						if (response.status !== 204) {
 							response.json().then((res: any): void => {
 								if (res.error) {
 									alert("Failed with error:\n\n" + res.error);
-									voted = !voted;
-									updateVoteDisplay();
 								}
+							}).catch(() => {
+								alert(`Voting failed with status ${response.status}`);
 							});
+							voted = !voted;
+							updateVoteDisplay();
 						}
 					}).catch(console.error);
 				});
@@ -80,7 +83,7 @@ function addLinkButton (program: Program): void {
 
 			copyLinkButton.setAttribute("role", "button");
 			copyLinkButton.innerHTML = "<span>Copy Link</span>";
-
+			copyLinkButton.classList.add(BUTTON_CLASSES.default);
 			copyLinkButton.addEventListener("click", function () {
 				if ((window.navigator as any).clipboard) {
 					(window.navigator as any).clipboard.writeText(`https://khanacademy.org/cs/i/${program.id}`).catch((err: Error) => {
@@ -108,4 +111,23 @@ function addLinkButton (program: Program): void {
 		});
 }
 
-export { BUTTON_CLASSES, addLinkButton, replaceVoteButton };
+//Remove the text nodes that make the buttons unevenly spaced
+function evenlySpaceButtons ():void {
+	querySelectorPromise(".buttons_vponqv")
+		.then(buttons => buttons as HTMLDivElement)
+		.then(buttons => {
+			Array.from(buttons.childNodes).forEach(node => {
+				if (node.nodeType === Node.TEXT_NODE && node.textContent && /^\s+$/.test(node.textContent)) {
+					buttons.removeChild(node);
+				}
+			});
+		});
+
+	querySelectorPromise(".voting-wrap .discussion-meta .discussion-meta-separator")
+		.then(separator => separator.parentElement as HTMLSpanElement)
+		.then(separator => {
+			separator.parentNode!.removeChild(separator);
+		});
+}
+
+export { BUTTON_CLASSES, addLinkButton, replaceVoteButton, evenlySpaceButtons };
