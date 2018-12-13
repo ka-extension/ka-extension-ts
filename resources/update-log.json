@@ -1,5 +1,14 @@
 [
     {
+        "version": "4.4.0",
+        "new": [
+            "Nothing"
+        ],
+        "fixes": [
+            "Fixes the editor settings panel for the new KA user interface"
+        ]
+    },
+    {
         "version": "4.3.0",
         "new": [
             "New editor settings tab, with several different customizable editor settings",

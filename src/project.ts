@@ -172,7 +172,7 @@ async function addEditorSettingsButton () {
 		scriptEl.addEventListener("load", function () {
 			ace.require("ace/ext/language_tools");
 		});
-		document.head.appendChild(scriptEl);
+		document!.head!.appendChild(scriptEl);
 	}else {
 		(window as any).ScratchpadAutosuggest.enableLiveCompletion = function () {};
 	}
