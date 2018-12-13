@@ -63,6 +63,16 @@ body .wrap_xyqcvi {
     display: none !important;
 }
 
+/** Make Error Buddy play better with other buttons in his half of the bar **/
+#page-container .errorBuddyContainer_1o6y302-o_O-buttonOnLeft_1tyzswu {
+    width: auto !important;
+    margin-right: 0 !important;
+}
+
+.scratchpad-wrap .error-buddy-resting .error-buddy-happy, .scratchpad-wrap .error-buddy-resting .error-buddy-thinking {
+    position: static;
+}
+
 .wrapScratchpadInner_poyjc {
 	overflow-x: hidden;
 }
