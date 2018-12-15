@@ -85,7 +85,7 @@ function addProgramInfo (program: Program, uok: string): void {
 
 function hideEditor (program: Program): void {
 	const wrap: HTMLDivElement | null = <HTMLDivElement>document.querySelector(".wrapScratchpad_1jkna7i");
-	if (wrap && program.userAuthoredContentType !== "webpage") {
+	if (wrap) {
 		const editor: HTMLDivElement = <HTMLDivElement>document.querySelector(".scratchpad-editor-wrap");
 		const lsEditorId: string = `${PREFIX}editor-hide`;
 		let lsEditorVal: string | null = <string>localStorage.getItem(lsEditorId);
