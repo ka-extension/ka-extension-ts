@@ -111,7 +111,11 @@ abstract class Extension {
 								this.onProgramPage(programData);
 								this.onProgramAboutPage(programData);
 								querySelectorPromise("#scratchpad-tabs").then(tabs => {
-									tabs.childNodes[0].addEventListener("click", () => this.onProgramAboutPage(programData));
+									tabs.childNodes[0].addEventListener("click", (e: Event) => {
+										if ((e.currentTarget as HTMLAnchorElement).getAttribute("aria-selected") !== "true") {
+											this.onProgramAboutPage(programData);
+										}
+									});
 								});
 							});
 						}
