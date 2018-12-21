@@ -104,30 +104,11 @@ function addLinkButton (program: Program): void {
 						alert("Copying failed with error:\n" + err);
 					}
 				}
-
 			});
 
 			buttons.insertBefore(copyLinkButton, buttons.children[buttons.children.length - 1]);
+			buttons.insertBefore(document.createTextNode(" "), copyLinkButton.nextSibling);
 		});
 }
 
-//Remove the text nodes that make the buttons unevenly spaced
-function evenlySpaceButtons ():void {
-	querySelectorPromise(".buttons_vponqv")
-		.then(buttons => buttons as HTMLDivElement)
-		.then(buttons => {
-			Array.from(buttons.childNodes).forEach(node => {
-				if (node.nodeType === Node.TEXT_NODE && node.textContent && /^\s+$/.test(node.textContent)) {
-					buttons.removeChild(node);
-				}
-			});
-		});
-
-	querySelectorPromise(".voting-wrap .discussion-meta .discussion-meta-separator")
-		.then(separator => separator.parentElement as HTMLSpanElement)
-		.then(separator => {
-			separator.parentNode!.removeChild(separator);
-		});
-}
-
-export { BUTTON_CLASSES, addLinkButton, replaceVoteButton, evenlySpaceButtons };
+export { BUTTON_CLASSES, addLinkButton, replaceVoteButton };
