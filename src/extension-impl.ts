@@ -1,9 +1,9 @@
 import { Extension, getKaid } from "./extension";
-import { Program, UsernameOrKaid } from "./types/data";
+import { Program, UsernameOrKaid, KA } from "./types/data";
 import { commentsButtonEventListener, commentsAddEditUI } from "./comment-data";
 import { addProgramFlags } from "./flag";
 import { addReportButton, addReportButtonDiscussionPosts, addProfileReportButton } from "./report";
-import { addUserInfo, addLocationInput } from "./profile";
+import { addUserInfo, addLocationInput, duplicateBadges, } from "./profile";
 import { addProgramInfo, hideEditor, keyboardShortcuts, addEditorSettingsButton, checkHiddenOrDeleted, addProgramAuthorHoverCard } from "./project";
 import { addLinkButton, replaceVoteButton } from "./buttons";
 import { deleteNotifButtons, updateNotifIndicator } from "./notif";
@@ -32,6 +32,10 @@ class ExtensionImpl extends Extension {
 		const kaid = await getKaid();
 		if (kaid) {
 			addProfileReportButton(uok, kaid);
+		}
+		const KA = (window as any).KA as KA;
+		if (KA!._userProfileData!.kaid === kaid) {
+			setInterval(duplicateBadges, 100);
 		}
 		addUserInfo(uok);
 	}
