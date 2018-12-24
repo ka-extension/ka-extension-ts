@@ -12,6 +12,12 @@ const PREFIX: string = "ka-extension-";
 const SVG_NAMESPACE: string = "http://www.w3.org/2000/svg";
 const DELETE_BUTTON: string = "kae-notif-delete";
 const API_ORIGIN: string = "https://www.khanacademy.org/api/internal";
+const DEVELOPERS: string[] = [
+	"kaid_933093676418892226040682",  // Luke
+	"kaid_1063314115048600759228780", // Ethan
+	"kaid_757721856896775939251306",  // Matthias
+	"kaid_455920429074646065838008",  // Jett
+];
 
 export {
 	CSRF_NAME, CSRF_HEADER, COOKIE,
@@ -20,5 +26,5 @@ export {
 	EXTENSION_COMMENT_EDIT_UI_CLASS,
 	EXTENSION_COMMENT_CANCEL_EDIT_PREFIX,
 	PREFIX, EXTENSION_ITEM_CLASSNAME, EXTENSION_MODIFIED_NOTIF,
-	SVG_NAMESPACE, DELETE_BUTTON, API_ORIGIN
+	SVG_NAMESPACE, DELETE_BUTTON, API_ORIGIN, DEVELOPERS
 };

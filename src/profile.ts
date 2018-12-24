@@ -3,6 +3,7 @@ import { querySelectorPromise, querySelectorAllPromise } from "./util/promise-ut
 import { getJSON } from "./util/api-util";
 import { formatDate } from "./util/text-util";
 import { getCSRF } from "./util/cookie-util";
+import { DEVELOPERS } from "./types/names";
 
 async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 	const userEndpoint = `${window.location.origin}/api/internal/user`;
@@ -39,7 +40,7 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 		"Average spinoffs received": averageSpinoffs,
 		"Total badges": totalBadges,
 		"Inspiration badges": totals.inspiration,
-		"More info": `<a href="${userEndpoint}/profile?${uok.type}=${uok.id}&format=pretty" target="_blank">Api endpoint</a>`
+		"More info": `<a href="${userEndpoint}/profile?${uok.type}=${uok.id}&format=pretty" target="_blank">API endpoint</a>`
 	};
 
 	for (const entry in entries) {
@@ -50,12 +51,17 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 	}
 
 	getJSON(`${userEndpoint}/profile?${uok.type}=${uok.id}`, {
-		dateJoined: 1
+		dateJoined: 1,
+		kaid: 1
 	})
 		.then(data => data as UserProfileData)
 		.then(User => {
 			const dateElement = document.querySelectorAll("td")[1];
 			dateElement!.title = formatDate(User.dateJoined);
+
+			if(DEVELOPERS.includes(User.kaid)) {
+				table.innerHTML += `<span class="kae-green user-statistics-label">KA Extension Developer</span>`;
+			}
 		});
 
 }

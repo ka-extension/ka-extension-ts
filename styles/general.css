@@ -203,3 +203,8 @@ body #kae-report-button:hover {
     margin-bottom: 10px;
     text-align: center;
 }
+
+/** Misc **/
+.kae-green {
+    color: #3eaa23 !important;
+}
