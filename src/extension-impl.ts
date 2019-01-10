@@ -3,7 +3,7 @@ import { Program, UsernameOrKaid, KA } from "./types/data";
 import { commentsButtonEventListener, commentsAddEditUI } from "./comment-data";
 import { addProgramFlags } from "./flag";
 import { addReportButton, addReportButtonDiscussionPosts, addProfileReportButton } from "./report";
-import { addUserInfo, addLocationInput, duplicateBadges, } from "./profile";
+import { addUserInfo, duplicateBadges, } from "./profile";
 import { addProgramInfo, hideEditor, keyboardShortcuts, addEditorSettingsButton, checkHiddenOrDeleted, addProgramAuthorHoverCard } from "./project";
 import { addLinkButton, replaceVoteButton } from "./buttons";
 import { deleteNotifButtons, updateNotifIndicator } from "./notif";
@@ -40,7 +40,7 @@ class ExtensionImpl extends Extension {
 		addUserInfo(uok);
 	}
 	onHomePage (uok: UsernameOrKaid) {
-		addLocationInput(uok);
+		console.info("On home page");
 	}
 	onDetailedDiscussionPage (focusId: string, focusKind: string) {
 		setInterval(addReportButtonDiscussionPosts.bind(null, focusId, focusKind), 100);

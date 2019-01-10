@@ -66,52 +66,6 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 
 }
 
-function addLocationInput (uok: UsernameOrKaid): void {
-	getJSON(`${window.location.origin}/api/internal/user/profile?${uok.type}=${uok}`, {
-		userLocation: 1
-	})
-		.then(userData => userData as UserProfileData)
-		.then(userData => userData.userLocation as UserLocation)
-		.then(locationData => {
-			console.log(locationData);
-			querySelectorPromise("#s2id_autogen1")
-				.then(locationElement => locationElement as HTMLDivElement)
-				.then(locationElement => {
-					console.log(locationElement);
-					const locationInput: HTMLInputElement = <HTMLInputElement>document.createElement("input");
-					locationInput.type = "text";
-					locationInput.id = "kae-location-input";
-					locationInput.value = locationData.displayText;
-
-					const parent = locationElement.parentNode as HTMLDivElement;
-					parent.replaceChild(locationInput, locationElement);
-
-					const submitButton: HTMLAnchorElement = <HTMLAnchorElement>document.querySelectorAll(".modal-footer button")[1];
-					submitButton.addEventListener("click", e => {
-						const bioLocation: HTMLDivElement = <HTMLDivElement>document.querySelector(".location-text");
-						bioLocation.textContent = locationInput.value;
-						setTimeout(() => {
-							const userKey = (window as any).KA._userProfileData.userKey;
-
-							const req: XMLHttpRequest = <XMLHttpRequest>new XMLHttpRequest();
-							req.open("POST", `${window.location.origin}/api/internal/user/profile`);
-							req.setRequestHeader("x-ka-fkey", getCSRF());
-							req.setRequestHeader("content-type", "application/json");
-							req.send(JSON.stringify({
-								userKey: userKey,
-								userLocation: {
-									displayText: bioLocation.textContent
-								}
-							}));
-						}, 500);
-					});
-
-					const privacy: HTMLDivElement = <HTMLDivElement>document.getElementById("edit-profile-privacy-indicator");
-					privacy.parentNode && privacy.parentNode.removeChild(privacy);
-				}).catch(console.error);
-		}).catch(console.error);
-}
-
 function duplicateBadges (): void {
 	const usedBadges = document.getElementsByClassName("used");
 	if (usedBadges.length > 0) {
@@ -121,4 +75,4 @@ function duplicateBadges (): void {
 	}
 }
 
-export { addUserInfo, addLocationInput, duplicateBadges };
+export { addUserInfo, duplicateBadges };
