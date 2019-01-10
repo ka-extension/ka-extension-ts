@@ -1,5 +1,18 @@
 [
     {
+        "version": "4.5.0",
+        "new": [
+            "Five new editor themes",
+            "A rework of the profile information table",
+            "User info distinguishment on <a href=\"https://www.khanacademy.org/profile/lukekrikorian\">developer profiles</a>"
+        ],
+        "fixes": [
+            "Fixed a bug where clicking on the \"About\" tab would duplicate program info",
+            "Fixed horizontal spacing for buttons underneath programs",
+            "Removed location editing feature due to user locations removal"
+        ]
+    },
+    {
         "version": "4.4.1",
         "new": [
             "Nothing"
