@@ -126,22 +126,11 @@ interface Scratchpads {
 	scratchpads: Scratchpad[];
 }
 
-interface UserLocation {
-	city: string;
-	country: string;
-	displayText: string;
-	googlePlacesId: string;
-	lastModified: string;
-	postalCode: string;
-	state: string;
-}
-
 interface UserProfileData {
 	countBrandNewNotifications: number;
 	isModerator?: boolean;
 	dateJoined: string;
 	kaid: string;
-	userLocation: UserLocation;
 	isPhantom: boolean;
 }
 
@@ -182,6 +171,6 @@ interface NotifElm {
 export {
 	InvalidUsernameOrKaid, IdType, UsernameOrKaid,
 	CommentSortType, Program, Notification,
-	Scratchpads, KA, UserLocation, UserProfileData,
+	Scratchpads, KA, UserProfileData,
 	NotifObj, Feedback, NotifElm
 };

@@ -1,8 +1,7 @@
-import { UsernameOrKaid, Scratchpads, UserLocation, UserProfileData } from "./types/data";
+import { UsernameOrKaid, Scratchpads, UserProfileData } from "./types/data";
 import { querySelectorPromise, querySelectorAllPromise } from "./util/promise-util";
 import { getJSON } from "./util/api-util";
 import { formatDate } from "./util/text-util";
-import { getCSRF } from "./util/cookie-util";
 import { DEVELOPERS } from "./types/names";
 
 async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
