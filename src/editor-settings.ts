@@ -142,10 +142,11 @@ const POSSIBLE_OPTIONS:{ [key:string]: Option } = {
 			"Tomorrow Night": "ace/theme/tomorrow_night",
 			"Monokai (Dark)": "ace/theme/monokai",
 			"Ambiance (Dark)": "ace/theme/ambiance",
-			"Dracula (Dark)": "ace/theme/dracula",
+			"Green on black (Dark)": "ace/theme/gob",
 			"Chrome": "ace/theme/chrome",
-			"SQL server": "ace/theme/sqlserver",
+			"Iplastic": "ace/theme/iplastic",
 			"Pastel on dark": "ace/theme/pastel_on_dark",
+			"Cobalt": "ace/theme/cobalt",
 		}),
 	fontFamily: new TextInput({
 		label: "Font",
