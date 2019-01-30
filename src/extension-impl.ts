@@ -1,6 +1,6 @@
 import { Extension, getKaid } from "./extension";
 import { Program, UsernameOrKaid, KA } from "./types/data";
-import { commentsButtonEventListener, commentsAddEditUI } from "./comment-data";
+import { commentsButtonEventListener } from "./comment-data";
 import { addProgramFlags } from "./flag";
 import { addReportButton, addReportButtonDiscussionPosts, addProfileReportButton } from "./report";
 import { addUserInfo, duplicateBadges, } from "./profile";
@@ -44,7 +44,6 @@ class ExtensionImpl extends Extension {
 	}
 	onDetailedDiscussionPage (focusId: string, focusKind: string) {
 		setInterval(addReportButtonDiscussionPosts.bind(null, focusId, focusKind), 100);
-		setInterval(commentsAddEditUI.bind(null, focusId, focusKind), 100);
 		console.info("On detailed discussion page");
 	}
 	onHotlistPage () {
