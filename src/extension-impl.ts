@@ -25,7 +25,7 @@ class ExtensionImpl extends Extension {
 	}
 	async onRepliesPage (uok: UsernameOrKaid) {
 		const kaid = await getKaid();
-		commentsButtonEventListener(uok, kaid);
+		// commentsButtonEventListener(uok, kaid);
 		console.info("On replies page");
 	}
 	async onProfilePage (uok: UsernameOrKaid) {
@@ -43,7 +43,7 @@ class ExtensionImpl extends Extension {
 		console.info("On home page");
 	}
 	onDetailedDiscussionPage (focusId: string, focusKind: string) {
-		setInterval(addReportButtonDiscussionPosts.bind(null, focusId, focusKind), 100);
+		// setInterval(addReportButtonDiscussionPosts.bind(null, focusId, focusKind), 100);
 		console.info("On detailed discussion page");
 	}
 	onHotlistPage () {

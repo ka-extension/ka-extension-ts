@@ -70,11 +70,6 @@ function deleteNotif (key: string): Promise<Response> {
 	}).then(e => e.status >= 200 && e.status < 300 ? Promise.resolve(e) : Promise.reject(e));
 }
 
-function getProgram (programId: string | number): Promise<Program> {
-	return getJSON(`${window.location.origin}/api/labs/scratchpads/${programId.toString()}`)
-		.then(e => e as Program);
-}
-
 interface FocusData {
 	id: string;
 	kind: string;
@@ -222,7 +217,7 @@ function getConvo (key: string, focusKind: string, focusId: string, discussionTy
 
 export {
 	getJSON, FocusData, CommentData,
-	commentDataGenerator, getProgram,
+	commentDataGenerator,
 	getConvo, FinalReply, FinalConvo,
 	DiscussionTypes, deleteNotif, putPostJSON
 };
