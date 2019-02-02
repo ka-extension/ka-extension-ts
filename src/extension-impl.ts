@@ -43,7 +43,12 @@ class ExtensionImpl extends Extension {
 		console.info("On home page");
 	}
 	onDetailedDiscussionPage (focusId: string, focusKind: string) {
+		//TODO: fix report button for discussion
 		// setInterval(addReportButtonDiscussionPosts.bind(null, focusId, focusKind), 100);
+
+		querySelectorPromise("#ka-uid-discussiontabbedpanel-1--tabbedpanel-tab-1").then(tabButton => tabButton as HTMLButtonElement).then(tabButton =>{
+			tabButton.click();
+		}).catch(console.error);
 		console.info("On detailed discussion page");
 	}
 	onHotlistPage () {

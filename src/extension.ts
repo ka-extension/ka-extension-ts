@@ -64,7 +64,8 @@ const KAdefine = {
 
 enum KAScripts {
 	SCRATCHPAD_UI = "./javascript/scratchpads-package/scratchpad-ui.js",
-	KA = "./javascript/shared-package/ka.js"
+	DISCUSSION = "./javascript/discussion-package/util.js",
+	KA = "./javascript/shared-package/ka.js",
 }
 
 const getKaid = (): Promise<string | null> => KAdefine.asyncRequire(KAScripts.KA)
@@ -98,7 +99,9 @@ abstract class Extension {
 				this.onNewProgramPage();
 			}
 
-			//TODO: onDetailedDiscussionPage check
+			KAdefine.asyncRequire(KAScripts.DISCUSSION, 100).then(() => {
+				this.onDetailedDiscussionPage();
+			}).catch(console.error);
 
 			KAdefine.asyncRequire(KAScripts.SCRATCHPAD_UI, 100, (data: KAdefineResult) =>
 					(typeof data.ScratchpadUI !== "undefined" && typeof data.ScratchpadUI.scratchpad !== "undefined")
