@@ -23,6 +23,24 @@ body .main-discussion-guidelines.discussion-guidelines {
     margin-top: 0px !important;
 }
 
+/** Improvements to discussion styling **/
+body *:focus { /*Default outline, light gray instead of the deafult bright blue*/
+    outline: auto 3px #888 !important;
+}
+body .notAButton_14bcykr-o_O-tabTrigger_1jwmooj-o_O-activeTab_khee7t:focus, /*T&T tab button*/
+.default_olfzxm-o_O-inlineStyles_16okj06:focus,                             /*Comments*/
+.default_olfzxm-o_O-horizontalSeparator_6lbsg7-o_O-inlineStyles_16okj06:focus { /*Replies*/
+    outline: none !important;
+}
+/*Background on focused comments*/
+.default_olfzxm-o_O-inlineStyles_16okj06:focus {
+    background: #f1f1f1;
+    border-radius: 9px;
+}
+body .default_olfzxm-o_O-inlineStyles_16okj06 {
+    padding: 9px !important;
+}
+
 /** Widen scratchpad **/
 body .wrap_xyqcvi {
     max-width: none !important;
