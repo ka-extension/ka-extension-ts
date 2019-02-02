@@ -85,7 +85,7 @@ abstract class Extension {
 	abstract onNewProgramPage (): void;
 	abstract onPage (): void;
 	abstract onProgram404Page (): void;
-	abstract onDetailedDiscussionPage (focusId: string, focusKind: string): void;
+	abstract onDetailedDiscussionPage (): void;
 	async init (): Promise<void> {
 		if (window.location.host.includes("khanacademy.org")) {
 			this.onPage();

@@ -6,6 +6,7 @@ import { addReportButton, addReportButtonDiscussionPosts, addProfileReportButton
 import { addUserInfo, duplicateBadges, } from "./profile";
 import { addProgramInfo, hideEditor, keyboardShortcuts, addEditorSettingsButton, checkHiddenOrDeleted, addProgramAuthorHoverCard } from "./project";
 import { addLinkButton, replaceVoteButton } from "./buttons";
+import { querySelectorPromise } from "./util/promise-util";
 import { deleteNotifButtons, updateNotifIndicator } from "./notif";
 
 class ExtensionImpl extends Extension {
@@ -42,7 +43,7 @@ class ExtensionImpl extends Extension {
 	onHomePage (uok: UsernameOrKaid) {
 		console.info("On home page");
 	}
-	onDetailedDiscussionPage (focusId: string, focusKind: string) {
+	onDetailedDiscussionPage () {
 		//TODO: fix report button for discussion
 		// setInterval(addReportButtonDiscussionPosts.bind(null, focusId, focusKind), 100);
 
