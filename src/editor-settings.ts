@@ -138,9 +138,13 @@ const POSSIBLE_OPTIONS:{ [key:string]: Option } = {
 		}),
 	theme: new TextSelect("Theme", {
 			"Textmate (Default)": "ace/theme/textmate",
+			"Chrome": "ace/theme/chrome",
 			"Tomorrow": "ace/theme/tomorrow",
 			"Tomorrow Night": "ace/theme/tomorrow_night",
-			"Monokai (Dark)": "ace/theme/monokai"
+			"Monokai": "ace/theme/monokai",
+			"Ambiance": "ace/theme/ambiance",
+			"Pastel on dark": "ace/theme/pastel_on_dark",
+			"Idle Fingers": "ace/theme/idle_fingers",
 		}),
 	fontFamily: new TextInput({
 		label: "Font",

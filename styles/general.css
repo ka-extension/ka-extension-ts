@@ -23,6 +23,31 @@ body .main-discussion-guidelines.discussion-guidelines {
     margin-top: 0px !important;
 }
 
+/** Improvements to discussion styling **/
+.linkStyledButton_ycurob:focus { /*Replies button*/
+    outline: auto 3px #888 !important;
+}
+body .notAButton_14bcykr-o_O-tabTrigger_1jwmooj-o_O-activeTab_khee7t:focus, /*T&T tab button*/
+.default_olfzxm-o_O-inlineStyles_16okj06:focus, /*Comments*/
+.default_olfzxm-o_O-horizontalSeparator_6lbsg7-o_O-inlineStyles_16okj06:focus, /*Replies*/
+button[class^="button_1eqj1ga-o_O-shared_acgh35-o_O-default_9fm203-o_O-"]:focus { /*Show more comments*/
+    outline: none !important;
+}
+/*Background on focused comments*/
+.default_olfzxm-o_O-inlineStyles_16okj06:focus {
+    background: #f1f1f1;
+    border-radius: 9px;
+}
+body .default_olfzxm-o_O-inlineStyles_16okj06 {
+    padding: 9px !important;
+}
+.discussion-code-inline { /*Fix a bug where inline code blocks expanded the width of the comment*/
+    white-space: pre-wrap;
+}
+body .default_olfzxm-o_O-flagText_1ajw024-o_O-flagText_avg348 {
+    display: block !important; /*Flag text gets hidden on profile reply page for some reason*/
+}
+
 /** Widen scratchpad **/
 body .wrap_xyqcvi {
     max-width: none !important;
@@ -58,14 +83,14 @@ body .errorBuddyContainer_1o6y302-o_O-buttonOnLeft_1tyzswu {
 	overflow-x: hidden;
 }
 
-#kae-hide-div {
-    text-align: right !important;
-    float: right !important;
-    margin-bottom: 5px;
+/** Program toolbar buttons (Toggle Editor and Toggle Editor Settings for now) **/
+#kae-toggle-editor-settings, #kae-hide-button {
+    font-size: 16px;
+    font-weight: bold;
 }
 
-#kae-hide-button {
-    width: 100px;
+#kae-toggle-editor-settings:hover, #kae-hide-button:hover {
+    box-shadow: 0 0 0 1px #ffffff, 0 0 0 3px #1865f2;
 }
 
 /** Table Styles **/
@@ -100,7 +125,7 @@ body .errorBuddyContainer_1o6y302-o_O-buttonOnLeft_1tyzswu {
     background: #dddddd;
 }
 
-/* Make program buttons blue */
+/** Make program buttons blue **/
 /* 1w8n1i8 was the filled in buttons, 77ub1h was the outlined buttons; now they're filled in unless they're disabled */
 body .link_1uvuyao-o_O-computing_1w8n1i8, body .link_1uvuyao-o_O-computing_77ub1h {
     border: 1px solid transparent !important;
@@ -132,29 +157,24 @@ body .link_1uvuyao-o_O-computing_1uwg40u:hover {
     color: #0f52cf !important;
 }
 
+/** Center program titles **/
 .scratchpad-page .titleAndLogo_1em9xw1 {
     display: block !important;
     text-align: center !important;
 }
 
+/** Evenly space program buttons **/
 .buttons_vponqv .discussion-meta .discussion-meta-controls > span:nth-child(2) {
     display: inline-block;
     width: 4.5px;
 }
 
+/** Hide survey **/
 .kui-survey.session-survey {
     display: none;
 }
 
-#kae-toggle-editor-settings {
-    font-size: 16px;
-    font-weight: bold;
-}
-
-#kae-toggle-editor-settings:hover {
-    box-shadow: 0 0 0 1px #ffffff, 0 0 0 3px #1865f2;
-}
-
+/** Editor Settings **/
 .kae-editor-settings {
     display: block;
     position: absolute;
@@ -202,4 +222,9 @@ body #kae-report-button:hover {
     padding: 8px;
     margin-bottom: 10px;
     text-align: center;
+}
+
+/** Misc **/
+.kae-green {
+    color: #3eaa23 !important;
 }

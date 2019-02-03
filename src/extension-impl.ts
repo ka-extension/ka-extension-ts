@@ -1,9 +1,9 @@
 import { Extension, getKaid } from "./extension";
-import { Program, UsernameOrKaid } from "./types/data";
-import { commentsButtonEventListener, commentsAddEditUI } from "./comment-data";
+import { Program, UsernameOrKaid, KA } from "./types/data";
+import { switchToTipsAndThanks, commentsButtonEventListener } from "./discussion";
 import { addProgramFlags } from "./flag";
-import { addReportButton, addReportButtonDiscussionPosts, addProfileReportButton } from "./report";
-import { addUserInfo, addLocationInput } from "./profile";
+import { addReportButton, /*addReportButtonDiscussionPosts,*/ addProfileReportButton } from "./report";
+import { addUserInfo, duplicateBadges, } from "./profile";
 import { addProgramInfo, hideEditor, keyboardShortcuts, addEditorSettingsButton, checkHiddenOrDeleted, addProgramAuthorHoverCard } from "./project";
 import { addLinkButton, replaceVoteButton } from "./buttons";
 import { deleteNotifButtons, updateNotifIndicator } from "./notif";
@@ -12,7 +12,6 @@ class ExtensionImpl extends Extension {
 	async onProgramPage (program: Program) {
 		hideEditor(program);
 		keyboardShortcuts(program);
-		addProgramAuthorHoverCard(program);
 		addEditorSettingsButton();
 	}
 	async onProgramAboutPage (program: Program) {
@@ -22,26 +21,30 @@ class ExtensionImpl extends Extension {
 		addProgramFlags(program, kaid);
 		addLinkButton(program);
 		replaceVoteButton(program);
-	}
-	async onRepliesPage (uok: UsernameOrKaid) {
-		const kaid = await getKaid();
-		commentsButtonEventListener(uok, kaid);
-		console.info("On replies page");
+		addProgramAuthorHoverCard(program);
 	}
 	async onProfilePage (uok: UsernameOrKaid) {
 		const kaid = await getKaid();
 		if (kaid) {
 			addProfileReportButton(uok, kaid);
 		}
+		const KA = (window as any).KA as KA;
+		if (KA!._userProfileData!.kaid === kaid) {
+			setInterval(duplicateBadges, 100);
+		}
 		addUserInfo(uok);
 	}
 	onHomePage (uok: UsernameOrKaid) {
-		addLocationInput(uok);
+		console.info("On home page");
 	}
-	onDetailedDiscussionPage (focusId: string, focusKind: string) {
-		setInterval(addReportButtonDiscussionPosts.bind(null, focusId, focusKind), 100);
-		setInterval(commentsAddEditUI.bind(null, focusId, focusKind), 100);
-		console.info("On detailed discussion page");
+	onDiscussionPage (uok: UsernameOrKaid) {
+		//TODO: fix report button for discussion
+		// setInterval(addReportButtonDiscussionPosts.bind(null, focusId, focusKind), 100);
+
+		switchToTipsAndThanks();
+
+		commentsButtonEventListener(uok);
+		console.info("On discussion page");
 	}
 	onHotlistPage () {
 		console.info("On the hotlist");
@@ -49,9 +52,6 @@ class ExtensionImpl extends Extension {
 	onPage () {
 		deleteNotifButtons();
 		updateNotifIndicator();
-	}
-	onNewProgramPage () {
-		addEditorSettingsButton();
 	}
 	onProgram404Page () {
 		checkHiddenOrDeleted();

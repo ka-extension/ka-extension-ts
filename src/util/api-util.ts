@@ -2,7 +2,6 @@ import "whatwg-fetch";
 import { CSRF_HEADER } from "../types/names";
 import { getCSRF } from "./cookie-util";
 import { buildQuery } from "./text-util";
-import { UsernameOrKaid, CommentSortType, Program } from "../types/data";
 
 async function getJSON (url: URL | string, projection?: object): Promise<object> {
 	url = new URL(url.toString());
@@ -70,11 +69,6 @@ function deleteNotif (key: string): Promise<Response> {
 	}).then(e => e.status >= 200 && e.status < 300 ? Promise.resolve(e) : Promise.reject(e));
 }
 
-function getProgram (programId: string | number): Promise<Program> {
-	return getJSON(`${window.location.origin}/api/labs/scratchpads/${programId.toString()}`)
-		.then(e => e as Program);
-}
-
 interface FocusData {
 	id: string;
 	kind: string;
@@ -89,43 +83,8 @@ interface CommentData {
 	flags: string[];
 }
 
-// Symbol.asyncIterator polyfill
-if (Symbol.asyncIterator === undefined) {
-	((Symbol as any).asyncIterator) = Symbol.for("asyncIterator");
-}
-
-async function* commentDataGenerator (user: UsernameOrKaid, sort: CommentSortType = CommentSortType.TOP, limit: number = 10): AsyncIterator<CommentData[]> {
-	let page: number = 0;
-	for (; ;) {
-		const body: CommentData[] | undefined = await getJSON(`${window.location.origin}/api/internal/user/replies?${buildQuery({
-			casing: "camel",
-			[user.type]: user.toString(),
-			sort: sort.toString(),
-			subject: "all",
-			limit: limit.toString(),
-			page: (page++).toString(),
-			_: Date.now().toString()
-		})}`, [
-				{
-					normal: {
-						focusUrl: 1,
-						expandKey: 1,
-						key: 1,
-						flags: 1,
-						authorKaid: 1,
-						focus: {
-							id: 1,
-							kind: 1
-						}
-					}
-				}
-			]).then(e => e as CommentData[]).catch(e => void console.error(e));
-		if (!body) {
-			return;
-		} else {
-			yield body;
-		}
-	}
+interface CommentResponse {
+	feedback: CommentData[];
 }
 
 enum DiscussionTypes {
@@ -220,9 +179,29 @@ function getConvo (key: string, focusKind: string, focusId: string, discussionTy
 	});
 }
 
+function getComment (key: string): Promise<CommentData> {
+	return getJSON(`${window.location.origin}/api/internal/discussions/scratchpad/5444013900333056/comments?${buildQuery({
+		casing: "camel",
+		qa_expand_key: key,
+		sort: "1",
+		subject: "all",
+		limit: "1",
+		page: "0",
+		lang: "en",
+		_: Date.now() + ""
+	})}`, {
+			feedback: [
+				{
+					normal: {
+						flags: 1
+					}
+				}
+			]
+		}).then(data => data as CommentResponse).then(data => data.feedback[0]);
+}
+
 export {
-	getJSON, FocusData, CommentData,
-	commentDataGenerator, getProgram,
+	getJSON, getComment, FocusData, CommentData,
 	getConvo, FinalReply, FinalConvo,
 	DiscussionTypes, deleteNotif, putPostJSON
 };

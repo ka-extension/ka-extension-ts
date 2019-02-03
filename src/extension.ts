@@ -1,5 +1,4 @@
 import { UsernameOrKaid, Program } from "./types/data";
-import { getProgram } from "./util/api-util";
 import { querySelectorPromise } from "./util/promise-util";
 
 interface HoverQtipOptions {
@@ -7,8 +6,16 @@ interface HoverQtipOptions {
 	at: string;
 }
 
+interface KAScratchpadUI {
+	scratchpad: {
+		id: number;
+		attributes: Program;
+	};
+}
+
 interface KAdefineResult {
 	data?: KAdefineData;
+	ScratchpadUI?: KAScratchpadUI;
 	createHoverCardQtip?: (target: HTMLElement, options: HoverQtipOptions) => void;
 	getKaid? (): string;
 }
@@ -56,8 +63,9 @@ const KAdefine = {
 };
 
 enum KAScripts {
-	DISCUSSION = "./javascript/discussion-package/discussion.js",
-	KA = "./javascript/shared-package/ka.js"
+	SCRATCHPAD_UI = "./javascript/scratchpads-package/scratchpad-ui.js",
+	DISCUSSION = "./javascript/discussion-package/util.js",
+	KA = "./javascript/shared-package/ka.js",
 }
 
 const getKaid = (): Promise<string | null> => KAdefine.asyncRequire(KAScripts.KA)
@@ -68,57 +76,38 @@ abstract class Extension {
 	constructor () {
 		this.url = window.location.href.split("/");
 	}
-	onDiscussionPage (): void | Promise<void> {
-		console.info("Discussion package loaded");
-	}
-	onDetailedDiscussionPage (focusId: string, focusKind: string): void | Promise<void> {
-		console.info("Detailed discussion page");
-	}
 	abstract onProgramPage (program: Program): void | Promise<void>;
 	abstract onProgramAboutPage (program: Program): void | Promise<void>;
-	abstract onRepliesPage (uok: UsernameOrKaid): void | Promise<void>;
 	abstract onHotlistPage (): void;
 	abstract onProfilePage (uok: UsernameOrKaid): void;
 	abstract onHomePage (uok: UsernameOrKaid): void;
-	abstract onNewProgramPage (): void;
 	abstract onPage (): void;
 	abstract onProgram404Page (): void;
+	abstract onDiscussionPage (uok: UsernameOrKaid): void;
 	async init (): Promise<void> {
 		if (window.location.host.includes("khanacademy.org")) {
 			this.onPage();
-			KAdefine.asyncRequire(KAScripts.DISCUSSION).then(e => {
-				if (e) {
-					this.onDiscussionPage();
-				}
+
+			const kaid = await getKaid();
+
+			KAdefine.asyncRequire(KAScripts.DISCUSSION, 100).then(data => {
+				this.onDiscussionPage(new UsernameOrKaid(kaid as string));
 			}).catch(console.error);
 
-			if (this.url[5] === "discussion" && this.url[6] === "replies" && this.url[3] === "profile") {
-				const identifier: UsernameOrKaid = new UsernameOrKaid(this.url[4]);
-				this.onRepliesPage(identifier);
-			}
-
-			if (this.url[4] === "new" && /webpage|pjs|sql/ig.test(this.url[5])) {
-				this.onNewProgramPage();
-			}
-
-			KAdefine.asyncRequire(KAScripts.DISCUSSION, 100, (data: KAdefineResult) =>
-				typeof data.data !== "undefined" && typeof data.data.focusId !== "undefined" &&
-				typeof data.data.focusKind !== "undefined").then(e => {
-					if (e.data && e.data.focusId && e.data.focusKind) {
-						this.onDetailedDiscussionPage(e.data.focusId, e.data.focusKind);
-						if (e.data.focusKind === "scratchpad") {
-							getProgram(e.data.focusId).then(programData => {
-								this.onProgramPage(programData);
-								this.onProgramAboutPage(programData);
-								querySelectorPromise("#scratchpad-tabs").then(tabs => {
-									tabs.childNodes[0].addEventListener("click", (e: Event) => {
-										if ((e.currentTarget as HTMLAnchorElement).getAttribute("aria-selected") !== "true") {
-											this.onProgramAboutPage(programData);
-										}
-									});
-								});
+			KAdefine.asyncRequire(KAScripts.SCRATCHPAD_UI, 100, (data: KAdefineResult) =>
+					(typeof data.ScratchpadUI !== "undefined" && typeof data.ScratchpadUI.scratchpad !== "undefined")
+				).then(e => {
+					if (e.ScratchpadUI && e.ScratchpadUI.scratchpad) {
+						const programData = e.ScratchpadUI.scratchpad.attributes;
+						this.onProgramPage(programData);
+						this.onProgramAboutPage(programData);
+						querySelectorPromise("#scratchpad-tabs").then(tabs => {
+							tabs.childNodes[0].addEventListener("click", (e: Event) => {
+								if ((e.currentTarget as HTMLAnchorElement).getAttribute("aria-selected") !== "true") {
+									this.onProgramAboutPage(programData);
+								}
 							});
-						}
+						});
 					}
 				}).catch(console.error);
 
@@ -144,7 +133,7 @@ abstract class Extension {
 				this.onHomePage(identifier);
 			}
 
-			const kaid = await getKaid();
+
 			if (this.url.length <= 4) {
 				const identifier: UsernameOrKaid = new UsernameOrKaid(kaid as string);
 				this.onHomePage(identifier);
