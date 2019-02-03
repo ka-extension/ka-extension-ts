@@ -53,9 +53,6 @@ class ExtensionImpl extends Extension {
 		deleteNotifButtons();
 		updateNotifIndicator();
 	}
-	onNewProgramPage () {
-		addEditorSettingsButton();
-	}
 	onProgram404Page () {
 		checkHiddenOrDeleted();
 	}
