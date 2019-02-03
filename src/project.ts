@@ -3,7 +3,6 @@ import { KAdefine } from "./extension";
 import { formatDate } from "./util/text-util";
 import { PREFIX } from "./types/names";
 import { querySelectorPromise } from "./util/promise-util";
-import { BUTTON_CLASSES } from "./buttons";
 import { addEditorSettings } from "./editor-settings";
 
 function tableRow (key: string, val: string, title?: string): HTMLTableRowElement {
