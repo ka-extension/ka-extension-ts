@@ -93,11 +93,10 @@ function hideEditor (program: Program): void {
 			editor.classList.toggle("kae-hide");
 			wrap.classList.toggle("kae-hide-wrap");
 		}
-		const hideDiv: HTMLDivElement = <HTMLDivElement>document.createElement("div");
-		const hideButton: HTMLAnchorElement = <HTMLAnchorElement>document.createElement("a");
-		hideDiv.id = "kae-hide-div";
+		const rightArea = <HTMLDivElement>document.querySelector(".default_olfzxm-o_O-rightColumn_1rpl0kp");
+		const hideButton = <HTMLAnchorElement>document.createElement("a");
 		hideButton.id = "kae-hide-button";
-		hideButton.className = BUTTON_CLASSES.default;
+		hideButton.classList.add("button_1eqj1ga-o_O-shared_acgh35-o_O-default_9fm203-o_O-toolbarButton_em2kam");
 		hideButton.textContent = "Toggle Editor";
 		hideButton.addEventListener("click", (): void => {
 			lsEditorVal = lsEditorVal === "true" ? "false" : "true";
@@ -105,10 +104,8 @@ function hideEditor (program: Program): void {
 			editor.classList.toggle("kae-hide");
 			wrap.classList.toggle("kae-hide-wrap");
 		});
-		const wrapParent: HTMLDivElement | null = <HTMLDivElement>wrap.parentNode;
-		if (wrapParent) {
-			hideDiv.appendChild(hideButton);
-			wrapParent.insertBefore(hideDiv, wrap);
+		if (rightArea) {
+			rightArea.appendChild(hideButton);
 		}
 	}
 }
