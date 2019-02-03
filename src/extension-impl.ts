@@ -1,12 +1,11 @@
 import { Extension, getKaid } from "./extension";
 import { Program, UsernameOrKaid, KA } from "./types/data";
-import { commentsButtonEventListener } from "./comment-data";
+import { switchToTipsAndThanks, commentsButtonEventListener } from "./discussion";
 import { addProgramFlags } from "./flag";
-import { addReportButton, addReportButtonDiscussionPosts, addProfileReportButton } from "./report";
+import { addReportButton, /*addReportButtonDiscussionPosts,*/ addProfileReportButton } from "./report";
 import { addUserInfo, duplicateBadges, } from "./profile";
 import { addProgramInfo, hideEditor, keyboardShortcuts, addEditorSettingsButton, checkHiddenOrDeleted, addProgramAuthorHoverCard } from "./project";
 import { addLinkButton, replaceVoteButton } from "./buttons";
-import { querySelectorPromise } from "./util/promise-util";
 import { deleteNotifButtons, updateNotifIndicator } from "./notif";
 
 class ExtensionImpl extends Extension {
@@ -24,11 +23,6 @@ class ExtensionImpl extends Extension {
 		addLinkButton(program);
 		replaceVoteButton(program);
 	}
-	async onRepliesPage (uok: UsernameOrKaid) {
-		const kaid = await getKaid();
-		// commentsButtonEventListener(uok, kaid);
-		console.info("On replies page");
-	}
 	async onProfilePage (uok: UsernameOrKaid) {
 		const kaid = await getKaid();
 		if (kaid) {
@@ -43,14 +37,14 @@ class ExtensionImpl extends Extension {
 	onHomePage (uok: UsernameOrKaid) {
 		console.info("On home page");
 	}
-	onDetailedDiscussionPage () {
+	onDiscussionPage (uok: UsernameOrKaid) {
 		//TODO: fix report button for discussion
 		// setInterval(addReportButtonDiscussionPosts.bind(null, focusId, focusKind), 100);
 
-		querySelectorPromise("#ka-uid-discussiontabbedpanel-1--tabbedpanel-tab-1").then(tabButton => tabButton as HTMLButtonElement).then(tabButton =>{
-			tabButton.click();
-		}).catch(console.error);
-		console.info("On detailed discussion page");
+		switchToTipsAndThanks();
+
+		commentsButtonEventListener(uok);
+		console.info("On discussion page");
 	}
 	onHotlistPage () {
 		console.info("On the hotlist");

@@ -24,12 +24,13 @@ body .main-discussion-guidelines.discussion-guidelines {
 }
 
 /** Improvements to discussion styling **/
-body *:focus { /*Default outline, light gray instead of the deafult bright blue*/
+.linkStyledButton_ycurob:focus { /*Replies button*/
     outline: auto 3px #888 !important;
 }
 body .notAButton_14bcykr-o_O-tabTrigger_1jwmooj-o_O-activeTab_khee7t:focus, /*T&T tab button*/
-.default_olfzxm-o_O-inlineStyles_16okj06:focus,                             /*Comments*/
-.default_olfzxm-o_O-horizontalSeparator_6lbsg7-o_O-inlineStyles_16okj06:focus { /*Replies*/
+.default_olfzxm-o_O-inlineStyles_16okj06:focus, /*Comments*/
+.default_olfzxm-o_O-horizontalSeparator_6lbsg7-o_O-inlineStyles_16okj06:focus, /*Replies*/
+button[class^="button_1eqj1ga-o_O-shared_acgh35-o_O-default_9fm203-o_O-"]:focus { /*Show more comments*/
     outline: none !important;
 }
 /*Background on focused comments*/
@@ -39,6 +40,12 @@ body .notAButton_14bcykr-o_O-tabTrigger_1jwmooj-o_O-activeTab_khee7t:focus, /*T&
 }
 body .default_olfzxm-o_O-inlineStyles_16okj06 {
     padding: 9px !important;
+}
+.discussion-code-inline { /*Fix a bug where inline code blocks expanded the width of the comment*/
+    white-space: pre-wrap;
+}
+body .default_olfzxm-o_O-flagText_1ajw024-o_O-flagText_avg348 {
+    display: block !important; /*Flag text gets hidden on profile reply page for some reason*/
 }
 
 /** Widen scratchpad **/
