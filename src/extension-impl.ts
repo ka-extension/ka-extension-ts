@@ -12,7 +12,6 @@ class ExtensionImpl extends Extension {
 	async onProgramPage (program: Program) {
 		hideEditor(program);
 		keyboardShortcuts(program);
-		addProgramAuthorHoverCard(program);
 		addEditorSettingsButton();
 	}
 	async onProgramAboutPage (program: Program) {
@@ -22,6 +21,7 @@ class ExtensionImpl extends Extension {
 		addProgramFlags(program, kaid);
 		addLinkButton(program);
 		replaceVoteButton(program);
+		addProgramAuthorHoverCard(program);
 	}
 	async onProfilePage (uok: UsernameOrKaid) {
 		const kaid = await getKaid();
@@ -52,9 +52,6 @@ class ExtensionImpl extends Extension {
 	onPage () {
 		deleteNotifButtons();
 		updateNotifIndicator();
-	}
-	onNewProgramPage () {
-		addEditorSettingsButton();
 	}
 	onProgram404Page () {
 		checkHiddenOrDeleted();

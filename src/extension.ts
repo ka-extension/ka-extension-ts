@@ -81,17 +81,12 @@ abstract class Extension {
 	abstract onHotlistPage (): void;
 	abstract onProfilePage (uok: UsernameOrKaid): void;
 	abstract onHomePage (uok: UsernameOrKaid): void;
-	abstract onNewProgramPage (): void;
 	abstract onPage (): void;
 	abstract onProgram404Page (): void;
 	abstract onDiscussionPage (uok: UsernameOrKaid): void;
 	async init (): Promise<void> {
 		if (window.location.host.includes("khanacademy.org")) {
 			this.onPage();
-
-			if (this.url[4] === "new" && /webpage|pjs|sql/ig.test(this.url[5])) {
-				this.onNewProgramPage();
-			}
 
 			const kaid = await getKaid();
 
