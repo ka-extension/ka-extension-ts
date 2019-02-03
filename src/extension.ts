@@ -78,36 +78,32 @@ abstract class Extension {
 	}
 	abstract onProgramPage (program: Program): void | Promise<void>;
 	abstract onProgramAboutPage (program: Program): void | Promise<void>;
-	abstract onRepliesPage (uok: UsernameOrKaid): void | Promise<void>;
 	abstract onHotlistPage (): void;
 	abstract onProfilePage (uok: UsernameOrKaid): void;
 	abstract onHomePage (uok: UsernameOrKaid): void;
 	abstract onNewProgramPage (): void;
 	abstract onPage (): void;
 	abstract onProgram404Page (): void;
-	abstract onDetailedDiscussionPage (): void;
+	abstract onDiscussionPage (uok: UsernameOrKaid): void;
 	async init (): Promise<void> {
 		if (window.location.host.includes("khanacademy.org")) {
 			this.onPage();
-
-			if (this.url[5] === "discussion" && this.url[6] === "replies" && this.url[3] === "profile") {
-				const identifier: UsernameOrKaid = new UsernameOrKaid(this.url[4]);
-				this.onRepliesPage(identifier);
-			}
 
 			if (this.url[4] === "new" && /webpage|pjs|sql/ig.test(this.url[5])) {
 				this.onNewProgramPage();
 			}
 
-			KAdefine.asyncRequire(KAScripts.DISCUSSION, 100).then(() => {
-				this.onDetailedDiscussionPage();
+			const kaid = await getKaid();
+
+			KAdefine.asyncRequire(KAScripts.DISCUSSION, 100).then(data => {
+				this.onDiscussionPage(new UsernameOrKaid(kaid as string));
 			}).catch(console.error);
 
 			KAdefine.asyncRequire(KAScripts.SCRATCHPAD_UI, 100, (data: KAdefineResult) =>
 					(typeof data.ScratchpadUI !== "undefined" && typeof data.ScratchpadUI.scratchpad !== "undefined")
 				).then(e => {
 					if (e.ScratchpadUI && e.ScratchpadUI.scratchpad) {
-						let programData = e.ScratchpadUI.scratchpad.attributes;
+						const programData = e.ScratchpadUI.scratchpad.attributes;
 						this.onProgramPage(programData);
 						this.onProgramAboutPage(programData);
 						querySelectorPromise("#scratchpad-tabs").then(tabs => {
@@ -142,7 +138,7 @@ abstract class Extension {
 				this.onHomePage(identifier);
 			}
 
-			const kaid = await getKaid();
+
 			if (this.url.length <= 4) {
 				const identifier: UsernameOrKaid = new UsernameOrKaid(kaid as string);
 				this.onHomePage(identifier);
