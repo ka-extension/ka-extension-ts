@@ -5,7 +5,8 @@
 	"private": true,
 	"scripts": {
 		"errordetails": "webpack --display-error-details",
-		"build": "webpack",
+		"build": "webpack --config webpack.dev.js",
+		"build-prod": "webpack --config webpack.prod.js",
 		"watch": "webpack --watch",
 		"clean": "rm ./dist/*",
 		"lint": "tslint --project tsconfig.json -c tslint.json \"src/**/*.ts\"",
@@ -43,6 +44,7 @@
 		"regenerator-runtime": "^0.11.1",
 		"ts-loader": "^4.1.0",
 		"typescript": "^2.8.1",
+		"webpack-merge": "^4.2.1",
 		"whatwg-fetch": "^2.0.4"
 	}
 }
