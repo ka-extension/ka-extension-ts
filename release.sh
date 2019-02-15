@@ -1,5 +1,7 @@
 #!/bin/bash
 
+npm run build-prod
+
 REL="releases/"
 NOTES_VER=$(jq -r .[0].version resources/update-log.json) # update log version
 MAN_VER=$(jq -r .version manifest.json) # manifest version
