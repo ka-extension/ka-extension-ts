@@ -29,8 +29,7 @@ body .main-discussion-guidelines.discussion-guidelines {
 }
 body .notAButton_14bcykr-o_O-tabTrigger_1jwmooj-o_O-activeTab_khee7t:focus, /*T&T tab button*/
 .default_olfzxm-o_O-inlineStyles_16okj06:focus, /*Comments*/
-.default_olfzxm-o_O-horizontalSeparator_6lbsg7-o_O-inlineStyles_16okj06:focus, /*Replies*/
-button[class^="button_1eqj1ga-o_O-shared_acgh35-o_O-default_9fm203-o_O-"]:focus { /*Show more comments*/
+.default_olfzxm-o_O-horizontalSeparator_6lbsg7-o_O-inlineStyles_16okj06:focus { /*Replies*/
     outline: none !important;
 }
 /*Background on focused comments*/
@@ -86,7 +85,6 @@ body .errorBuddyContainer_1o6y302-o_O-buttonOnLeft_1tyzswu {
 /** Program toolbar buttons (Toggle Editor and Toggle Editor Settings for now) **/
 #kae-toggle-editor-settings, #kae-hide-button {
     font-size: 16px;
-    font-weight: bold;
 }
 
 #kae-toggle-editor-settings:hover, #kae-hide-button:hover {

@@ -28,7 +28,7 @@ function updateComments (): void {
 }
 
 function commentsButtonEventListener (uok: UsernameOrKaid): void {
-	querySelectorPromise(".button_1eqj1ga-o_O-shared_acgh35-o_O-default_9fm203", 100)
+	querySelectorPromise(".button_1eqj1ga-o_O-shared_1t8r4tr-o_O-default_9fm203", 100)
 		.then(button => {
 			button.addEventListener("click", updateComments);
 			updateComments();
