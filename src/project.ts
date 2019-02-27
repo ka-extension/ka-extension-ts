@@ -95,7 +95,7 @@ function hideEditor (program: Program): void {
 		const rightArea = <HTMLDivElement>document.querySelector(".default_olfzxm-o_O-rightColumn_1rpl0kp");
 		const hideButton = <HTMLAnchorElement>document.createElement("a");
 		hideButton.id = "kae-hide-button";
-		hideButton.classList.add("button_1eqj1ga-o_O-shared_acgh35-o_O-default_9fm203-o_O-toolbarButton_em2kam");
+		hideButton.classList.add("button_1eqj1ga-o_O-shared_1t8r4tr-o_O-default_9fm203-o_O-toolbarButton_em2kam");
 		hideButton.textContent = "Toggle Editor";
 		hideButton.addEventListener("click", (): void => {
 			lsEditorVal = lsEditorVal === "true" ? "false" : "true";
@@ -175,7 +175,7 @@ async function addEditorSettingsButton () {
 
 	const innerButtonLink: HTMLAnchorElement = document.createElement("a");
 	innerButtonLink.id = "kae-toggle-editor-settings";
-	innerButtonLink.classList.add("button_1eqj1ga-o_O-shared_acgh35-o_O-default_9fm203-o_O-toolbarButton_em2kam");
+	innerButtonLink.classList.add("button_1eqj1ga-o_O-shared_1t8r4tr-o_O-default_9fm203-o_O-toolbarButton_em2kam");
 	innerButtonLink.innerHTML = "Toggle Editor Settings";
 
 	const editor = document.querySelector(".scratchpad-ace-editor") as HTMLElement;

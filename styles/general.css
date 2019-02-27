@@ -86,7 +86,6 @@ body .errorBuddyContainer_1o6y302-o_O-buttonOnLeft_1tyzswu {
 /** Program toolbar buttons (Toggle Editor and Toggle Editor Settings for now) **/
 #kae-toggle-editor-settings, #kae-hide-button {
     font-size: 16px;
-    font-weight: bold;
 }
 
 #kae-toggle-editor-settings:hover, #kae-hide-button:hover {
