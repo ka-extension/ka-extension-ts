@@ -26,6 +26,7 @@ function tableRow (key: string, val: string, title?: string): HTMLTableRowElemen
 }
 
 function addProgramAuthorHoverCard (program: Program): void {
+	//TODO: Fix or remove
 	KAdefine.asyncRequire("./javascript/hover-card-package/hover-card.js").then(HoverCard => {
 		querySelectorPromise(".lastUpdated_9qi1wc").then((updatedSpan) => {
 			const nicknameAnchor = (updatedSpan.parentNode as HTMLDivElement).getElementsByClassName("shared_ko2ejt-o_O-default_1bzye1z")[0];
@@ -36,7 +37,7 @@ function addProgramAuthorHoverCard (program: Program): void {
 				});
 			});
 		});
-	});
+	}).catch(console.error);
 }
 
 function addProgramInfo (program: Program, uok: string): void {

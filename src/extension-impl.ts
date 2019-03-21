@@ -1,4 +1,4 @@
-import { Extension, getKaid } from "./extension";
+import { Extension } from "./extension";
 import { Program, UsernameOrKaid, KA } from "./types/data";
 import { switchToTipsAndThanks, commentsButtonEventListener } from "./discussion";
 import { addProgramFlags } from "./flag";
@@ -15,7 +15,7 @@ class ExtensionImpl extends Extension {
 		addEditorSettingsButton();
 	}
 	async onProgramAboutPage (program: Program) {
-		const kaid = await getKaid() as string;
+		const kaid = (window as any).KA.kaid;
 		addReportButton(program, kaid);
 		addProgramInfo(program, kaid);
 		addProgramFlags(program, kaid);
@@ -24,12 +24,12 @@ class ExtensionImpl extends Extension {
 		addProgramAuthorHoverCard(program);
 	}
 	async onProfilePage (uok: UsernameOrKaid) {
-		const kaid = await getKaid();
+		const KA:KA = (window as any).KA;
+		const kaid = KA.kaid;
 		if (kaid) {
 			addProfileReportButton(uok, kaid);
 		}
-		const KA = (window as any).KA as KA;
-		if (KA!._userProfileData!.kaid === kaid) {
+		if ((uok.asUsername() && uok.asUsername() === KA._userProfileData!.username) || (uok.asKaid() && uok.asKaid() === kaid)) {
 			setInterval(duplicateBadges, 100);
 		}
 		addUserInfo(uok);

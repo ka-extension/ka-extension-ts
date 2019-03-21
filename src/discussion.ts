@@ -1,6 +1,6 @@
 import { UsernameOrKaid } from "./types/data";
 import { querySelectorPromise, querySelectorAllPromise } from "./util/promise-util";
-import { getComment } from "./util/api-util.ts";
+import { getComment } from "./util/api-util";
 import {
 	EXTENSION_COMMENT_CLASSNAME,
 } from "./types/names";

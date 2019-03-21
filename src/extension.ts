@@ -1,5 +1,6 @@
 import { UsernameOrKaid, Program } from "./types/data";
 import { querySelectorPromise } from "./util/promise-util";
+import { KA } from "./types/data";
 
 interface HoverQtipOptions {
 	my: string;
@@ -41,23 +42,7 @@ const KAdefine = {
 	},
 	asyncRequire (url: string, interval: number = 100, test?: (data: KAdefineResult) => boolean, maxAttempts?: number): Promise<KAdefineResult> {
 		return new Promise((resolve, reject) => {
-			let counter = 0;
-			const attempt = () => {
-				try {
-					const data: KAdefineResult = getKAdefine().require(url);
-					if (test && !test(data)) {
-						throw new Error("Data failed tests");
-					}
-					resolve(data);
-				} catch (e) {
-					if (!maxAttempts || counter++ < maxAttempts) {
-						setTimeout(attempt, interval);
-					} else if (typeof maxAttempts !== "undefined") {
-						reject(e);
-					}
-				}
-			};
-			attempt();
+			reject(new Error("KAdefine.asyncRequire is depreciated after KA removed `KAdefine`."));
 		});
 	}
 };
@@ -68,8 +53,20 @@ enum KAScripts {
 	KA = "./javascript/shared-package/ka.js",
 }
 
-const getKaid = (): Promise<string | null> => KAdefine.asyncRequire(KAScripts.KA)
-	.then(req => req.getKaid ? req.getKaid() : null);
+const KA: KA|null = (window as any).KA;
+
+const getScratchpadUI = (): Promise<KAScratchpadUI> =>
+	new Promise((succeed, fail) => {
+		const check = () => {
+			const ScratchpadUI: KAScratchpadUI|null = (window as any).ScratchpadUI;
+			if (ScratchpadUI && ScratchpadUI.scratchpad) {
+				return succeed(ScratchpadUI);
+			}else {
+				setTimeout(check, 100);
+			}
+		};
+		check();
+	});
 
 abstract class Extension {
 	private readonly url: string[];
@@ -88,28 +85,28 @@ abstract class Extension {
 		if (window.location.host.includes("khanacademy.org")) {
 			this.onPage();
 
-			const kaid = await getKaid();
+			if (!KA || !KA.kaid) {
+				throw ("window.KA not found.");
+			}
+			const kaid = KA.kaid;
 
+			// TODO: Remove asyncRequire
 			KAdefine.asyncRequire(KAScripts.DISCUSSION, 100).then(data => {
 				this.onDiscussionPage(new UsernameOrKaid(kaid as string));
 			}).catch(console.error);
 
-			KAdefine.asyncRequire(KAScripts.SCRATCHPAD_UI, 100, (data: KAdefineResult) =>
-					(typeof data.ScratchpadUI !== "undefined" && typeof data.ScratchpadUI.scratchpad !== "undefined")
-				).then(e => {
-					if (e.ScratchpadUI && e.ScratchpadUI.scratchpad) {
-						const programData = e.ScratchpadUI.scratchpad.attributes;
-						this.onProgramPage(programData);
-						this.onProgramAboutPage(programData);
-						querySelectorPromise("#scratchpad-tabs").then(tabs => {
-							tabs.childNodes[0].addEventListener("click", (e: Event) => {
-								if ((e.currentTarget as HTMLAnchorElement).getAttribute("aria-selected") !== "true") {
-									this.onProgramAboutPage(programData);
-								}
-							});
-						});
-					}
-				}).catch(console.error);
+			getScratchpadUI().then(ScratchpadUI => {
+				const programData = ScratchpadUI.scratchpad.attributes;
+				this.onProgramPage(programData);
+				this.onProgramAboutPage(programData);
+				querySelectorPromise("#scratchpad-tabs").then(tabs => {
+					tabs.childNodes[0].addEventListener("click", (e: Event) => {
+						if ((e.currentTarget as HTMLAnchorElement).getAttribute("aria-selected") !== "true") {
+							this.onProgramAboutPage(programData);
+						}
+					});
+				});
+			});
 
 			if (/^\d{10,16}/.test(this.url[5])) {
 				querySelectorPromise("#page-container-inner", 100)
@@ -149,4 +146,4 @@ abstract class Extension {
 	}
 }
 
-export { Extension, getKaid, KAdefine };
+export { Extension, KAdefine };

@@ -30,7 +30,7 @@ class UsernameOrKaid {
 		return this.type === IdType.KAID ? this.toString() : null;
 	}
 	asUsername (): string | null {
-		return this.type === IdType.KAID ? this.toString() : null;
+		return this.type === IdType.USERNAME ? this.toString() : null;
 	}
 }
 
@@ -132,9 +132,11 @@ interface UserProfileData {
 	dateJoined: string;
 	kaid: string;
 	isPhantom: boolean;
+	username: string;
 }
 
 interface KA {
+	kaid: string;
 	_userProfileData?: UserProfileData;
 }
 
