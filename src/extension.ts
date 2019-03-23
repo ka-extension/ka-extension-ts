@@ -56,13 +56,18 @@ enum KAScripts {
 const KA: KA|null = (window as any).KA;
 
 const getScratchpadUI = (): Promise<KAScratchpadUI> =>
-	new Promise((succeed, fail) => {
+	new Promise((resolve, reject) => {
+		//Give it 10 seconds, max
+		let attemptsRemaining = 100;
 		const check = () => {
 			const ScratchpadUI: KAScratchpadUI|null = (window as any).ScratchpadUI;
 			if (ScratchpadUI && ScratchpadUI.scratchpad) {
-				return succeed(ScratchpadUI);
-			}else {
+				return resolve(ScratchpadUI);
+			}else if (attemptsRemaining) {
+				attemptsRemaining --;
 				setTimeout(check, 100);
+			}else {
+				reject(new Error("Unable to load scratchpad UI."));
 			}
 		};
 		check();
@@ -106,7 +111,7 @@ abstract class Extension {
 						}
 					});
 				});
-			});
+			}).catch(console.warn);
 
 			if (/^\d{10,16}/.test(this.url[5])) {
 				querySelectorPromise("#page-container-inner", 100)
