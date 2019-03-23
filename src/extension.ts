@@ -95,10 +95,10 @@ abstract class Extension {
 			}
 			const kaid = KA.kaid;
 
-			// TODO: Remove asyncRequire
-			KAdefine.asyncRequire(KAScripts.DISCUSSION, 100).then(data => {
-				this.onDiscussionPage(new UsernameOrKaid(kaid as string));
-			}).catch(console.error);
+			//10 seconds max
+			querySelectorPromise(".default_olfzxm-o_O-listWrapperExtraSpacing_1homyt1-o_O-inlineStyles_17u7rry ul", 100, 100).then(el =>
+				this.onDiscussionPage(new UsernameOrKaid(kaid as string))
+			).catch(console.warn);
 
 			getScratchpadUI().then(ScratchpadUI => {
 				const programData = ScratchpadUI.scratchpad.attributes;
