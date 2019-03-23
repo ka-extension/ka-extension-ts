@@ -37,7 +37,13 @@ function commentsButtonEventListener (uok: UsernameOrKaid): void {
 
 function switchToTipsAndThanks () {
 	querySelectorPromise("#ka-uid-discussiontabbedpanel-1--tabbedpanel-tab-1").then(tabButton => tabButton as HTMLButtonElement).then(tabButton => {
-		tabButton.click();
+		const y = document.body.scrollTop;
+
+		tabButton.dispatchEvent(new MouseEvent("click", { "view": window, "bubbles": true }));
+
+		window.setTimeout(function () {
+			window.scrollTo(0, y);
+		}, 0);
 	}).catch(console.error);
 }
 
