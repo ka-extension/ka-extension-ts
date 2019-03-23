@@ -28,30 +28,13 @@ interface KAdefineData {
 	isScratchpad?: boolean;
 }
 
-interface KAdefineType {
-	require (url: string): KAdefineResult;
-}
-
-function getKAdefine (): KAdefineType {
-	return (window as any).KAdefine as KAdefineType;
-}
-
 const KAdefine = {
-	require (url: string): KAdefineResult {
-		return getKAdefine().require(url);
-	},
 	asyncRequire (url: string, interval: number = 100, test?: (data: KAdefineResult) => boolean, maxAttempts?: number): Promise<KAdefineResult> {
 		return new Promise((resolve, reject) => {
 			reject(new Error("KAdefine.asyncRequire is depreciated after KA removed `KAdefine`."));
 		});
 	}
 };
-
-enum KAScripts {
-	SCRATCHPAD_UI = "./javascript/scratchpads-package/scratchpad-ui.js",
-	DISCUSSION = "./javascript/discussion-package/util.js",
-	KA = "./javascript/shared-package/ka.js",
-}
 
 const KA: KA|null = (window as any).KA;
 
