@@ -157,8 +157,8 @@ function checkHiddenOrDeleted () {
 
 /*** Add a button to toggle the Editor Settings popup for programs ***/
 async function addEditorSettingsButton () {
-	const leftArea = await querySelectorPromise(".default_olfzxm-o_O-leftColumn_qf2u39");
-
+	const editor = await querySelectorPromise(".scratchpad-ace-editor") as HTMLElement;
+	
 	const ace = (window as any).ace;
 
 	ace.config.set("basePath", "https://cdn.jsdelivr.net/gh/ajaxorg/ace-builds@1.1.4/src-min-noconflict");
@@ -171,15 +171,13 @@ async function addEditorSettingsButton () {
 		});
 		document!.head!.appendChild(scriptEl);
 	}else {
-		(window as any).ScratchpadAutosuggest.enableLiveCompletion = function () {};
+		(window as any).ScratchpadAutosuggest.enableLiveCompletion = () => {};
 	}
-
-	const innerButtonLink: HTMLAnchorElement = document.createElement("a");
+	
+	const innerButtonLink: HTMLAnchorElement = document.createElement("button");
 	innerButtonLink.id = "kae-toggle-editor-settings";
-	innerButtonLink.classList.add("button_1eqj1ga-o_O-shared_1t8r4tr-o_O-default_9fm203-o_O-toolbarButton_em2kam");
 	innerButtonLink.innerHTML = "Toggle Editor Settings";
 
-	const editor = document.querySelector(".scratchpad-ace-editor") as HTMLElement;
 	const session = ace.edit(editor).getSession();
 	session.setMode(new (ace.require(session.getMode().$id).Mode)());
 
@@ -193,6 +191,7 @@ async function addEditorSettingsButton () {
 	innerButtonLink.addEventListener("click", repos);
 	window.addEventListener("resize", repos);
 
+	const leftArea = await querySelectorPromise("._b9dpo7z");
 	leftArea.appendChild(innerButtonLink);
 
 	document.body.appendChild(editorSettings);

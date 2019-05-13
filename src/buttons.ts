@@ -2,10 +2,6 @@ import { Program, UserProfileData } from "./types/data";
 import { querySelectorPromise } from "./util/promise-util";
 import { getCSRF } from "./util/cookie-util";
 
-const enum BUTTON_CLASSES {
-	default = "link_1uvuyao-o_O-computing_77ub1h",
-}
-
 //Replace KA's vote button with one that updates after you vote and allows undoing votes
 function replaceVoteButton (program: Program): void {
 	querySelectorPromise(".voting-wrap .discussion-meta-controls span")
@@ -24,8 +20,9 @@ function replaceVoteButton (program: Program): void {
 			const newWrap = document.createElement("span");
 			const voteButton = document.createElement("a");
 			const voteText = document.createElement("span");
+			voteButton.setAttribute("role", "button");
+			voteButton.classList.add("kae-program-button");
 			voteButton.appendChild(voteText);
-			voteButton.classList.add(BUTTON_CLASSES.default);
 			newWrap.appendChild(voteButton);
 
 			function updateVoteDisplay () {
@@ -74,16 +71,15 @@ function replaceVoteButton (program: Program): void {
 
 //Add a "Copy Link" button
 function addLinkButton (program: Program): void {
-	querySelectorPromise(".buttons_vponqv")
-		.then(buttons => buttons as HTMLDivElement)
+	querySelectorPromise(".voting-wrap")
+		.then(buttons => buttons.parentNode).then(buttons => buttons as HTMLDivElement)
 		.then(buttons => {
-			console.log(buttons);
 			const copyLinkButton: HTMLAnchorElement = document.createElement("a");
 			copyLinkButton.id = "kae-link-button";
 
 			copyLinkButton.setAttribute("role", "button");
 			copyLinkButton.innerHTML = "<span>Copy Link</span>";
-			copyLinkButton.classList.add(BUTTON_CLASSES.default);
+			copyLinkButton.classList.add("kae-program-button");
 			copyLinkButton.addEventListener("click", function () {
 				if ((window.navigator as any).clipboard) {
 					(window.navigator as any).clipboard.writeText(`https://khanacademy.org/cs/i/${program.id}`).catch((err: Error) => {
@@ -111,4 +107,4 @@ function addLinkButton (program: Program): void {
 		});
 }
 
-export { BUTTON_CLASSES, addLinkButton, replaceVoteButton };
+export { addLinkButton, replaceVoteButton };
