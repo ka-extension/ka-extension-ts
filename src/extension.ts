@@ -1,6 +1,6 @@
 import { UsernameOrKaid, Program } from "./types/data";
 import { querySelectorPromise } from "./util/promise-util";
-import { KA, ScratchpadUI } from "./types/data";
+import { ScratchpadUI } from "./types/data";
 
 interface HoverQtipOptions {
 	my: string;

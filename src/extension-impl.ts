@@ -1,8 +1,8 @@
 import { Extension } from "./extension";
-import { Program, UsernameOrKaid, KA } from "./types/data";
+import { Program, UsernameOrKaid } from "./types/data";
 import { switchToTipsAndThanks, commentsButtonEventListener } from "./discussion";
 import { addProgramFlags } from "./flag";
-import { addReportButton, /*addReportButtonDiscussionPosts,*/ addProfileReportButton } from "./report";
+import { addReportButton, addProfileReportButton } from "./report";
 import { addUserInfo, duplicateBadges, } from "./profile";
 import { addProgramInfo, hideEditor, keyboardShortcuts, addEditorSettingsButton, checkHiddenOrDeleted, addProgramAuthorHoverCard } from "./project";
 import { addLinkButton, replaceVoteButton } from "./buttons";

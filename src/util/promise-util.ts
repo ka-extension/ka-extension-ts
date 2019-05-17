@@ -1,3 +1,4 @@
+/* tslint:disable */
 // TS Promise-based utility functions for finding JS generated elements on a page
 function querySelectorAllPromise (selectorString: string, interval: number = 250, maxTrials?: number): Promise<NodeList> {
 	return new Promise((resolve: (nodes: NodeList) => void, reject: (...args: any[]) => void): void => {

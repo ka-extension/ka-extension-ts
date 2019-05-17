@@ -1,4 +1,4 @@
-import { Program, UserProfileData } from "./types/data";
+import { Program } from "./types/data";
 import { querySelectorPromise } from "./util/promise-util";
 
 function addProgramFlags (program: Program, kaid: string): void {
