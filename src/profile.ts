@@ -31,7 +31,7 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 		return prev + (parseInt(badge.textContent || "") || 0);
 	}, 0) || 0;
 
-	const entries: any = {
+	const entries = {
 		"Programs": totals.programs,
 		"Total votes received": totals.votes,
 		"Total spinoffs received": totals.spinoffs,
@@ -40,7 +40,7 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 		"Total badges": totalBadges,
 		"Inspiration badges": totals.inspiration,
 		"More info": `<a href="${userEndpoint}/profile?${uok.type}=${uok.id}&format=pretty" target="_blank">API endpoint</a>`
-	};
+	} as { [key: string]: string | number; };
 
 	for (const entry in entries) {
 		table.innerHTML += `<tr>
@@ -58,7 +58,7 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 			const dateElement = document.querySelectorAll("td")[1];
 			dateElement!.title = formatDate(User.dateJoined);
 
-			if(DEVELOPERS.includes(User.kaid)) {
+			if (DEVELOPERS.includes(User.kaid)) {
 				table.innerHTML += `<span class="kae-green user-statistics-label">KA Extension Developer</span>`;
 			}
 		});

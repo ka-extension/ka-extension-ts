@@ -159,7 +159,7 @@ function checkHiddenOrDeleted () {
 async function addEditorSettingsButton () {
 	const leftArea = await querySelectorPromise(".default_olfzxm-o_O-leftColumn_qf2u39");
 
-	const ace = (window as any).ace;
+	const ace = window.ace;
 
 	ace.config.set("basePath", "https://cdn.jsdelivr.net/gh/ajaxorg/ace-builds@1.1.4/src-min-noconflict");
 
@@ -170,8 +170,8 @@ async function addEditorSettingsButton () {
 			ace.require("ace/ext/language_tools");
 		});
 		document!.head!.appendChild(scriptEl);
-	}else {
-		(window as any).ScratchpadAutosuggest.enableLiveCompletion = function () {};
+	} else {
+		window.ScratchpadAutosuggest.enableLiveCompletion = function () { };
 	}
 
 	const innerButtonLink: HTMLAnchorElement = document.createElement("a");

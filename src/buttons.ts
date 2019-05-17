@@ -1,4 +1,4 @@
-import { Program, UserProfileData } from "./types/data";
+import { Program } from "./types/data";
 import { querySelectorPromise } from "./util/promise-util";
 import { getCSRF } from "./util/cookie-util";
 
@@ -33,7 +33,7 @@ function replaceVoteButton (program: Program): void {
 			}
 			updateVoteDisplay();
 
-			const profileData: UserProfileData | undefined = <UserProfileData>(window as any).KA._userProfileData;
+			const profileData = window.KA._userProfileData;
 			if (!profileData || profileData.isPhantom) {
 				console.log("Not logged in.", voteButton);
 				voteButton.setAttribute("style", "cursor: default !important");
@@ -50,18 +50,10 @@ function replaceVoteButton (program: Program): void {
 						headers: { "X-KA-FKey": getCSRF() },
 						credentials: "same-origin"
 					}).then((response: Response): void => {
-						if (response.status !== 204) {
-							response.json().then((res: any): void => {
-								if (res.error) {
-									alert("Failed with error:\n\n" + res.error);
-								}
-							}).catch(() => {
-								alert(`Voting failed with status ${response.status}`);
-							});
+							if (response.status === 204) { return; }
 							voted = !voted;
 							updateVoteDisplay();
-						}
-					}).catch(console.error);
+						}).catch(console.error);
 				});
 			}
 
@@ -84,11 +76,14 @@ function addLinkButton (program: Program): void {
 			copyLinkButton.setAttribute("role", "button");
 			copyLinkButton.innerHTML = "<span>Copy Link</span>";
 			copyLinkButton.classList.add(BUTTON_CLASSES.default);
+
 			copyLinkButton.addEventListener("click", function () {
-				if ((window.navigator as any).clipboard) {
+				if (window.navigator.hasOwnProperty("clipboard")) {
+					/* tslint:disable:no-any */
 					(window.navigator as any).clipboard.writeText(`https://khanacademy.org/cs/i/${program.id}`).catch((err: Error) => {
 						alert("Copying failed with error:\n" + err);
 					});
+					/* tslint:enable:no-any */
 				} else {
 					try {
 						const textArea = document.createElement("textarea");

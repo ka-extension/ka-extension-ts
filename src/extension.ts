@@ -1,22 +1,15 @@
 import { UsernameOrKaid, Program } from "./types/data";
 import { querySelectorPromise } from "./util/promise-util";
-import { KA } from "./types/data";
+import { KA, ScratchpadUI } from "./types/data";
 
 interface HoverQtipOptions {
 	my: string;
 	at: string;
 }
 
-interface KAScratchpadUI {
-	scratchpad: {
-		id: number;
-		attributes: Program;
-	};
-}
-
 interface KAdefineResult {
 	data?: KAdefineData;
-	ScratchpadUI?: KAScratchpadUI;
+	ScratchpadUI?: ScratchpadUI;
 	createHoverCardQtip?: (target: HTMLElement, options: HoverQtipOptions) => void;
 	getKaid? (): string;
 }
@@ -30,26 +23,24 @@ interface KAdefineData {
 
 const KAdefine = {
 	asyncRequire (url: string, interval: number = 100, test?: (data: KAdefineResult) => boolean, maxAttempts?: number): Promise<KAdefineResult> {
-		return new Promise((resolve, reject) => {
+		return new Promise ((resolve, reject) => {
 			reject(new Error("KAdefine.asyncRequire is depreciated after KA removed `KAdefine`."));
 		});
 	}
 };
 
-const KA: KA|null = (window as any).KA;
-
-const getScratchpadUI = (): Promise<KAScratchpadUI> =>
+const getScratchpadUI = (): Promise<ScratchpadUI> =>
 	new Promise((resolve, reject) => {
 		//Give it 10 seconds, max
 		let attemptsRemaining = 100;
 		const check = () => {
-			const ScratchpadUI: KAScratchpadUI|null = (window as any).ScratchpadUI;
+			const ScratchpadUI = window.ScratchpadUI;
 			if (ScratchpadUI && ScratchpadUI.scratchpad) {
 				return resolve(ScratchpadUI);
-			}else if (attemptsRemaining) {
-				attemptsRemaining --;
+			} else if (attemptsRemaining) {
+				attemptsRemaining--;
 				setTimeout(check, 100);
-			}else {
+			} else {
 				reject(new Error("Unable to load scratchpad UI."));
 			}
 		};
@@ -73,10 +64,7 @@ abstract class Extension {
 		if (window.location.host.includes("khanacademy.org")) {
 			this.onPage();
 
-			if (!KA || !KA.kaid) {
-				throw ("window.KA not found.");
-			}
-			const kaid = KA.kaid;
+			const kaid = window.KA.kaid;
 
 			//10 seconds max
 			querySelectorPromise(".default_olfzxm-o_O-listWrapperExtraSpacing_1homyt1-o_O-inlineStyles_17u7rry ul", 100, 100).then(el =>
@@ -101,7 +89,7 @@ abstract class Extension {
 					.then(pageContent => pageContent as HTMLDivElement)
 					.then(pageContent => {
 						if (pageContent.querySelector("#four-oh-four")) {
-							(window as any).$LAB.queueWait(() => {
+							window.$LAB.queueWait(() => {
 								this.onProgram404Page();
 							});
 						}
