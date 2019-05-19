@@ -1,8 +1,8 @@
 import { Extension } from "./extension";
-import { Program, UsernameOrKaid, KA } from "./types/data";
+import { Program, UsernameOrKaid } from "./types/data";
 import { switchToTipsAndThanks, commentsButtonEventListener } from "./discussion";
 import { addProgramFlags } from "./flag";
-import { addReportButton, /*addReportButtonDiscussionPosts,*/ addProfileReportButton } from "./report";
+import { addReportButton, addProfileReportButton } from "./report";
 import { addUserInfo, duplicateBadges, } from "./profile";
 import { addProgramInfo, hideEditor, keyboardShortcuts, addEditorSettingsButton, checkHiddenOrDeleted, addProgramAuthorHoverCard } from "./project";
 import { addLinkButton, replaceVoteButton } from "./buttons";
@@ -15,7 +15,7 @@ class ExtensionImpl extends Extension {
 		addEditorSettingsButton();
 	}
 	async onProgramAboutPage (program: Program) {
-		const kaid = (window as any).KA.kaid;
+		const kaid = window.KA.kaid;
 		addReportButton(program, kaid);
 		addProgramInfo(program, kaid);
 		addProgramFlags(program, kaid);
@@ -24,12 +24,11 @@ class ExtensionImpl extends Extension {
 		addProgramAuthorHoverCard(program);
 	}
 	async onProfilePage (uok: UsernameOrKaid) {
-		const KA:KA = (window as any).KA;
-		const kaid = KA.kaid;
+		const kaid = window.KA.kaid;
 		if (kaid) {
 			addProfileReportButton(uok, kaid);
 		}
-		if ((uok.asUsername() && uok.asUsername() === KA._userProfileData!.username) || (uok.asKaid() && uok.asKaid() === kaid)) {
+		if ((uok.asUsername() && uok.asUsername() === window.KA._userProfileData!.username) || (uok.asKaid() && uok.asKaid() === kaid)) {
 			setInterval(duplicateBadges, 100);
 		}
 		addUserInfo(uok);
