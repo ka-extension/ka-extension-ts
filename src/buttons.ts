@@ -74,6 +74,9 @@ function addLinkButton (program: Program): void {
 	querySelectorPromise(".voting-wrap")
 		.then(buttons => buttons.parentNode).then(buttons => buttons as HTMLDivElement)
 		.then(buttons => {
+			/*Grab all the other buttons for styling*/
+			Array.from(buttons.querySelectorAll("a[role=\"button\"]")).forEach(el => el.classList.add("kae-program-button"));
+			
 			const copyLinkButton: HTMLAnchorElement = document.createElement("a");
 			copyLinkButton.id = "kae-link-button";
 

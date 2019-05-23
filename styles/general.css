@@ -158,27 +158,25 @@ body .link_1uvuyao-o_O-computing_77ub1h-o_O-disabled_2gos5, body .link_1uvuyao-o
 }
 
 /*Make buttons under the program blue*/
-/* 
-    Matches descendents of the parent of `.voting-wrap` which are `a[role="button"]`, or equivalently, 
-    The descendents of `.voting-wrap`, the siblings of `.voting-wrap`, and the descendents of the siblings of `.voting-wrap`, which also match `a[role="button"]`.
-*/
-.voting-wrap a[role="button"], .voting-wrap ~ a[role="button"], .voting-wrap ~ * a[role="button"] {
-    margin: 0;
-    padding: 8px;
-    font-size: 15px;
-    line-height: 23px;
-    font-weight: 400;
-    border-radius: 4px;
-    display: inline-block;
-    cursor: pointer;
-    text-decoration: none;
+body .kae-program-button {
+    margin: 0 !important;
+    padding: 8px !important;
+    font-size: 15px !important;
+    line-height: 23px !important;
+    font-weight: 400 !important;
+    border-radius: 4px !important;
+    display: inline-block !important;
+    cursor: pointer !important;
+    text-decoration: none !important;
     margin-right: 0 !important;
     border: 1px solid transparent !important;
     color: white !important;
     background: #1865f2 !important;
 }
-.voting-wrap ~ a[role="button"]:hover, .voting-wrap ~ * a[role="button"]:hover, .voting-wrap a[role="button"]:hover {
+body .kae-program-button:hover {
     background: #0f52cf !important;
+    color: white !important;
+    border: 1px solid transparent !important;
 }
 
 /** Evenly space program buttons **/
