@@ -134,30 +134,7 @@ body .errorBuddyContainer_1o6y302-o_O-buttonOnLeft_1tyzswu {
     background: #dddddd;
 }
 
-/** Make program buttons blue **/
-/* 1w8n1i8 was the filled in buttons, 77ub1h was the outlined buttons; now they're filled in unless they're disabled */
-body .link_1uvuyao-o_O-computing_1w8n1i8, body .link_1uvuyao-o_O-computing_77ub1h {
-    border: 1px solid transparent !important;
-    color: white !important;
-    background: #1865f2 !important;
-    margin-right: 0 !important;
-}
-
-body .link_1uvuyao-o_O-computing_1w8n1i8:hover, body .link_1uvuyao-o_O-computing_77ub1h:hover {
-    border: 1px solid transparent !important;
-    color: white !important;
-    background: #0f52cf !important;
-}
-
-/* The color for the disabled elements gets handled by KA setting opacity 0.5 */
-body .link_1uvuyao-o_O-computing_77ub1h-o_O-disabled_2gos5, body .link_1uvuyao-o_O-computing_1w8n1i8-o_O-disabled_2gos5 {
-    color: #0f52cf !important;
-    border: 1px solid #0f52cf !important;
-    border-radius: 4px !important;
-    background: white !important;
-}
-
-/*Make buttons under the program blue*/
+/** Make buttons under the program blue **/
 body .kae-program-button {
     margin: 0 !important;
     padding: 8px !important;
