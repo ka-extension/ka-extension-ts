@@ -1,7 +1,6 @@
 import { Extension } from "./extension";
 import { Program, UsernameOrKaid, KA } from "./types/data";
 import { switchToTipsAndThanks, commentsButtonEventListener } from "./discussion";
-import { addProgramFlags } from "./flag";
 import { addReportButton, /*addReportButtonDiscussionPosts,*/ addProfileReportButton } from "./report";
 import { addUserInfo, duplicateBadges, } from "./profile";
 import { addProgramInfo, hideEditor, keyboardShortcuts, addEditorSettingsButton, checkHiddenOrDeleted, addProgramAuthorHoverCard } from "./project";
@@ -19,7 +18,6 @@ class ExtensionImpl extends Extension {
 		loadButtonMods(program);
 		addReportButton(program, kaid);
 		addProgramInfo(program, kaid);
-		addProgramFlags(program, kaid);
 		addProgramAuthorHoverCard(program);
 	}
 	async onProfilePage (uok: UsernameOrKaid) {

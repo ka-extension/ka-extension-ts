@@ -103,6 +103,25 @@ function addLinkButton (buttons: HTMLDivElement, program: Program): void {
 	buttons.insertBefore(document.createTextNode(" "), copyLinkButton.nextSibling);
 }
 
+function addProgramFlags(buttons: HTMLDivElement, program: Program) {
+	const controls = buttons.querySelector(".discussion-meta-controls")
+
+	if (!controls) {
+		console.log(buttons);
+		throw new Error("Button controls should be loaded.");
+	}
+	
+	const programFlags: string[] = program.flags;
+	const flagButton: HTMLElement = <HTMLElement>controls.childNodes[2];
+	const reasons: string = programFlags.length > 0 ? programFlags.reduce((total, current) => total += `${current}\n`) : "No flags here!";
+	const profileData: UserProfileData | undefined = <UserProfileData>(window as any).KA._userProfileData;
+	//TODO: Allow viewing flags on your own program (where there's normally not a flag button)
+	if (profileData && profileData.kaid !== program.kaid && profileData.isModerator === false) {
+		flagButton.textContent += ` • ${programFlags.length}`;
+		flagButton.title = reasons;
+	}
+}
+
 function findOtherButtons (buttons: HTMLDivElement): void {
 	/*Add the kae-program-button class to all other program buttons so we can restyle them */
 	Array.from(buttons.querySelectorAll("a[role=\"button\"]")).forEach(el => el.classList.add("kae-program-button"));
@@ -116,6 +135,7 @@ function loadButtonMods (program: Program): void {
 			findOtherButtons(buttons);
 			addLinkButton(buttons, program);
 			replaceVoteButton(buttons, program);
+			addProgramFlags(buttons, program);
 		});
 	
 	querySelectorPromise("#child-account-notice")
