@@ -157,9 +157,9 @@ body .kae-program-button:hover {
 }
 
 /** Evenly space program buttons **/
-.buttons_vponqv .discussion-meta .discussion-meta-controls > span:nth-child(2) {
+.voting-wrap .discussion-meta .discussion-meta-controls > span:nth-child(2) {
     display: inline-block;
-    width: 4.5px;
+    width: 3px;
 }
 
 /* Make the sort selecting elements on the browse projects page blue */
