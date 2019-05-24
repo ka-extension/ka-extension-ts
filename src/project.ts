@@ -41,9 +41,13 @@ function addProgramAuthorHoverCard (program: Program): void {
 }
 
 function addProgramInfo (program: Program, uok: string): void {
-	querySelectorPromise(".lastUpdated_9qi1wc")
-		.then(updatedSpan => updatedSpan as HTMLSpanElement)
-		.then(updatedSpan => {
+	querySelectorPromise("[data-user-kaid]")
+		.then(userLink => userLink as HTMLAnchorElement)
+		.then(userLink => userLink.parentNode)
+		.then(wrapDiv => wrapDiv as HTMLDivElement)
+		.then(wrapDiv => wrapDiv.parentNode)
+		.then(wrapDiv => wrapDiv as HTMLDivElement)
+		.then(wrapDiv => {
 			const table = document.createElement("table");
 			table.className = "kae-table";
 
@@ -79,7 +83,7 @@ function addProgramInfo (program: Program, uok: string): void {
 				table.appendChild(tableRow("Updated", updated));
 			}
 			table.appendChild(tableRow("Created", created));
-			updatedSpan.appendChild(table);
+			wrapDiv.appendChild(table);
 		});
 }
 
@@ -174,7 +178,7 @@ async function addEditorSettingsButton () {
 		(window as any).ScratchpadAutosuggest.enableLiveCompletion = () => {};
 	}
 	
-	const innerButtonLink: HTMLAnchorElement = document.createElement("button");
+	const innerButtonLink: HTMLButtonElement = document.createElement("button");
 	innerButtonLink.id = "kae-toggle-editor-settings";
 	innerButtonLink.innerHTML = "Toggle Editor Settings";
 
