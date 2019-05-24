@@ -1,4 +1,4 @@
-import { MessageTypes } from "./types/message-types";
+import { MessageTypes, KAID_MESSAGE } from "./types/message-types";
 
 (() => {
 	console.log("content.js fired");
@@ -22,7 +22,7 @@ import { MessageTypes } from "./types/message-types";
 
 	window.addEventListener("beforeunload", () => {
 		chrome.runtime.sendMessage({
-			type: MessageTypes.GREY_ICON
+			type: MessageTypes.GREY_ICON,
 		});
 	});
 
@@ -31,7 +31,7 @@ import { MessageTypes } from "./types/message-types";
 		console.log(e);
 		chrome.runtime.sendMessage({
 			type: e.data.type,
-			message: e.data.message
+			message: e.data.message as KAID_MESSAGE
 		});
 	});
 

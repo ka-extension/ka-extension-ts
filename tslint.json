@@ -1,6 +1,7 @@
 {
     "rules": {
         "curly": true,
+        "no-any": true,
         "no-eval": true,
         "no-string-literal": true,
         "no-unused-variable": true,

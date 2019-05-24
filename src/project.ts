@@ -163,7 +163,7 @@ function checkHiddenOrDeleted () {
 async function addEditorSettingsButton () {
 	const editor = await querySelectorPromise(".scratchpad-ace-editor") as HTMLElement;
 	
-	const ace = (window as any).ace;
+	const ace = window.ace;
 
 	ace.config.set("basePath", "https://cdn.jsdelivr.net/gh/ajaxorg/ace-builds@1.1.4/src-min-noconflict");
 
@@ -175,7 +175,7 @@ async function addEditorSettingsButton () {
 		});
 		document!.head!.appendChild(scriptEl);
 	}else {
-		(window as any).ScratchpadAutosuggest.enableLiveCompletion = () => {};
+		window.ScratchpadAutosuggest.enableLiveCompletion = function () {};
 	}
 	
 	const innerButtonLink: HTMLButtonElement = document.createElement("button");

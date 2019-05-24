@@ -1,4 +1,4 @@
-import { Program, UserProfileData } from "./types/data";
+import { Program } from "./types/data";
 import { querySelectorPromise } from "./util/promise-util";
 import { QUEUE_ROOT } from "./types/names";
 import { getCSRF } from "./util/cookie-util";
@@ -33,7 +33,7 @@ function replaceVoteButton (buttons: HTMLDivElement, program: Program): void {
 	}
 	updateVoteDisplay();
 
-	const profileData: UserProfileData | undefined = <UserProfileData>(window as any).KA._userProfileData;
+	const profileData = window.KA._userProfileData;
 	if (!profileData || profileData.isPhantom) {
 		console.log("Not logged in.", voteButton);
 		voteButton.setAttribute("style", "cursor: default !important");
@@ -50,6 +50,7 @@ function replaceVoteButton (buttons: HTMLDivElement, program: Program): void {
 				headers: { "X-KA-FKey": getCSRF() },
 				credentials: "same-origin"
 			}).then((response: Response): void => {
+				//If there's an error, undo the vote
 				if (response.status !== 204) {
 					response.json().then((res: any): void => {
 						if (res.error) {
@@ -80,10 +81,12 @@ function addLinkButton (buttons: HTMLDivElement, program: Program): void {
 	copyLinkButton.innerHTML = "<span>Copy Link</span>";
 	copyLinkButton.classList.add("kae-program-button");
 	copyLinkButton.addEventListener("click", function () {
-		if ((window.navigator as any).clipboard) {
+		if (window.navigator.hasOwnProperty("clipboard")) {
+			/* tslint:disable:no-any */
 			(window.navigator as any).clipboard.writeText(`https://khanacademy.org/cs/i/${program.id}`).catch((err: Error) => {
 				alert("Copying failed with error:\n" + err);
 			});
+			/* tslint:enable:no-any */
 		} else {
 			try {
 				const textArea = document.createElement("textarea");
@@ -117,7 +120,7 @@ function addProgramFlags(buttons: HTMLDivElement, program: Program) {
 	const programFlags: string[] = program.flags;
 	const flagButton: HTMLElement = <HTMLElement>controls.childNodes[2];
 	const reasons: string = programFlags.length > 0 ? programFlags.reduce((total, current) => total += `${current}\n`) : "No flags here!";
-	const profileData: UserProfileData | undefined = <UserProfileData>(window as any).KA._userProfileData;
+	const profileData = window.KA._userProfileData;
 	//TODO: Allow viewing flags on your own program (where there's normally not a flag button)
 	if (profileData && profileData.kaid !== program.kaid && profileData.isModerator === false) {
 		flagButton.textContent += ` • ${programFlags.length}`;

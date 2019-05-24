@@ -14,18 +14,17 @@ class ExtensionImpl extends Extension {
 		addEditorSettingsButton();
 	}
 	async onProgramAboutPage (program: Program) {
-		const kaid = (window as any).KA.kaid;
+		const kaid = window.KA.kaid;
 		loadButtonMods(program);
 		addProgramInfo(program, kaid);
 		addProgramAuthorHoverCard(program);
 	}
 	async onProfilePage (uok: UsernameOrKaid) {
-		const KA:KA = (window as any).KA;
-		const kaid = KA.kaid;
+		const kaid = window.KA.kaid;
 		if (kaid) {
 			addProfileReportButton(uok, kaid);
 		}
-		if ((uok.asUsername() && uok.asUsername() === KA._userProfileData!.username) || (uok.asKaid() && uok.asKaid() === kaid)) {
+		if ((uok.asUsername() && uok.asUsername() === window.KA._userProfileData!.username) || (uok.asKaid() && uok.asKaid() === kaid)) {
 			setInterval(duplicateBadges, 100);
 		}
 		addUserInfo(uok);
