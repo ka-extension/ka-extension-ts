@@ -1,7 +1,7 @@
 import { Extension } from "./extension";
 import { Program, UsernameOrKaid, KA } from "./types/data";
 import { switchToTipsAndThanks, commentsButtonEventListener } from "./discussion";
-import { addReportButton, /*addReportButtonDiscussionPosts,*/ addProfileReportButton } from "./report";
+import { /*addReportButtonDiscussionPosts,*/ addProfileReportButton } from "./report";
 import { addUserInfo, duplicateBadges, } from "./profile";
 import { addProgramInfo, hideEditor, keyboardShortcuts, addEditorSettingsButton, checkHiddenOrDeleted, addProgramAuthorHoverCard } from "./project";
 import { loadButtonMods } from "./buttons";
@@ -16,7 +16,6 @@ class ExtensionImpl extends Extension {
 	async onProgramAboutPage (program: Program) {
 		const kaid = (window as any).KA.kaid;
 		loadButtonMods(program);
-		addReportButton(program, kaid);
 		addProgramInfo(program, kaid);
 		addProgramAuthorHoverCard(program);
 	}

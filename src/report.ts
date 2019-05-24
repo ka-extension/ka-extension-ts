@@ -9,27 +9,6 @@ import { FileDownloader } from "./util/download-util";
 
 const downloader = new FileDownloader();
 
-function addReportButton (program: Program, kaid: string) {
-	querySelectorPromise(".buttons_vponqv")
-		.then(buttons => buttons as HTMLDivElement)
-		.then(buttons => {
-			if (kaid !== program.kaid) {
-				const reportButton: HTMLAnchorElement = document.createElement("a");
-				reportButton.id = "kae-report-button";
-				reportButton.classList.add("kae-program-button");
-				reportButton.href = `${QUEUE_ROOT}submit?${buildQuery({
-					type: "program",
-					id: program.id.toString(),
-					callback: window.location.href
-				})}`;
-				reportButton.setAttribute("role", "button");
-				reportButton.innerHTML = "<span>Report</span>";
-				buttons.insertBefore(reportButton, buttons.children[1]);
-				buttons.insertBefore(document.createTextNode(" "), reportButton.nextSibling);
-			}
-		});
-}
-
 async function addProfileReportButton (uok: UsernameOrKaid, loggedInKaid: string) {
 	const kaid: string = uok.type === IdType.KAID ? uok.toString() :
 		await getJSON(`${window.location.origin}/api/internal/user/profile?username=${uok}`, {
@@ -110,7 +89,6 @@ function addReportButtonDiscussionPosts (focusId: string, focusKind: string) {
 }
 
 export {
-	addReportButton,
 	addReportButtonDiscussionPosts,
 	addProfileReportButton
 };
