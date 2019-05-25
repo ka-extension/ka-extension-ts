@@ -1,5 +1,5 @@
 import { Extension } from "./extension";
-import { Program, UsernameOrKaid, KA } from "./types/data";
+import { Program, UsernameOrKaid } from "./types/data";
 import { switchToTipsAndThanks, commentsButtonEventListener } from "./discussion";
 import { /*addReportButtonDiscussionPosts,*/ addProfileReportButton } from "./report";
 import { addUserInfo, duplicateBadges, } from "./profile";

@@ -65,14 +65,14 @@ abstract class Extension {
 			this.onPage();
 
 			const kaid = window.KA.kaid;
-			
+
 			//Check for discussion page, 10 seconds max. (Element isn't used, just used to check for discussion page)
 			querySelectorPromise("[data-test-id=\"discussion-tab\"]", 100, 100).then (_ =>
 				//TODO: Why UsernameOrKaid and not always a KAID here?
 				this.onDiscussionPage(new UsernameOrKaid(kaid))
 			).catch(console.warn);
 
-			
+
 			getScratchpadUI().then(ScratchpadUI => {
 				const programData = ScratchpadUI.scratchpad.attributes;
 				this.onProgramPage(programData);

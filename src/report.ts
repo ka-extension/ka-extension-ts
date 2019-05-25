@@ -1,8 +1,8 @@
 import { buildQuery } from "./util/text-util";
-import { Program, UsernameOrKaid } from "./types/data";
+import { UsernameOrKaid } from "./types/data";
 import { QUEUE_ROOT, EXTENSION_ITEM_CLASSNAME } from "./types/names";
 import { DiscussionTypes, getConvo } from "./util/api-util";
-import { querySelectorAllPromise, querySelectorPromise } from "./util/promise-util";
+import { querySelectorAllPromise } from "./util/promise-util";
 import { getJSON } from "./util/api-util";
 import { UserProfileData, IdType } from "./types/data";
 import { FileDownloader } from "./util/download-util";

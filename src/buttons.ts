@@ -7,7 +7,7 @@ import { buildQuery } from "./util/text-util";
 //Replace KA's vote button with one that updates after you vote and allows undoing votes
 function replaceVoteButton (buttons: HTMLDivElement, program: Program): void {
 	const wrap = buttons.querySelector(".voting-wrap .discussion-meta-controls span");
-	
+
 	//TODO: Handle non-English
 	if (!(wrap instanceof HTMLElement) || !wrap.innerText.includes("Vote")) {
 		console.log("Voting failed to load.", buttons, wrap, wrap && wrap.firstChild);
@@ -52,7 +52,7 @@ function replaceVoteButton (buttons: HTMLDivElement, program: Program): void {
 			}).then((response: Response): void => {
 				//If there's an error, undo the vote
 				if (response.status !== 204) {
-					response.json().then((res: any): void => {
+					response.json().then((res: { error?: string }): void => {
 						if (res.error) {
 							alert("Failed with error:\n\n" + res.error);
 						}
@@ -73,7 +73,7 @@ function replaceVoteButton (buttons: HTMLDivElement, program: Program): void {
 }
 
 //Add a "Copy Link" button
-function addLinkButton (buttons: HTMLDivElement, program: Program): void {	
+function addLinkButton (buttons: HTMLDivElement, program: Program): void {
 	const copyLinkButton: HTMLAnchorElement = document.createElement("a");
 	copyLinkButton.id = "kae-link-button";
 
@@ -109,14 +109,14 @@ function addLinkButton (buttons: HTMLDivElement, program: Program): void {
 }
 
 //Add the number of flags and title text to the program flag button
-function addProgramFlags(buttons: HTMLDivElement, program: Program) {
-	const controls = buttons.querySelector(".discussion-meta-controls")
+function addProgramFlags (buttons: HTMLDivElement, program: Program) {
+	const controls = buttons.querySelector(".discussion-meta-controls");
 
 	if (!controls) {
 		console.log(buttons);
 		throw new Error("Button controls should be loaded.");
 	}
-	
+
 	const programFlags: string[] = program.flags;
 	const flagButton: HTMLElement = <HTMLElement>controls.childNodes[2];
 	const reasons: string = programFlags.length > 0 ? programFlags.reduce((total, current) => total += `${current}\n`) : "No flags here!";
@@ -152,8 +152,8 @@ function findOtherButtons (buttons: HTMLDivElement): void {
 }
 
 function loadButtonMods (program: Program): void {
-	const kaid:string = (window as any).KA.kaid;
-	
+	const kaid:string = window.KA.kaid;
+
 	querySelectorPromise(".voting-wrap")
 		.then(votingWrap => votingWrap.parentNode)
 		.then(buttons => buttons as HTMLDivElement)
@@ -164,7 +164,7 @@ function loadButtonMods (program: Program): void {
 			addProgramFlags(buttons, program);
 			addProgramReportButton(buttons, program, kaid);
 		});
-	
+
 	querySelectorPromise("#child-account-notice")
 		.then(childNotice => childNotice as HTMLSpanElement)
 		.then(childNotice => childNotice.parentNode)
@@ -174,8 +174,8 @@ function loadButtonMods (program: Program): void {
 			addLinkButton(buttons, program);
 			//TODO, let voting run here too
 		});
-		
-	//TODO: 
+
+	//TODO:
 	//Find the buttons wrap on offical project pages (maybe for voting or link copying. Might not be useful)
 	//https://www.khanacademy.org/computing/computer-programming/programming/drawing-basics/pc/challenge-waving-snowman
 }

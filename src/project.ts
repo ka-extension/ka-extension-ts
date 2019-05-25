@@ -162,7 +162,7 @@ function checkHiddenOrDeleted () {
 /*** Add a button to toggle the Editor Settings popup for programs ***/
 async function addEditorSettingsButton () {
 	const editor = await querySelectorPromise(".scratchpad-ace-editor") as HTMLElement;
-	
+
 	const ace = window.ace;
 
 	ace.config.set("basePath", "https://cdn.jsdelivr.net/gh/ajaxorg/ace-builds@1.1.4/src-min-noconflict");
@@ -177,7 +177,7 @@ async function addEditorSettingsButton () {
 	}else {
 		window.ScratchpadAutosuggest.enableLiveCompletion = function () {};
 	}
-	
+
 	const innerButtonLink: HTMLButtonElement = document.createElement("button");
 	innerButtonLink.id = "kae-toggle-editor-settings";
 	innerButtonLink.innerHTML = "Toggle Editor Settings";
