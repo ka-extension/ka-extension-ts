@@ -6,18 +6,20 @@ import {
 } from "./types/names";
 
 function updateComments (): void {
-	console.log("Checking for new comments");
+	console.log("Checking for new comments"); //Debug 
 	
 	//TODO: Add a listener to the post button so new comments are found
 	//TODO: Bug: Opening a direct link to comment causes the replies to be automatically unfolded, and they aren't found
-	querySelectorAllPromise(`div[data-test-id='discussion-post']:not(.${EXTENSION_COMMENT_CLASSNAME})`, 50 /*ms*/, 20 /*attempts*/)
+	querySelectorAllPromise(`div[data-test-id='discussion-post']:not(.${EXTENSION_COMMENT_CLASSNAME})`, 100 /*ms*/, 20 /*attempts*/)
 		.then((unalteredComments: NodeList) => {
-			console.log("Found new comments");
+			console.log("Found new comments"); //Debug 
 			//Find the load more comments button, and attach an event listener to it.
-			//TODO: refactor
-			//TODO: fails if there are no more comments; i.e., no button
-			//TODO: fails if replies have just been opened, in which case the parentNode chain selects the wrong thelment.
-			// Array.from((unalteredComments[0].parentNode!.parentNode!.parentNode!.parentNode as HTMLDivElement).children).slice(-1)[0].addEventListener("click", () => { console.log("1"); updateComments(); });
+			const moreCommentsButton = Array.from((unalteredComments[0].parentNode!.parentNode!.parentNode!.parentNode as HTMLElement).children).slice(-1)[0];
+			console.log(moreCommentsButton, moreCommentsButton instanceof HTMLButtonElement);
+			if (moreCommentsButton && moreCommentsButton instanceof HTMLButtonElement) {
+				console.assert(moreCommentsButton.textContent!.slice(-3) === "...");
+				moreCommentsButton.addEventListener("click", updateComments);
+			}
 			
 			//Loop through all unalteredComments and apply any modifications to them
 			for (let i = 0; i < unalteredComments.length; i++) {

@@ -122,6 +122,7 @@ function addProgramFlags (buttons: HTMLDivElement, program: Program) {
 	const reasons: string = programFlags.length > 0 ? programFlags.reduce((total, current) => total += `${current}\n`) : "No flags here!";
 	const profileData = window.KA._userProfileData;
 	//TODO: Allow viewing flags on your own program (where there's normally not a flag button)
+	//TODO: Bug: errors on offical programs (no flag button)
 	if (profileData && profileData.kaid !== program.kaid && profileData.isModerator === false) {
 		flagButton.textContent += ` • ${programFlags.length}`;
 		flagButton.title = reasons;
