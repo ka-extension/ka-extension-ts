@@ -6,33 +6,33 @@ import {
 } from "./types/names";
 
 function updateComments (): void {
-	console.log("Checking for new comments"); //Debug 
-	
+	console.log("Checking for new comments"); //Debug
+
 	//TODO: Add a listener to the post button so new comments are found
 	//TODO: Add a listener to the sort sector (voted or recent)
 	//TODO: Bug: Opening a direct link to comment causes the replies to be automatically unfolded, and they aren't found
 	//TODO: I've had this take up to 5-6 seconds. :/
 	querySelectorAllPromise(`div[data-test-id='discussion-post']:not(.${EXTENSION_COMMENT_CLASSNAME})`, 100 /*ms*/, 20 /*attempts*/)
 		.then((unalteredComments: NodeList) => {
-			console.log("Found new comments"); //Debug 
+			console.log("Found new comments"); //Debug
 			//Find the load more comments button, and attach an event listener to it.
 			const moreCommentsButton = Array.from((unalteredComments[0].parentNode!.parentNode!.parentNode!.parentNode as HTMLElement).children).slice(-1)[0];
 			if (moreCommentsButton && moreCommentsButton instanceof HTMLButtonElement) {
 				console.assert(moreCommentsButton.textContent!.slice(-3) === "...");
 				moreCommentsButton.addEventListener("click", updateComments);
 			}
-			
+
 			//Loop through all unalteredComments and apply any modifications to them
 			for (let i = 0; i < unalteredComments.length; i++) {
 				const comment = unalteredComments[i] as HTMLElement;
 				const flagButton = comment.querySelector("button[id^=uid-discussion-list-][id$=-flag]");
 				const timestampLink = comment.querySelector("a[href*=qa_expand_key]");
-				
+
 				//Replies to comments don't have a hyperlink or ID
 				if (timestampLink) {
 					//Extract the comment id from the link to the comment
 					const commentId = (timestampLink as HTMLAnchorElement)!.href.match(/qa_expand_key=(.*?)(?:&|$)/)![1];
-					
+
 					getComment(commentId).then((data) => {
 						if (flagButton && data && data.flags) {
 							const flagText = flagButton.querySelector("div");
@@ -41,7 +41,7 @@ function updateComments (): void {
 							flagButton.setAttribute("title", data.flags.join("\n"));
 						}
 					}).catch(console.error);
-					
+
 					//Look for replies button and add an event listener to it
 					const showCommentsButton = comment.querySelector("[aria-controls*=-replies-container]");
 					if (showCommentsButton) {
@@ -51,7 +51,7 @@ function updateComments (): void {
 					}else {
 						console.error("Replies button expected under top-level comment.");
 					}
-					
+
 					//Button for answers to questions (now called "Replies" in the UI)
 					const answerForm = comment.querySelector("[id$=-answer-input]");
 					if (answerForm) {
@@ -76,12 +76,12 @@ function updateComments (): void {
 
 function commentsButtonEventListener (uok: UsernameOrKaid): void {
 	//Select tab buttons. The check for being on a discussion page saw that these were loaded
-	let discussionTabs = document.querySelectorAll("[data-test-id=\"discussion-tab\"]");
-	
+	const discussionTabs = document.querySelectorAll("[data-test-id=\"discussion-tab\"]");
+
 	if (!discussionTabs || !discussionTabs.length) {
 		console.error("Discussion tabs were loaded but now aren't.");
 	}
-	
+
 	//Listeners for switching discussion tabs
 	Array.from(discussionTabs).map(discussionTab => discussionTab as HTMLButtonElement).forEach(discussionTab =>
 		discussionTab.addEventListener("click", () => {
@@ -91,7 +91,7 @@ function commentsButtonEventListener (uok: UsernameOrKaid): void {
 				updateComments();
 			}
 		})
-	)
+	);
 }
 
 function switchToTipsAndThanks () {
