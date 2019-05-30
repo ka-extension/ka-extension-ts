@@ -9,13 +9,14 @@ function updateComments (): void {
 	console.log("Checking for new comments"); //Debug 
 	
 	//TODO: Add a listener to the post button so new comments are found
+	//TODO: Add a listener to the sort sector (voted or recent)
 	//TODO: Bug: Opening a direct link to comment causes the replies to be automatically unfolded, and they aren't found
+	//TODO: I've had this take up to 5-6 seconds. :/
 	querySelectorAllPromise(`div[data-test-id='discussion-post']:not(.${EXTENSION_COMMENT_CLASSNAME})`, 100 /*ms*/, 20 /*attempts*/)
 		.then((unalteredComments: NodeList) => {
 			console.log("Found new comments"); //Debug 
 			//Find the load more comments button, and attach an event listener to it.
 			const moreCommentsButton = Array.from((unalteredComments[0].parentNode!.parentNode!.parentNode!.parentNode as HTMLElement).children).slice(-1)[0];
-			console.log(moreCommentsButton, moreCommentsButton instanceof HTMLButtonElement);
 			if (moreCommentsButton && moreCommentsButton instanceof HTMLButtonElement) {
 				console.assert(moreCommentsButton.textContent!.slice(-3) === "...");
 				moreCommentsButton.addEventListener("click", updateComments);
@@ -35,13 +36,13 @@ function updateComments (): void {
 					getComment(commentId).then((data) => {
 						if (flagButton && data && data.flags) {
 							const flagText = flagButton.querySelector("div");
+							//TODO: Bug: when not logged in there is more to textContent
 							flagText!.textContent += ` (${data.flags.length})`;
 							flagButton.setAttribute("title", data.flags.join("\n"));
 						}
 					}).catch(console.error);
 					
 					//Look for replies button and add an event listener to it
-					//TODO: Button for answers to questions ("Replies")
 					const showCommentsButton = comment.querySelector("[aria-controls*=-replies-container]");
 					if (showCommentsButton) {
 						//{ once: true } so that the listener is automatically removed after firing once
@@ -50,14 +51,26 @@ function updateComments (): void {
 					}else {
 						console.error("Replies button expected under top-level comment.");
 					}
+					
+					//Button for answers to questions (now called "Replies" in the UI)
+					const answerForm = comment.querySelector("[id$=-answer-input]");
+					if (answerForm) {
+						const answersWrap = answerForm.parentNode!;
+						const showMoreAnswersButton = Array.from((answersWrap as HTMLDivElement).children).slice(-1);
+						showMoreAnswersButton[0].addEventListener("click", updateComments);
+					}else {
+						//Not a question; not an issue
+					}
 				}
 
 				comment.classList.add(EXTENSION_COMMENT_CLASSNAME);
 			}
-		}).catch(() => {
-			//There are known cases where updateComments is called at the possiblity of new comments
-			//Not finding new comments is fine
-			console.log("Didn't find new comments.");
+		}).catch(e => {
+			if (e.toString().indexOf("Error: Could not find") === 0) {
+				//There are known cases where updateComments is called at the possiblity of new comments
+				//Not finding new comments is fine
+			}
+			console.error(e); //Other errors are not okay
 		});
 }
 
