@@ -1,11 +1,10 @@
 import { Extension } from "./extension";
 import { Program, UsernameOrKaid } from "./types/data";
 import { switchToTipsAndThanks, commentsButtonEventListener } from "./discussion";
-import { addProgramFlags } from "./flag";
-import { addReportButton, addProfileReportButton } from "./report";
+import { /*addReportButtonDiscussionPosts,*/ addProfileReportButton } from "./report";
 import { addUserInfo, duplicateBadges, } from "./profile";
 import { addProgramInfo, hideEditor, keyboardShortcuts, addEditorSettingsButton, checkHiddenOrDeleted, addProgramAuthorHoverCard } from "./project";
-import { addLinkButton, replaceVoteButton } from "./buttons";
+import { loadButtonMods } from "./buttons";
 import { deleteNotifButtons, updateNotifIndicator } from "./notif";
 
 class ExtensionImpl extends Extension {
@@ -16,11 +15,8 @@ class ExtensionImpl extends Extension {
 	}
 	async onProgramAboutPage (program: Program) {
 		const kaid = window.KA.kaid;
-		addReportButton(program, kaid);
+		loadButtonMods(program);
 		addProgramInfo(program, kaid);
-		addProgramFlags(program, kaid);
-		addLinkButton(program);
-		replaceVoteButton(program);
 		addProgramAuthorHoverCard(program);
 	}
 	async onProfilePage (uok: UsernameOrKaid) {

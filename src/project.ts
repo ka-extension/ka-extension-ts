@@ -41,9 +41,13 @@ function addProgramAuthorHoverCard (program: Program): void {
 }
 
 function addProgramInfo (program: Program, uok: string): void {
-	querySelectorPromise(".lastUpdated_9qi1wc")
-		.then(updatedSpan => updatedSpan as HTMLSpanElement)
-		.then(updatedSpan => {
+	querySelectorPromise("[data-user-kaid]")
+		.then(userLink => userLink as HTMLAnchorElement)
+		.then(userLink => userLink.parentNode)
+		.then(wrapDiv => wrapDiv as HTMLDivElement)
+		.then(wrapDiv => wrapDiv.parentNode)
+		.then(wrapDiv => wrapDiv as HTMLDivElement)
+		.then(wrapDiv => {
 			const table = document.createElement("table");
 			table.className = "kae-table";
 
@@ -79,7 +83,7 @@ function addProgramInfo (program: Program, uok: string): void {
 				table.appendChild(tableRow("Updated", updated));
 			}
 			table.appendChild(tableRow("Created", created));
-			updatedSpan.appendChild(table);
+			wrapDiv.appendChild(table);
 		});
 }
 
@@ -157,7 +161,7 @@ function checkHiddenOrDeleted () {
 
 /*** Add a button to toggle the Editor Settings popup for programs ***/
 async function addEditorSettingsButton () {
-	const leftArea = await querySelectorPromise(".default_olfzxm-o_O-leftColumn_qf2u39");
+	const editor = await querySelectorPromise(".scratchpad-ace-editor") as HTMLElement;
 
 	const ace = window.ace;
 
@@ -170,16 +174,14 @@ async function addEditorSettingsButton () {
 			ace.require("ace/ext/language_tools");
 		});
 		document!.head!.appendChild(scriptEl);
-	} else {
-		window.ScratchpadAutosuggest.enableLiveCompletion = function () { };
+	}else {
+		window.ScratchpadAutosuggest.enableLiveCompletion = function () {};
 	}
 
-	const innerButtonLink: HTMLAnchorElement = document.createElement("a");
+	const innerButtonLink: HTMLButtonElement = document.createElement("button");
 	innerButtonLink.id = "kae-toggle-editor-settings";
-	innerButtonLink.classList.add("button_1eqj1ga-o_O-shared_1t8r4tr-o_O-default_9fm203-o_O-toolbarButton_em2kam");
 	innerButtonLink.innerHTML = "Toggle Editor Settings";
 
-	const editor = document.querySelector(".scratchpad-ace-editor") as HTMLElement;
 	const session = ace.edit(editor).getSession();
 	session.setMode(new (ace.require(session.getMode().$id).Mode)());
 
@@ -193,6 +195,7 @@ async function addEditorSettingsButton () {
 	innerButtonLink.addEventListener("click", repos);
 	window.addEventListener("resize", repos);
 
+	const leftArea = await querySelectorPromise("._b9dpo7z");
 	leftArea.appendChild(innerButtonLink);
 
 	document.body.appendChild(editorSettings);

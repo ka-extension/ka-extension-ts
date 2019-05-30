@@ -66,10 +66,12 @@ abstract class Extension {
 
 			const kaid = window.KA.kaid;
 
-			//10 seconds max
-			querySelectorPromise(".default_olfzxm-o_O-listWrapperExtraSpacing_1homyt1-o_O-inlineStyles_17u7rry ul", 100, 100).then(el =>
-				this.onDiscussionPage(new UsernameOrKaid(kaid as string))
+			//Check for discussion page, 10 seconds max. (Element isn't used, just used to check for discussion page)
+			querySelectorPromise("[data-test-id=\"discussion-tab\"]", 100, 100).then (_ =>
+				//TODO: Why UsernameOrKaid and not always a KAID here?
+				this.onDiscussionPage(new UsernameOrKaid(kaid))
 			).catch(console.warn);
+
 
 			getScratchpadUI().then(ScratchpadUI => {
 				const programData = ScratchpadUI.scratchpad.attributes;

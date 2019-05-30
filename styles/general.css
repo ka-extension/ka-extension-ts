@@ -84,11 +84,22 @@ body .errorBuddyContainer_1o6y302-o_O-buttonOnLeft_1tyzswu {
 
 /** Program toolbar buttons (Toggle Editor and Toggle Editor Settings for now) **/
 #kae-toggle-editor-settings, #kae-hide-button {
+    font-family: Lato, sans-serif;
     font-size: 16px;
+    font-weight: bold;
+    border: 1px solid rgba(33,36,44,0.50);
+    height: 40px;
+    border-radius: 4px;
+    color: #1865f2;
+    padding: 0 12px;
+    line-height: 20px;
+    cursor: pointer;
+    outline: none;
 }
 
 #kae-toggle-editor-settings:hover, #kae-hide-button:hover {
-    box-shadow: 0 0 0 1px #ffffff, 0 0 0 3px #1865f2;
+    border: 1px solid transparent !important;
+    box-shadow: 0 0 0 2px #1865f2;
 }
 
 /** Table Styles **/
@@ -123,27 +134,32 @@ body .errorBuddyContainer_1o6y302-o_O-buttonOnLeft_1tyzswu {
     background: #dddddd;
 }
 
-/** Make program buttons blue **/
-/* 1w8n1i8 was the filled in buttons, 77ub1h was the outlined buttons; now they're filled in unless they're disabled */
-body .link_1uvuyao-o_O-computing_1w8n1i8, body .link_1uvuyao-o_O-computing_77ub1h {
+/** Make buttons under the program blue **/
+body .kae-program-button {
+    margin: 0 !important;
+    padding: 8px !important;
+    font-size: 15px !important;
+    line-height: 23px !important;
+    font-weight: 400 !important;
+    border-radius: 4px !important;
+    display: inline-block !important;
+    cursor: pointer !important;
+    text-decoration: none !important;
+    margin-right: 0 !important;
     border: 1px solid transparent !important;
     color: white !important;
     background: #1865f2 !important;
-    margin-right: 0 !important;
 }
-
-body .link_1uvuyao-o_O-computing_1w8n1i8:hover, body .link_1uvuyao-o_O-computing_77ub1h:hover {
-    border: 1px solid transparent !important;
-    color: white !important;
+body .kae-program-button:hover {
     background: #0f52cf !important;
+    color: white !important;
+    border: 1px solid transparent !important;
 }
 
-/* The color for the disabled elements gets handled by KA setting opacity 0.5 (here and below) */
-body .link_1uvuyao-o_O-computing_77ub1h-o_O-disabled_2gos5, body .link_1uvuyao-o_O-computing_1w8n1i8-o_O-disabled_2gos5 {
-    color: #0f52cf !important;
-    border: 1px solid #0f52cf !important;
-    border-radius: 4px !important;
-    background: white !important;
+/** Evenly space program buttons **/
+.voting-wrap .discussion-meta .discussion-meta-controls > span:nth-child(2) {
+    display: inline-block;
+    width: 3px;
 }
 
 /* Make the sort selecting elements on the browse projects page blue */
@@ -159,12 +175,6 @@ body .link_1uvuyao-o_O-computing_1uwg40u:hover {
 .scratchpad-page .titleAndLogo_1em9xw1 {
     display: block !important;
     text-align: center !important;
-}
-
-/** Evenly space program buttons **/
-.buttons_vponqv .discussion-meta .discussion-meta-controls > span:nth-child(2) {
-    display: inline-block;
-    width: 4.5px;
 }
 
 /** Hide survey **/
