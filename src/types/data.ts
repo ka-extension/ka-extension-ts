@@ -135,6 +135,10 @@ interface UserProfileData {
 	username: string;
 }
 
+interface User {
+	discussion_banned?: boolean;
+}
+
 interface KA {
 	kaid: string;
 	_userProfileData?: UserProfileData;
@@ -213,5 +217,6 @@ export {
 	CommentSortType, Program, Notification,
 	Scratchpads, KA, UserProfileData,
 	NotifObj, Feedback, NotifElm, ScratchpadUI,
-	EditorOptions, ACE, ACE_OPTION
+	EditorOptions, ACE, ACE_OPTION,
+	User
 };
