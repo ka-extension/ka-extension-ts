@@ -1,7 +1,5 @@
 import { Program } from "./types/data";
-import { KAdefine } from "./extension";
 import { formatDate } from "./util/text-util";
-import { PREFIX } from "./types/names";
 import { querySelectorPromise } from "./util/promise-util";
 import { addEditorSettings } from "./editor-settings";
 
@@ -23,21 +21,6 @@ function tableRow (key: string, val: string, title?: string): HTMLTableRowElemen
 	tr.appendChild(valElm);
 
 	return tr;
-}
-
-function addProgramAuthorHoverCard (program: Program): void {
-	//TODO: Fix or remove
-	KAdefine.asyncRequire("./javascript/hover-card-package/hover-card.js").then(HoverCard => {
-		querySelectorPromise(".lastUpdated_9qi1wc").then((updatedSpan) => {
-			const nicknameAnchor = (updatedSpan.parentNode as HTMLDivElement).getElementsByClassName("shared_ko2ejt-o_O-default_1bzye1z")[0];
-			nicknameAnchor.addEventListener("mouseenter", function (this: HTMLAnchorElement) {
-				HoverCard.createHoverCardQtip!(this, {
-					my: "top left",
-					at: "bottom left"
-				});
-			});
-		});
-	}).catch(console.error);
 }
 
 function addProgramInfo (program: Program, uok: string): void {
@@ -85,33 +68,6 @@ function addProgramInfo (program: Program, uok: string): void {
 			table.appendChild(tableRow("Created", created));
 			wrapDiv.appendChild(table);
 		});
-}
-
-function hideEditor (program: Program): void {
-	const wrap: HTMLDivElement | null = <HTMLDivElement>document.querySelector(".wrapScratchpad_1jkna7i");
-	if (wrap) {
-		const editor: HTMLDivElement = <HTMLDivElement>document.querySelector(".scratchpad-editor-wrap");
-		const lsEditorId: string = `${PREFIX}editor-hide`;
-		let lsEditorVal: string | null = <string>localStorage.getItem(lsEditorId);
-		if (lsEditorVal && lsEditorVal === "true") {
-			editor.classList.toggle("kae-hide");
-			wrap.classList.toggle("kae-hide-wrap");
-		}
-		const rightArea = <HTMLDivElement>document.querySelector(".default_olfzxm-o_O-rightColumn_1rpl0kp");
-		const hideButton = <HTMLAnchorElement>document.createElement("a");
-		hideButton.id = "kae-hide-button";
-		hideButton.classList.add("button_1eqj1ga-o_O-shared_1t8r4tr-o_O-default_9fm203-o_O-toolbarButton_em2kam");
-		hideButton.textContent = "Toggle Editor";
-		hideButton.addEventListener("click", (): void => {
-			lsEditorVal = lsEditorVal === "true" ? "false" : "true";
-			localStorage.setItem(lsEditorId, lsEditorVal);
-			editor.classList.toggle("kae-hide");
-			wrap.classList.toggle("kae-hide-wrap");
-		});
-		if (rightArea) {
-			rightArea.appendChild(hideButton);
-		}
-	}
 }
 
 function keyboardShortcuts (program: Program): void {
@@ -195,10 +151,21 @@ async function addEditorSettingsButton () {
 	innerButtonLink.addEventListener("click", repos);
 	window.addEventListener("resize", repos);
 
-	const leftArea = await querySelectorPromise("._b9dpo7z");
-	leftArea.appendChild(innerButtonLink);
+	const errorBuddy = await querySelectorPromise(".error-buddy-resting");
+	const errorBuddyWrap = errorBuddy.parentNode as HTMLDivElement;
+	if (!errorBuddyWrap) {
+		throw new Error("Can't find Error Buddy");
+	}
+	errorBuddyWrap.parentNode!.insertBefore(innerButtonLink, errorBuddyWrap);
 
 	document.body.appendChild(editorSettings);
+
+	const editorWrap = document.querySelector(".scratchpad-editor-wrap");
+	if (editorWrap && editorWrap.parentElement) {
+		editorWrap.parentElement.classList.toggle("kae-hidden-editor-wrap", localStorage.kaeEditorHidden === "true" ? true : false);
+	}else {
+		throw new Error("Scratchpad editor has no parent wrap.");
+	}
 }
 
-export { addProgramInfo, hideEditor, keyboardShortcuts, addEditorSettingsButton, checkHiddenOrDeleted, addProgramAuthorHoverCard };
+export { addProgramInfo, keyboardShortcuts, addEditorSettingsButton, checkHiddenOrDeleted };

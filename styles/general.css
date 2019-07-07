@@ -60,33 +60,19 @@ body .wrap_xyqcvi {
 }
 
 /** Hide editor feature **/
-.kae-hide-wrap .wrapScratchpadInner_poyjc-o_O-wrapScratchpadInnerBorder_1b0rgvs {
-    display: block !important;
+body .kae-hidden-editor-wrap {
     text-align: center;
+    display: block !important;
 }
 
-.kae-hide-wrap .scratchpad-canvas-wrap {
+.kae-hidden-editor-wrap > .scratchpad-canvas-wrap {
     display: inline-block !important;
     border-left: 1px solid rgba(33, 37, 45, 0.16) !important;
     border-right: 1px solid rgba(33, 37, 45, 0.16) !important;
 }
 
-body .kae-hide {
+.kae-hidden-editor-wrap .scratchpad-editor-wrap {
     display: none !important;
-}
-
-/** Make Error Buddy play better with other buttons in his half of the bar **/
-body .errorBuddyContainer_1o6y302-o_O-buttonOnLeft_1tyzswu {
-    width: auto !important;
-    margin-right: 0 !important;
-}
-
-.scratchpad-wrap .error-buddy-resting .error-buddy-happy, .scratchpad-wrap .error-buddy-resting .error-buddy-thinking {
-    position: static;
-}
-
-.wrapScratchpadInner_poyjc {
-	overflow-x: hidden;
 }
 
 /** Program toolbar buttons (Toggle Editor and Toggle Editor Settings for now) **/
@@ -102,7 +88,7 @@ body .errorBuddyContainer_1o6y302-o_O-buttonOnLeft_1tyzswu {
     line-height: 20px;
     cursor: pointer;
     outline: none;
-}
+    margin-right: 16px}
 
 #kae-toggle-editor-settings:hover, #kae-hide-button:hover {
     border: 1px solid transparent !important;
