@@ -34,7 +34,8 @@
         "tabs",
         "dist/index.js",
         "dist/popup.js",
-        "styles/general.css"
+        "styles/general.css",
+        "styles/discussion-code-highlighting.css"
     ],
     "background": {
       "scripts": ["dist/background.js"]

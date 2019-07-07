@@ -7,6 +7,7 @@ body .video-discussion {
     max-width: unset !important;
     display: block;
 }
+@import url("discussion-code-highlighting.css");
 
 .scratchpad-page .video-discussion .tab, .scratchpad-page .video-discussion .video-discussion-header {
     max-width: unset !important;
@@ -37,10 +38,16 @@ body .notAButton_14bcykr-o_O-tabTrigger_1jwmooj-o_O-activeTab_khee7t:focus, /*T&
     background: #f1f1f1;
     border-radius: 9px;
 }
-body .default_olfzxm-o_O-inlineStyles_16okj06 {
-    padding: 9px !important;
+
+/*Add a background to code blocks*/
+.discussion-code-format {
+    background-color: #f4f4f4;
+    border-radius: 3px;
+    padding: .2em .4em;
 }
-.discussion-code-inline { /*Fix a bug where inline code blocks expanded the width of the comment*/
+
+/*Fix a bug where inline code blocks expanded the width of the comment*/
+.discussion-code-inline {
     white-space: pre-wrap;
 }
 body .default_olfzxm-o_O-flagText_1ajw024-o_O-flagText_avg348 {
