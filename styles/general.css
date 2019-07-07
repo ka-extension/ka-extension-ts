@@ -1,42 +1,18 @@
-/** Community guidelines **/
-body .video-discussion {
-    float: left !important;
-    margin: 0px !important;
-    margin-left: 25% !important;
-    width: 50% !important;
-    max-width: unset !important;
-    display: block;
-}
 @import url("discussion-code-highlighting.css");
 
 .scratchpad-page .video-discussion .tab, .scratchpad-page .video-discussion .video-discussion-header {
     max-width: unset !important;
 }
 
-body .footer_crtwg {
-    max-width: none !important;
-}
-
-body .main-discussion-guidelines.discussion-guidelines {
-    float: right !important;
-    width: 20% !important;
-    display: block !important;
-    margin-top: 0px !important;
-}
-
 /** Improvements to discussion styling **/
-.linkStyledButton_ycurob:focus { /*Replies button*/
-    outline: auto 3px #888 !important;
+/*TODO: Re-add outline-fixing code*/
+
+/*Make the reply textbox not tiny*/
+body textarea[id^="uid-discussion-input"] {
+    min-height: 40px !important;
 }
-body .notAButton_14bcykr-o_O-tabTrigger_1jwmooj-o_O-activeTab_khee7t:focus, /*T&T tab button*/
-.default_olfzxm-o_O-inlineStyles_16okj06:focus, /*Comments*/
-.default_olfzxm-o_O-horizontalSeparator_6lbsg7-o_O-inlineStyles_16okj06:focus { /*Replies*/
-    outline: none !important;
-}
-/*Background on focused comments*/
-.default_olfzxm-o_O-inlineStyles_16okj06:focus {
-    background: #f1f1f1;
-    border-radius: 9px;
+textarea[id^="uid-discussion-input"]:focus {
+    min-height: 143px !important;
 }
 
 /*Add a background to code blocks*/
@@ -50,12 +26,9 @@ body .notAButton_14bcykr-o_O-tabTrigger_1jwmooj-o_O-activeTab_khee7t:focus, /*T&
 .discussion-code-inline {
     white-space: pre-wrap;
 }
-body .default_olfzxm-o_O-flagText_1ajw024-o_O-flagText_avg348 {
-    display: block !important; /*Flag text gets hidden on profile reply page for some reason*/
-}
 
 /** Widen scratchpad **/
-body .wrap_xyqcvi {
+body .scratchpad-wrap-outer > div {
     max-width: none !important;
 }
 
@@ -156,18 +129,18 @@ body .kae-program-button:hover {
 }
 
 /* Make the sort selecting elements on the browse projects page blue */
-body .link_1uvuyao-o_O-computing_1uwg40u, body .link_1uvuyao-o_O-computing_1uwg40u-o_O-disabled_2gos5 {
-    color: #1865f2 !important;
+body ._1wnf0g1k, body ._11pveom5 {
+    color: #1152b0 !important;
 }
 
-body .link_1uvuyao-o_O-computing_1uwg40u:hover {
-    color: #0f52cf !important;
+body ._1wnf0g1k:hover {
+    color: #0d3d82 !important;
 }
 
 /** Center program titles **/
-.scratchpad-page .titleAndLogo_1em9xw1 {
-    display: block !important;
-    text-align: center !important;
+.scratchpad-page h1 {
+    width: 100%;
+    text-align: center;
 }
 
 /** Hide survey **/
