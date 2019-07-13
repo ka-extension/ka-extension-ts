@@ -295,8 +295,35 @@ function addEditorSettings (toggleButton: HTMLElement, editor: HTMLElement) {
 				}
 			}
 
-			container.appendChild(table).appendChild(rowEl);
+			table.appendChild(rowEl);
 		}
+
+		const hideEditorWrap = document.createElement("tr");
+		hideEditorWrap.setAttribute("colspan", "2");
+		const hideEditorToggle = document.createElement("input");
+		hideEditorToggle.type = "checkbox";
+		hideEditorToggle.name = hideEditorToggle.id = "kae-hide-editor";
+		hideEditorToggle.checked = localStorage.kaeEditorHidden === "true" ? false : true;
+		hideEditorToggle.addEventListener("change", () => {
+			const editorWrap = <HTMLDivElement>document.querySelector(".scratchpad-editor-wrap");
+			if (editorWrap.parentElement) {
+				editorWrap.parentElement.classList.toggle("kae-hidden-editor-wrap", !hideEditorToggle.checked);
+			}else {
+				throw new Error("Can't find scratchpad wrap.");
+			}
+
+			localStorage.kaeEditorHidden = hideEditorToggle.checked ? "false" : "true";
+		});
+
+		const hideEditorLabel = document.createElement("label");
+		hideEditorLabel.setAttribute("for", "kae-hide-editor");
+		hideEditorLabel.textContent = "Show Editor: ";
+		hideEditorWrap.appendChild(hideEditorLabel);
+		hideEditorWrap.appendChild(hideEditorToggle);
+		table.appendChild(hideEditorWrap);
+
+		container.appendChild(table);
+
 		return container;
 	}
 

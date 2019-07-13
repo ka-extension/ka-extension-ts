@@ -176,8 +176,7 @@ function loadButtonMods (program: Program): void {
 			//TODO, let voting run here too
 		});
 
-	//TODO:
-	//Find the buttons wrap on offical project pages (maybe for voting or link copying. Might not be useful)
+	//TODO: Find the buttons wrap on offical project pages (maybe for voting or link copying. Might not be useful)
 	//https://www.khanacademy.org/computing/computer-programming/programming/drawing-basics/pc/challenge-waving-snowman
 }
 

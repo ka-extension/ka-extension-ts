@@ -5,11 +5,18 @@ import {
 	EXTENSION_COMMENT_CLASSNAME,
 } from "./types/names";
 
+import hljs from "highlight.js";
+
 function updateComments (): void {
 	//TODO: Add a listener to the post button so new comments are found
 	//TODO: Add a listener to the sort sector (voted or recent)
+
+	//TODO: Report button on comments and replies
+
+	//TODO: Flag information on replies (no good way to get the ID's, IIRC)
+
 	//TODO: Bug: Opening a direct link to comment causes the replies to be automatically unfolded, and they aren't found
-	//TODO: I've had this take up to 5-6 seconds. :/
+	//TODO: I've had this take up to 5-6 seconds. Won't fix until querySelectorAllPromise is refactored
 	querySelectorAllPromise(`div[data-test-id='discussion-post']:not(.${EXTENSION_COMMENT_CLASSNAME})`, 100 /*ms*/, 40 /*attempts*/)
 		.then((unalteredComments: NodeList) => {
 			//Find the load more comments button, and attach an event listener to it.
@@ -61,6 +68,10 @@ function updateComments (): void {
 				}
 
 				comment.classList.add(EXTENSION_COMMENT_CLASSNAME);
+
+				//Init syntax highlighting
+				const blocks = document.querySelectorAll("pre code.discussion-code-block");
+				Array.from(blocks).forEach(hljs.highlightBlock);
 			}
 		}).catch(e => {
 			if (e.toString().indexOf("Error: Could not find") === 0) {
