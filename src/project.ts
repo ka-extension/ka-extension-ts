@@ -79,10 +79,6 @@ function keyboardShortcuts (program: Program): void {
 				const restartButton: HTMLAnchorElement | null = <HTMLAnchorElement>document.querySelector("#restart-code");
 				if (restartButton) { restartButton.click(); }
 				break;
-			case 68: // D - Toggle documentation
-				const firstLink: HTMLAnchorElement | null = <HTMLAnchorElement>document.querySelector(".link_1uvuyao-o_O-tabTrigger_pbokdw-o_O-inactiveTab_1t8hj6j");
-				if (firstLink) { firstLink.click(); }
-				break;
 			case 80: // P - Go to the profile of program creator
 				window.location.href = `${window.location.origin}/profile/${program.kaid}`;
 				break;
