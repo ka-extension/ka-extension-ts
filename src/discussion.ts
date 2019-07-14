@@ -1,4 +1,3 @@
-import { UsernameOrKaid } from "./types/data";
 import { querySelectorPromise, querySelectorAllPromise } from "./util/promise-util";
 import { getComment } from "./util/api-util";
 import {
@@ -82,7 +81,7 @@ function updateComments (): void {
 		});
 }
 
-function commentsButtonEventListener (uok: UsernameOrKaid): void {
+function commentsButtonEventListener (): void {
 	//Select tab buttons. The check for being on a discussion page saw that these were loaded
 	const discussionTabs = document.querySelectorAll("[data-test-id=\"discussion-tab\"]");
 
