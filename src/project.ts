@@ -97,18 +97,19 @@ function checkHiddenOrDeleted () {
 	}
 	const id = idMatch[0];
 
-	const PROGRAM_API = "https://www.khanacademy.org/api/internal/scratchpads";
+	const textWrap = document.querySelector("#four-oh-four > div > div:last-child")!;
 
-	const textWrap = document.querySelector("#four-oh-four .textContainer_d4i2v")!;
+	const API_URL = `https://www.khanacademy.org/api/internal/scratchpads/${id}`;
 
 	const msg = document.createElement("div");
 	msg.style.marginTop = "25px";
 	msg.innerHTML = "Checking program...";
 	textWrap.appendChild(msg);
-	fetch(`${PROGRAM_API}/${id}?projection={}`).then((response: Response): void => {
+	fetch(`${API_URL}?projection={}`).then((response: Response): void => {
 		if (response.status === 200) {
-			msg.innerHTML = "This program actually exists.<br>";
-			msg.innerHTML += `<a style="color: white" href="${PROGRAM_API}/${id}?format=pretty">View API Data</a>`;
+			const PROGRAM_VIEW = `https://khan.github.io/live-editor/demos/simple/?scratchpad=${id}`;
+
+			msg.innerHTML = `This <a class="kae-white" style="text-decoration: none" href="${PROGRAM_VIEW}">program</a> is completely hidden. (<a class="kae-white" href="${API_URL}?format=pretty">API</a>)`;
 		} else if (response.status === 404) {
 			msg.innerHTML = "This program is actually deleted.";
 		}
