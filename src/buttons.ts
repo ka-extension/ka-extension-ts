@@ -82,11 +82,9 @@ function addLinkButton (buttons: HTMLDivElement, program: Program): void {
 	copyLinkButton.classList.add("kae-program-button");
 	copyLinkButton.addEventListener("click", function () {
 		if (window.navigator.hasOwnProperty("clipboard")) {
-			/* tslint:disable:no-any */
-			(window.navigator as any).clipboard.writeText(`https://khanacademy.org/cs/i/${program.id}`).catch((err: Error) => {
+			window.navigator.clipboard.writeText(`https://khanacademy.org/cs/i/${program.id}`).catch((err: Error) => {
 				alert("Copying failed with error:\n" + err);
 			});
-			/* tslint:enable:no-any */
 		} else {
 			try {
 				const textArea = document.createElement("textarea");

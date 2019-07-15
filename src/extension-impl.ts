@@ -30,13 +30,13 @@ class ExtensionImpl extends Extension {
 	onHomePage (uok: UsernameOrKaid) {
 		console.info("On home page");
 	}
-	onDiscussionPage (uok: UsernameOrKaid) {
+	onDiscussionPage () {
 		//TODO: fix report button for discussion
 		// setInterval(addReportButtonDiscussionPosts.bind(null, focusId, focusKind), 100);
 
 		switchToTipsAndThanks();
 
-		commentsButtonEventListener(uok);
+		commentsButtonEventListener();
 		console.info("On discussion page");
 	}
 	onHotlistPage () {

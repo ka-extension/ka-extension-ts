@@ -2,33 +2,6 @@ import { UsernameOrKaid, Program } from "./types/data";
 import { querySelectorPromise } from "./util/promise-util";
 import { ScratchpadUI } from "./types/data";
 
-interface HoverQtipOptions {
-	my: string;
-	at: string;
-}
-
-interface KAdefineResult {
-	data?: KAdefineData;
-	ScratchpadUI?: ScratchpadUI;
-	createHoverCardQtip?: (target: HTMLElement, options: HoverQtipOptions) => void;
-	getKaid? (): string;
-}
-
-interface KAdefineData {
-	which?: string;
-	focusId?: string;
-	focusKind?: string;
-	isScratchpad?: boolean;
-}
-
-const KAdefine = {
-	asyncRequire (url: string, interval: number = 100, test?: (data: KAdefineResult) => boolean, maxAttempts?: number): Promise<KAdefineResult> {
-		return new Promise ((resolve, reject) => {
-			reject(new Error("KAdefine.asyncRequire is depreciated after KA removed `KAdefine`."));
-		});
-	}
-};
-
 const getScratchpadUI = (): Promise<ScratchpadUI> =>
 	new Promise((resolve, reject) => {
 		//Give it 10 seconds, max
@@ -59,7 +32,7 @@ abstract class Extension {
 	abstract onHomePage (uok: UsernameOrKaid): void;
 	abstract onPage (): void;
 	abstract onProgram404Page (): void;
-	abstract onDiscussionPage (uok: UsernameOrKaid): void;
+	abstract onDiscussionPage (): void;
 	async init (): Promise<void> {
 		if (window.location.host.includes("khanacademy.org")) {
 			this.onPage();
@@ -68,8 +41,7 @@ abstract class Extension {
 
 			//Check for discussion page, 10 seconds max. (Element isn't used, just used to check for discussion page)
 			querySelectorPromise("[data-test-id=\"discussion-tab\"]", 100, 100).then (_ =>
-				//TODO: Why UsernameOrKaid and not always a KAID here?
-				this.onDiscussionPage(new UsernameOrKaid(kaid))
+				this.onDiscussionPage()
 			).catch(console.warn);
 
 
@@ -124,4 +96,4 @@ abstract class Extension {
 	}
 }
 
-export { Extension, KAdefine };
+export { Extension };
