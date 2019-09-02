@@ -7,7 +7,7 @@
 		"errordetails": "webpack --display-error-details",
 		"build": "webpack --config webpack.dev.js",
 		"build-prod": "webpack --config webpack.prod.js",
-		"watch": "webpack --watch",
+		"watch": "webpack --watch --config webpack.dev.js",
 		"clean": "rm ./dist/*",
 		"lint": "tslint --project tsconfig.json -c tslint.json \"src/**/*.ts\"",
 		"fix": "tslint --project tsconfig.json -c tslint.json \"src/**/*.ts\" --fix",

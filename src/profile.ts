@@ -65,15 +65,23 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 
 			if (User.kaid === window.KA.kaid) {
 				getJSON(`${window.location.origin}/api/v1/user`, {"discussion_banned":1}).then((data: User) => {
-					//If something messes up I don't want to accedently tell someone they're banned
+					//If something messes up I don't want to accidentally tell someone they're banned
 					if (!data.hasOwnProperty("discussion_banned")) {
 						throw new Error("Error loading ban information.");
-					}else if (data.discussion_banned === false) {
-						table.innerHTML += `<div>You are not banned</div>`;
-					}else if (data.discussion_banned === true) {
-						table.innerHTML += `<div style="color: red">You are discussion banned</div>`;
 					}else {
-						throw new Error("Error loading ban information.");
+						let bannedHTML = `<tr><td class="user-statistics-label">Banned</td>`;
+
+						if (data.discussion_banned === false) {
+							bannedHTML += `<td>No</td>`;
+						}else if (data.discussion_banned === true) {
+							bannedHTML += `<td style="color: red">Discussion banned*</td>`;
+						}else {
+							throw new Error("Error loading ban information.");
+						}
+
+						const lastTR = table.querySelector("tr:last-of-type");
+						if (!lastTR) { throw new Error("Table has no tr"); }
+						lastTR.outerHTML = bannedHTML + `</tr>` + lastTR.outerHTML;
 					}
 				});
 			}
