@@ -14,6 +14,7 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 		}]
 	}) as Scratchpads;
 
+	//TODO: Never fires and we don't get info if the user has thier statistics hidden
 	const table = await querySelectorPromise(".user-statistics-table > tbody") as HTMLElement;
 
 	const totals = Scratchpads.scratchpads.reduce((current, scratch) => {
@@ -80,6 +81,7 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 
 }
 
+//TODO: Fix or report to KA, currently disabled
 function duplicateBadges (): void {
 	const usedBadges = document.getElementsByClassName("used");
 	if (usedBadges.length > 0) {

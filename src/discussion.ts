@@ -1,5 +1,6 @@
 import { querySelectorPromise, querySelectorAllPromise } from "./util/promise-util";
 import { getComment } from "./util/api-util";
+import { parseQuery } from "./util/text-util";
 import {
 	EXTENSION_COMMENT_CLASSNAME,
 } from "./types/names";
@@ -76,8 +77,9 @@ function updateComments (): void {
 			if (e.toString().indexOf("Error: Could not find") === 0) {
 				//There are known cases where updateComments is called at the possiblity of new comments
 				//Not finding new comments is fine
+			}else {
+				console.error(e); //Other errors are not okay
 			}
-			console.error(e); //Other errors are not okay
 		});
 }
 
@@ -103,13 +105,18 @@ function commentsButtonEventListener (): void {
 
 function switchToTipsAndThanks () {
 	querySelectorPromise("#ka-uid-discussiontabbedpanel-1--tabbedpanel-tab-1").then(tabButton => tabButton as HTMLButtonElement).then(tabButton => {
-		//TODO: Don't switch to T&T if you have followed a direct link to question
+		//Don't switch to T&T if you have followed a direct link to question
+		if (parseQuery(window.location.search.substr(1)).hasOwnProperty("qa_expand_key")) {
+			return;
+		}
+
 		const y = document.body.scrollTop;
 
 		tabButton.dispatchEvent(new MouseEvent("click", { "view": window, "bubbles": true }));
 
 		window.setTimeout(function () {
 			window.scrollTo(0, y);
+			tabButton.blur();
 		}, 0);
 	}).catch(console.error);
 }

@@ -22,9 +22,12 @@ class ExtensionImpl extends Extension {
 		if (kaid) {
 			addProfileReportButton(uok, kaid);
 		}
-		if ((uok.asUsername() && uok.asUsername() === window.KA._userProfileData!.username) || (uok.asKaid() && uok.asKaid() === kaid)) {
+		
+		//TODO: Duplicate badges is currently patched. Fix or report to KA
+		/*if ((uok.asUsername() && uok.asUsername() === window.KA._userProfileData!.username) || (uok.asKaid() && uok.asKaid() === kaid)) {
 			setInterval(duplicateBadges, 100);
-		}
+		}*/
+		
 		addProjectsLink(uok);
 		addUserInfo(uok);
 	}

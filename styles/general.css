@@ -9,7 +9,7 @@
 
 /*Make the reply textbox not tiny*/
 body textarea[id^="uid-discussion-input"] {
-    min-height: 40px !important;
+    min-height: 143px !important;
 }
 textarea[id^="uid-discussion-input"]:focus {
     min-height: 143px !important;
