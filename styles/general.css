@@ -82,24 +82,6 @@ body .kae-hidden-editor-wrap {
 	border: none;
 }
 
-/** Notification delete button **/
-.kae-notif-delete {
-    cursor: pointer;
-    display: block;
-    margin: 0;
-    padding-left: 5px;
-    padding-top: 5px;
-}
-
-.kae-notif-delete svg {
-    padding: 5px;
-    border-radius: 5px;
-}
-
-.kae-notif-delete svg:hover {
-    background: #dddddd;
-}
-
 /** Make buttons under the program blue **/
 body .kae-program-button {
     margin: 0 !important;
@@ -141,6 +123,52 @@ body ._1wnf0g1k:hover {
 .scratchpad-page h1 {
     width: 100%;
     text-align: center;
+}
+
+/** Notification delete button **/
+.kae-notif-delete {
+    cursor: pointer;
+    display: block;
+    margin: 0;
+    padding-left: 5px;
+    padding-top: 5px;
+}
+
+.kae-notif-delete svg {
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.kae-notif-delete svg:hover {
+    background: #dddddd;
+}
+
+/** Profile tweaks **/
+/*Fix a small UI bug with the Edit Profile button*/
+#nav-container .user-card-edit-menu {
+    top: 0;
+}
+
+/*Style for the Projects link we add to the left sidebar on a profile*/
+.kae-projects-profile-link {
+    background-color: transparent !important;
+    text-decoration: none !important;
+    color: #21242C !important;
+    border-radius: 4px !important;
+    padding-top: 11px !important;
+    padding-bottom: 11px !important;
+    padding-left: 24px !important;
+    border: 1px solid transparent !important;
+    display: block !important;
+    cursor: pointer !important;
+    font-size: 16px;
+    font-smoothing: antialiased;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+}
+
+.kae-projects-profile-link:hover {
+    opacity: 0.64;
 }
 
 /** Hide survey **/

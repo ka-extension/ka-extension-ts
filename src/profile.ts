@@ -89,4 +89,30 @@ function duplicateBadges (): void {
 	}
 }
 
-export { addUserInfo, duplicateBadges };
+//TODO: Doesn't fire if switching from one profile page to another
+//e.g: Opening khanacademy.com or clicking "Learner Home" to go to your own profile when on someone else's profile
+function addProjectsLink (uok: UsernameOrKaid): void {
+	querySelectorPromise("nav[data-test-id=\"side-nav\"] section:last-child ul").then(sidebarLinks => {
+		//If we're on the projects page already, don't worry about adding it
+		if (window.location.pathname.indexOf("projects") === -1) {
+			let profileLink = document.querySelector("nav[data-test-id=\"side-nav\"] a[data-test-id=\"side-nav-profile\"]") as HTMLElement;
+			console.log(profileLink.textContent);
+			if (!profileLink || !profileLink.parentElement) {
+				throw new Error("Failed to find profile element");
+			}
+			profileLink = profileLink.parentElement;
+
+			profileLink.style.color = "red";
+
+			const projectsLink = document.createElement("a");
+
+			projectsLink.innerText = "Projects";
+			projectsLink.href = `/profile/${uok}/projects`;
+			projectsLink.classList.add("kae-projects-profile-link");
+
+			profileLink.appendChild(projectsLink);
+		}
+	}).catch(console.error);
+}
+
+export { addUserInfo, duplicateBadges, addProjectsLink };

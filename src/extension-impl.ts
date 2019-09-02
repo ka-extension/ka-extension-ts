@@ -2,7 +2,7 @@ import { Extension } from "./extension";
 import { Program, UsernameOrKaid } from "./types/data";
 import { switchToTipsAndThanks, commentsButtonEventListener } from "./discussion";
 import { /*addReportButtonDiscussionPosts,*/ addProfileReportButton } from "./report";
-import { addUserInfo, duplicateBadges, } from "./profile";
+import { addUserInfo, duplicateBadges, addProjectsLink } from "./profile";
 import { addProgramInfo, keyboardShortcuts, addEditorSettingsButton, checkHiddenOrDeleted } from "./project";
 import { loadButtonMods } from "./buttons";
 import { deleteNotifButtons, updateNotifIndicator } from "./notif";
@@ -25,10 +25,11 @@ class ExtensionImpl extends Extension {
 		if ((uok.asUsername() && uok.asUsername() === window.KA._userProfileData!.username) || (uok.asKaid() && uok.asKaid() === kaid)) {
 			setInterval(duplicateBadges, 100);
 		}
+		addProjectsLink(uok);
 		addUserInfo(uok);
 	}
 	onHomePage (uok: UsernameOrKaid) {
-		console.info("On home page");
+
 	}
 	onDiscussionPage () {
 		//TODO: fix report button for discussion
