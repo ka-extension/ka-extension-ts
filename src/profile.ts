@@ -74,7 +74,7 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 						if (data.discussion_banned === false) {
 							bannedHTML += `<td>No</td>`;
 						}else if (data.discussion_banned === true) {
-							bannedHTML += `<td style="color: red">Discussion banned*</td>`;
+							bannedHTML += `<td style="color: red">Discussion banned</td>`;
 						}else {
 							throw new Error("Error loading ban information.");
 						}
