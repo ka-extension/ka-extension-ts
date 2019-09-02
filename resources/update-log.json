@@ -1,5 +1,23 @@
 [
     {
+        "version": "4.7.0",
+        "new": [
+            "Add syntax highlighting to code blocks in comments",
+            "Move hide editor to the Editor Settings menu",
+            "Make the comment reply box not tiny",
+            "Add a \"Projects\" button to the left sidebar on profiles",
+            "Add a check on your profile to let you know if you're banned",
+            "Fix a KA bug where the Edit Profile button would clip down"
+        ],
+        "fixes": [
+            "Moves Toggle Editor Settings button before Oh Noes, to avoid Oh Noes clipping as he changes width.",
+            "Sort selecting elements on the browse projects page are blue again",
+            "Hidden program check on the 404 page works again",
+            "Fixes bugs associated with switching to the T&T tab",
+            "Removes code for a couple of broken features that aren't worth fixing: profile hover cards under programs, toggle documentation keyboard shortcut, discussion guidelines next to the discussion area, and duplicating badges."
+        ]
+    },
+    {
         "version": "4.6.3",
         "new": [
             "Nothing"
