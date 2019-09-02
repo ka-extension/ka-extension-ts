@@ -24,7 +24,7 @@ function getCSRF (): string {
 }
 
 function getChromeFkey (): Promise<{}> {
-	const cookiePromise = new Promise((resolve, reject) => {
+	const cookiePromise: Promise<{}> = new Promise((resolve, reject) => {
 		chrome.cookies.get({
 			url: "https://www.khanacademy.org",
 			name: "fkey"

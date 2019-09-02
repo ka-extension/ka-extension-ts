@@ -1,5 +1,44 @@
 [
     {
+        "version": "4.6.3",
+        "new": [
+            "Nothing"
+        ],
+        "fixes": [
+            "The most critical features of the extension, after a major KA source update.",
+            "A number of discussion features after the previous discussion update.",
+            "There are still known bugs. 4.6.4 is already planned."
+        ]
+    },
+    {
+        "version": "4.6.2",
+        "new": [
+            "Nothing"
+        ],
+        "fixes": [
+            "Fixes discussion and program features after a KA update",
+            "Fixes a bug that causes the page to be scrolled automatically on pages with discussion"
+        ]
+    },
+    {
+        "version": "4.6.1",
+        "new": [
+            "Nothing"
+        ],
+        "fixes": [
+            "Style bugs with buttons"
+        ]
+    },
+    {
+        "version": "4.6.0",
+        "new": [
+            "Makes T/T the default page for program dicussions"
+        ],
+        "fixes": [
+            "Fixes features broken by KA's discussion update"
+        ]
+    },
+    {
         "version": "4.5.0",
         "new": [
             "Five new editor themes",

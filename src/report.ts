@@ -1,35 +1,13 @@
 import { buildQuery } from "./util/text-util";
-import { Program, UsernameOrKaid } from "./types/data";
+import { UsernameOrKaid } from "./types/data";
 import { QUEUE_ROOT, EXTENSION_ITEM_CLASSNAME } from "./types/names";
-import { BUTTON_CLASSES } from "./buttons";
 import { DiscussionTypes, getConvo } from "./util/api-util";
-import { querySelectorAllPromise, querySelectorPromise } from "./util/promise-util";
+import { querySelectorAllPromise } from "./util/promise-util";
 import { getJSON } from "./util/api-util";
 import { UserProfileData, IdType } from "./types/data";
 import { FileDownloader } from "./util/download-util";
 
 const downloader = new FileDownloader();
-
-function addReportButton (program: Program, kaid: string) {
-	querySelectorPromise(".buttons_vponqv")
-		.then(buttons => buttons as HTMLDivElement)
-		.then(buttons => {
-			if (kaid !== program.kaid) {
-				const reportButton: HTMLAnchorElement = document.createElement("a");
-				reportButton.id = "kae-report-button";
-				reportButton.classList.add(BUTTON_CLASSES.default);
-				reportButton.href = `${QUEUE_ROOT}submit?${buildQuery({
-					type: "program",
-					id: program.id.toString(),
-					callback: window.location.href
-				})}`;
-				reportButton.setAttribute("role", "button");
-				reportButton.innerHTML = "<span>Report</span>";
-				buttons.insertBefore(reportButton, buttons.children[1]);
-				buttons.insertBefore(document.createTextNode(" "), reportButton.nextSibling);
-			}
-		});
-}
 
 async function addProfileReportButton (uok: UsernameOrKaid, loggedInKaid: string) {
 	const kaid: string = uok.type === IdType.KAID ? uok.toString() :
@@ -111,7 +89,6 @@ function addReportButtonDiscussionPosts (focusId: string, focusKind: string) {
 }
 
 export {
-	addReportButton,
 	addReportButtonDiscussionPosts,
 	addProfileReportButton
 };

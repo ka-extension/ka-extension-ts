@@ -1,7 +1,5 @@
 import { Program } from "./types/data";
-import { KAdefine } from "./extension";
 import { formatDate } from "./util/text-util";
-import { PREFIX } from "./types/names";
 import { querySelectorPromise } from "./util/promise-util";
 import { addEditorSettings } from "./editor-settings";
 
@@ -25,24 +23,14 @@ function tableRow (key: string, val: string, title?: string): HTMLTableRowElemen
 	return tr;
 }
 
-function addProgramAuthorHoverCard (program: Program): void {
-	KAdefine.asyncRequire("./javascript/hover-card-package/hover-card.js").then(HoverCard => {
-		querySelectorPromise(".lastUpdated_9qi1wc").then((updatedSpan) => {
-			const nicknameAnchor = (updatedSpan.parentNode as HTMLDivElement).getElementsByClassName("shared_ko2ejt-o_O-default_1bzye1z")[0];
-			nicknameAnchor.addEventListener("mouseenter", function (this: HTMLAnchorElement) {
-				HoverCard.createHoverCardQtip!(this, {
-					my: "top left",
-					at: "bottom left"
-				});
-			});
-		});
-	});
-}
-
 function addProgramInfo (program: Program, uok: string): void {
-	querySelectorPromise(".lastUpdated_9qi1wc")
-		.then(updatedSpan => updatedSpan as HTMLSpanElement)
-		.then(updatedSpan => {
+	querySelectorPromise("[data-user-kaid]")
+		.then(userLink => userLink as HTMLAnchorElement)
+		.then(userLink => userLink.parentNode)
+		.then(wrapDiv => wrapDiv as HTMLDivElement)
+		.then(wrapDiv => wrapDiv.parentNode)
+		.then(wrapDiv => wrapDiv as HTMLDivElement)
+		.then(wrapDiv => {
 			const table = document.createElement("table");
 			table.className = "kae-table";
 
@@ -78,35 +66,8 @@ function addProgramInfo (program: Program, uok: string): void {
 				table.appendChild(tableRow("Updated", updated));
 			}
 			table.appendChild(tableRow("Created", created));
-			updatedSpan.appendChild(table);
+			wrapDiv.appendChild(table);
 		});
-}
-
-function hideEditor (program: Program): void {
-	const wrap: HTMLDivElement | null = <HTMLDivElement>document.querySelector(".wrapScratchpad_1jkna7i");
-	if (wrap) {
-		const editor: HTMLDivElement = <HTMLDivElement>document.querySelector(".scratchpad-editor-wrap");
-		const lsEditorId: string = `${PREFIX}editor-hide`;
-		let lsEditorVal: string | null = <string>localStorage.getItem(lsEditorId);
-		if (lsEditorVal && lsEditorVal === "true") {
-			editor.classList.toggle("kae-hide");
-			wrap.classList.toggle("kae-hide-wrap");
-		}
-		const rightArea = <HTMLDivElement>document.querySelector(".default_olfzxm-o_O-rightColumn_1rpl0kp");
-		const hideButton = <HTMLAnchorElement>document.createElement("a");
-		hideButton.id = "kae-hide-button";
-		hideButton.classList.add("button_1eqj1ga-o_O-shared_acgh35-o_O-default_9fm203-o_O-toolbarButton_em2kam");
-		hideButton.textContent = "Toggle Editor";
-		hideButton.addEventListener("click", (): void => {
-			lsEditorVal = lsEditorVal === "true" ? "false" : "true";
-			localStorage.setItem(lsEditorId, lsEditorVal);
-			editor.classList.toggle("kae-hide");
-			wrap.classList.toggle("kae-hide-wrap");
-		});
-		if (rightArea) {
-			rightArea.appendChild(hideButton);
-		}
-	}
 }
 
 //Replace KA's vote button with one that updates after you vote and allows undoing votes
@@ -190,10 +151,6 @@ function keyboardShortcuts (program: Program): void {
 				const restartButton: HTMLAnchorElement | null = <HTMLAnchorElement>document.querySelector("#restart-code");
 				if (restartButton) { restartButton.click(); }
 				break;
-			case 68: // D - Toggle documentation
-				const firstLink: HTMLAnchorElement | null = <HTMLAnchorElement>document.querySelector(".link_1uvuyao-o_O-tabTrigger_pbokdw-o_O-inactiveTab_1t8hj6j");
-				if (firstLink) { firstLink.click(); }
-				break;
 			case 80: // P - Go to the profile of program creator
 				window.location.href = `${window.location.origin}/profile/${program.kaid}`;
 				break;
@@ -208,18 +165,19 @@ function checkHiddenOrDeleted () {
 	}
 	const id = idMatch[0];
 
-	const PROGRAM_API = "https://www.khanacademy.org/api/internal/scratchpads";
+	const textWrap = document.querySelector("#four-oh-four > div > div:last-child")!;
 
-	const textWrap = document.querySelector("#four-oh-four .textContainer_d4i2v")!;
+	const API_URL = `https://www.khanacademy.org/api/internal/scratchpads/${id}`;
 
 	const msg = document.createElement("div");
 	msg.style.marginTop = "25px";
 	msg.innerHTML = "Checking program...";
 	textWrap.appendChild(msg);
-	fetch(`${PROGRAM_API}/${id}?projection={}`).then((response: Response): void => {
+	fetch(`${API_URL}?projection={}`).then((response: Response): void => {
 		if (response.status === 200) {
-			msg.innerHTML = "This program actually exists.<br>";
-			msg.innerHTML += `<a style="color: white" href="${PROGRAM_API}/${id}?format=pretty">View API Data</a>`;
+			const PROGRAM_VIEW = `https://khan.github.io/live-editor/demos/simple/?scratchpad=${id}`;
+
+			msg.innerHTML = `This <a class="kae-white" style="text-decoration: none" href="${PROGRAM_VIEW}">program</a> is completely hidden. (<a class="kae-white" href="${API_URL}?format=pretty">API</a>)`;
 		} else if (response.status === 404) {
 			msg.innerHTML = "This program is actually deleted.";
 		}
@@ -228,9 +186,9 @@ function checkHiddenOrDeleted () {
 
 /*** Add a button to toggle the Editor Settings popup for programs ***/
 async function addEditorSettingsButton () {
-	const leftArea = await querySelectorPromise(".default_olfzxm-o_O-leftColumn_qf2u39");
+	const editor = await querySelectorPromise(".scratchpad-ace-editor") as HTMLElement;
 
-	const ace = (window as any).ace;
+	const ace = window.ace;
 
 	ace.config.set("basePath", "https://cdn.jsdelivr.net/gh/ajaxorg/ace-builds@1.1.4/src-min-noconflict");
 
@@ -242,15 +200,13 @@ async function addEditorSettingsButton () {
 		});
 		document!.head!.appendChild(scriptEl);
 	}else {
-		(window as any).ScratchpadAutosuggest.enableLiveCompletion = function () {};
+		window.ScratchpadAutosuggest.enableLiveCompletion = function () {};
 	}
 
-	const innerButtonLink: HTMLAnchorElement = document.createElement("a");
+	const innerButtonLink: HTMLButtonElement = document.createElement("button");
 	innerButtonLink.id = "kae-toggle-editor-settings";
-	innerButtonLink.classList.add("button_1eqj1ga-o_O-shared_acgh35-o_O-default_9fm203-o_O-toolbarButton_em2kam");
 	innerButtonLink.innerHTML = "Toggle Editor Settings";
 
-	const editor = document.querySelector(".scratchpad-ace-editor") as HTMLElement;
 	const session = ace.edit(editor).getSession();
 	session.setMode(new (ace.require(session.getMode().$id).Mode)());
 
@@ -264,9 +220,21 @@ async function addEditorSettingsButton () {
 	innerButtonLink.addEventListener("click", repos);
 	window.addEventListener("resize", repos);
 
-	leftArea.appendChild(innerButtonLink);
+	const errorBuddy = await querySelectorPromise(".error-buddy-resting");
+	const errorBuddyWrap = errorBuddy.parentNode as HTMLDivElement;
+	if (!errorBuddyWrap) {
+		throw new Error("Can't find Error Buddy");
+	}
+	errorBuddyWrap.parentNode!.insertBefore(innerButtonLink, errorBuddyWrap);
 
 	document.body.appendChild(editorSettings);
+
+	const editorWrap = document.querySelector(".scratchpad-editor-wrap");
+	if (editorWrap && editorWrap.parentElement) {
+		editorWrap.parentElement.classList.toggle("kae-hidden-editor-wrap", localStorage.kaeEditorHidden === "true" ? true : false);
+	}else {
+		throw new Error("Scratchpad editor has no parent wrap.");
+	}
 }
 
-export { addProgramInfo, hideEditor, keyboardShortcuts, addEditorSettingsButton, checkHiddenOrDeleted, addProgramAuthorHoverCard };
+export { addProgramInfo, keyboardShortcuts, addEditorSettingsButton, checkHiddenOrDeleted };

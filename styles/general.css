@@ -1,96 +1,71 @@
-/** Community guidelines **/
-body .video-discussion {
-    float: left !important;
-    margin: 0px !important;
-    margin-left: 25% !important;
-    width: 50% !important;
-    max-width: unset !important;
-    display: block;
-}
+@import url("discussion-code-highlighting.css");
 
 .scratchpad-page .video-discussion .tab, .scratchpad-page .video-discussion .video-discussion-header {
     max-width: unset !important;
 }
 
-body .footer_crtwg {
-    max-width: none !important;
-}
-
-body .main-discussion-guidelines.discussion-guidelines {
-    float: right !important;
-    width: 20% !important;
-    display: block !important;
-    margin-top: 0px !important;
-}
-
 /** Improvements to discussion styling **/
-.linkStyledButton_ycurob:focus { /*Replies button*/
-    outline: auto 3px #888 !important;
+/*TODO: Re-add outline-fixing code*/
+
+/*Make the reply textbox not tiny*/
+body textarea[id^="uid-discussion-input"] {
+    min-height: 40px !important;
 }
-body .notAButton_14bcykr-o_O-tabTrigger_1jwmooj-o_O-activeTab_khee7t:focus, /*T&T tab button*/
-.default_olfzxm-o_O-inlineStyles_16okj06:focus, /*Comments*/
-.default_olfzxm-o_O-horizontalSeparator_6lbsg7-o_O-inlineStyles_16okj06:focus, /*Replies*/
-button[class^="button_1eqj1ga-o_O-shared_acgh35-o_O-default_9fm203-o_O-"]:focus { /*Show more comments*/
-    outline: none !important;
+textarea[id^="uid-discussion-input"]:focus {
+    min-height: 143px !important;
 }
-/*Background on focused comments*/
-.default_olfzxm-o_O-inlineStyles_16okj06:focus {
-    background: #f1f1f1;
-    border-radius: 9px;
+
+/*Add a background to code blocks*/
+.discussion-code-format {
+    background-color: #f4f4f4;
+    border-radius: 3px;
+    padding: .2em .4em;
 }
-body .default_olfzxm-o_O-inlineStyles_16okj06 {
-    padding: 9px !important;
-}
-.discussion-code-inline { /*Fix a bug where inline code blocks expanded the width of the comment*/
+
+/*Fix a bug where inline code blocks expanded the width of the comment*/
+.discussion-code-inline {
     white-space: pre-wrap;
-}
-body .default_olfzxm-o_O-flagText_1ajw024-o_O-flagText_avg348 {
-    display: block !important; /*Flag text gets hidden on profile reply page for some reason*/
 }
 
 /** Widen scratchpad **/
-body .wrap_xyqcvi {
+body .scratchpad-wrap-outer > div {
     max-width: none !important;
 }
 
 /** Hide editor feature **/
-.kae-hide-wrap .wrapScratchpadInner_poyjc-o_O-wrapScratchpadInnerBorder_1b0rgvs {
-    display: block !important;
+body .kae-hidden-editor-wrap {
     text-align: center;
+    display: block !important;
 }
 
-.kae-hide-wrap .scratchpad-canvas-wrap {
+.kae-hidden-editor-wrap > .scratchpad-canvas-wrap {
     display: inline-block !important;
     border-left: 1px solid rgba(33, 37, 45, 0.16) !important;
     border-right: 1px solid rgba(33, 37, 45, 0.16) !important;
 }
 
-body .kae-hide {
+.kae-hidden-editor-wrap .scratchpad-editor-wrap {
     display: none !important;
-}
-
-/** Make Error Buddy play better with other buttons in his half of the bar **/
-body .errorBuddyContainer_1o6y302-o_O-buttonOnLeft_1tyzswu {
-    width: auto !important;
-    margin-right: 0 !important;
-}
-
-.scratchpad-wrap .error-buddy-resting .error-buddy-happy, .scratchpad-wrap .error-buddy-resting .error-buddy-thinking {
-    position: static;
-}
-
-.wrapScratchpadInner_poyjc {
-	overflow-x: hidden;
 }
 
 /** Program toolbar buttons (Toggle Editor and Toggle Editor Settings for now) **/
 #kae-toggle-editor-settings, #kae-hide-button {
+    font-family: Lato, sans-serif;
     font-size: 16px;
     font-weight: bold;
-}
+    border: 1px solid rgba(33,36,44,0.50);
+    height: 40px;
+    border-radius: 4px;
+    color: #1865f2;
+    padding: 0 12px;
+    line-height: 20px;
+    cursor: pointer;
+    outline: none;
+    margin-right: 16px}
 
 #kae-toggle-editor-settings:hover, #kae-hide-button:hover {
-    box-shadow: 0 0 0 1px #ffffff, 0 0 0 3px #1865f2;
+    border: 1px solid transparent !important;
+    box-shadow: 0 0 0 2px #1865f2;
 }
 
 /** Table Styles **/
@@ -125,48 +100,47 @@ body .errorBuddyContainer_1o6y302-o_O-buttonOnLeft_1tyzswu {
     background: #dddddd;
 }
 
-/** Make program buttons blue **/
-/* 1w8n1i8 was the filled in buttons, 77ub1h was the outlined buttons; now they're filled in unless they're disabled */
-body .link_1uvuyao-o_O-computing_1w8n1i8, body .link_1uvuyao-o_O-computing_77ub1h {
+/** Make buttons under the program blue **/
+body .kae-program-button {
+    margin: 0 !important;
+    padding: 8px !important;
+    font-size: 15px !important;
+    line-height: 23px !important;
+    font-weight: 400 !important;
+    border-radius: 4px !important;
+    display: inline-block !important;
+    cursor: pointer !important;
+    text-decoration: none !important;
+    margin-right: 0 !important;
     border: 1px solid transparent !important;
     color: white !important;
     background: #1865f2 !important;
-    margin-right: 0 !important;
 }
-
-body .link_1uvuyao-o_O-computing_1w8n1i8:hover, body .link_1uvuyao-o_O-computing_77ub1h:hover {
-    border: 1px solid transparent !important;
-    color: white !important;
+body .kae-program-button:hover {
     background: #0f52cf !important;
-}
-
-/* The color for the disabled elements gets handled by KA setting opacity 0.5 (here and below) */
-body .link_1uvuyao-o_O-computing_77ub1h-o_O-disabled_2gos5, body .link_1uvuyao-o_O-computing_1w8n1i8-o_O-disabled_2gos5 {
-    color: #0f52cf !important;
-    border: 1px solid #0f52cf !important;
-    border-radius: 4px !important;
-    background: white !important;
-}
-
-/* Make the sort selecting elements on the browse projects page blue */
-body .link_1uvuyao-o_O-computing_1uwg40u, body .link_1uvuyao-o_O-computing_1uwg40u-o_O-disabled_2gos5 {
-    color: #1865f2 !important;
-}
-
-body .link_1uvuyao-o_O-computing_1uwg40u:hover {
-    color: #0f52cf !important;
-}
-
-/** Center program titles **/
-.scratchpad-page .titleAndLogo_1em9xw1 {
-    display: block !important;
-    text-align: center !important;
+    color: white !important;
+    border: 1px solid transparent !important;
 }
 
 /** Evenly space program buttons **/
-.buttons_vponqv .discussion-meta .discussion-meta-controls > span:nth-child(2) {
+.voting-wrap .discussion-meta .discussion-meta-controls > span:nth-child(2) {
     display: inline-block;
-    width: 4.5px;
+    width: 3px;
+}
+
+/* Make the sort selecting elements on the browse projects page blue */
+body ._1wnf0g1k, body ._11pveom5 {
+    color: #1152b0 !important;
+}
+
+body ._1wnf0g1k:hover {
+    color: #0d3d82 !important;
+}
+
+/** Center program titles **/
+.scratchpad-page h1 {
+    width: 100%;
+    text-align: center;
 }
 
 /** Hide survey **/
@@ -227,4 +201,8 @@ body #kae-report-button:hover {
 /** Misc **/
 .kae-green {
     color: #3eaa23 !important;
+}
+
+.kae-white {
+    color: #ffffff !important;
 }

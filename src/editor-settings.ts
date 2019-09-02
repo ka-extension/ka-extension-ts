@@ -1,14 +1,16 @@
+import { ACE_OPTION, EditorOptions } from "./types/data";
+
 const DEFAULT_SETTINGS = {
-	fontFamily : "'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace",
-	showInvisibles : false,
-	tabSize : 4,
-	theme : "ace/theme/textmate",
-	useSoftTabs : true,
-	wrap : true,
-	useWorker : false,
-	behavioursEnabled : true,
-	wrapBehavioursEnabled : false,
-};
+	fontFamily: "'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace",
+	showInvisibles: false,
+	tabSize: 4,
+	theme: "ace/theme/textmate",
+	useSoftTabs: true,
+	wrap: true,
+	useWorker: false,
+	behavioursEnabled: true,
+	wrapBehavioursEnabled: false,
+} as EditorOptions;
 
 interface Option {
 	valueLabels?: string[];
@@ -20,7 +22,7 @@ class BoolRadio implements Option {
 	valueLabels: string[];
 	values: boolean[];
 
-	constructor (values: { [valueLabel:string]: boolean }) {
+	constructor (values: { [valueLabel: string]: boolean }) {
 		this.values = [];
 		this.valueLabels = [];
 		for (const valueLabel in values) {
@@ -47,7 +49,7 @@ class Select implements Option {
 class BoolSelect extends Select {
 	values: boolean[];
 
-	constructor (label: string, values: { [valueLabel:string]: boolean }) {
+	constructor (label: string, values: { [valueLabel: string]: boolean }) {
 		super(label);
 
 		this.values = [];
@@ -61,7 +63,7 @@ class BoolSelect extends Select {
 class TextSelect extends Select {
 	values: string[];
 
-	constructor (label: string, values: { [valueLabel:string]: string }) {
+	constructor (label: string, values: { [valueLabel: string]: string }) {
 		super(label);
 
 		this.values = [];
@@ -75,7 +77,7 @@ class TextSelect extends Select {
 class BoolSelectMultikey extends Select {
 	values: boolean[][];
 
-	constructor (label: string, values: { [valueLabel:string]: boolean[] }) {
+	constructor (label: string, values: { [valueLabel: string]: boolean[] }) {
 		super(label);
 
 		this.values = [];
@@ -87,14 +89,14 @@ class BoolSelectMultikey extends Select {
 }
 
 class NumSelect extends Select {
-	valueLabels:string[];
+	valueLabels: string[];
 	values: number[];
 
 	constructor (label: string, values: number[]) {
 		super(label);
 
 		this.values = values;
-		this.valueLabels = values.map((n:number) => n.toString());
+		this.valueLabels = values.map((n: number) => n.toString());
 	}
 }
 
@@ -102,13 +104,13 @@ class TextInput implements Option {
 	label: string;
 	placeholder: string;
 
-	constructor (options: {label:string, placeholder:string}) {
+	constructor (options: { label: string, placeholder: string }) {
 		this.label = options.label;
 		this.placeholder = options.placeholder;
 	}
 }
 
-const POSSIBLE_OPTIONS:{ [key:string]: Option } = {
+const POSSIBLE_OPTIONS: { [key: string]: Option } = {
 	wrap: new BoolRadio({
 		"Wrap": true,
 		"Scroll": false,
@@ -132,20 +134,20 @@ const POSSIBLE_OPTIONS:{ [key:string]: Option } = {
 	//wrapBehaviours are when you select a word, then press " and it puts quotes around the word
 	"behavioursEnabled wrapBehavioursEnabled": new BoolSelectMultikey(
 		"Character pairs", {
-			"Off" : [false, false],
+			"Off": [false, false],
 			"Match Pair": [true, false],
 			"Match Pair and Wrap Selection": [true, true],
 		}),
 	theme: new TextSelect("Theme", {
-			"Textmate (Default)": "ace/theme/textmate",
-			"Chrome": "ace/theme/chrome",
-			"Tomorrow": "ace/theme/tomorrow",
-			"Tomorrow Night": "ace/theme/tomorrow_night",
-			"Monokai": "ace/theme/monokai",
-			"Ambiance": "ace/theme/ambiance",
-			"Pastel on dark": "ace/theme/pastel_on_dark",
-			"Idle Fingers": "ace/theme/idle_fingers",
-		}),
+		"Textmate (Default)": "ace/theme/textmate",
+		"Chrome": "ace/theme/chrome",
+		"Tomorrow": "ace/theme/tomorrow",
+		"Tomorrow Night": "ace/theme/tomorrow_night",
+		"Monokai": "ace/theme/monokai",
+		"Ambiance": "ace/theme/ambiance",
+		"Pastel on dark": "ace/theme/pastel_on_dark",
+		"Idle Fingers": "ace/theme/idle_fingers",
+	}),
 	fontFamily: new TextInput({
 		label: "Font",
 		placeholder: "fontFamily css"
@@ -154,19 +156,21 @@ const POSSIBLE_OPTIONS:{ [key:string]: Option } = {
 
 let editorSettingsCount = 0; //Used to give each instance an index, so that element id's don't conflict
 
-function loadOptions () {
+function loadOptions (): EditorOptions {
 	try {
-		return JSON.parse(window.localStorage.kaeEditorSettings);
-	}catch (e) {
+		return JSON.parse(window.localStorage.kaeEditorSettings) as EditorOptions;
+	} catch (e) {
 		return DEFAULT_SETTINGS;
 	}
 }
 
+/* This whole function should probably be refactored at some point,
+	there are more than a few implicit `any`s */
 function addEditorSettings (toggleButton: HTMLElement, editor: HTMLElement) {
 	const editorSettingsId = editorSettingsCount++;
 
-	const aceEditor = (window as any).ace.edit(editor);
-	const currentOptions = loadOptions();
+	const aceEditor = window.ace.edit(editor);
+	const currentOptions = loadOptions() as any; // tslint:disable-line
 
 	let toggledOn = false;
 	const container = createContainer();
@@ -184,14 +188,13 @@ function addEditorSettings (toggleButton: HTMLElement, editor: HTMLElement) {
 
 			for (let i = 0; i < values.length; i++) {
 				aceEditor.setOption(options[i], values[i] === "true");
-
 				currentOptions[options[i]] = values[i] === "true";
 			}
-		}else {
-			let value:number|string|boolean = this.value;
+		} else {
+			let value = this.value as ACE_OPTION;
 			if (optionObj instanceof NumSelect) {
-				value = parseFloat(value);
-			}else if (optionObj instanceof BoolSelect || optionObj instanceof BoolRadio) {
+				value = parseFloat(value as string);
+			} else if (optionObj instanceof BoolSelect || optionObj instanceof BoolRadio) {
 				value = value === "true";
 			}
 
@@ -234,7 +237,7 @@ function addEditorSettings (toggleButton: HTMLElement, editor: HTMLElement) {
 							}
 							selectEl.appendChild(optionEl);
 						}
-					}else if (optionObj instanceof BoolSelectMultikey) {
+					} else if (optionObj instanceof BoolSelectMultikey) {
 						for (let i = 0; i < optionObj.values.length; i++) {
 							const optionEl = document.createElement("option");
 							optionEl.innerHTML = optionObj.valueLabels[i];
@@ -249,7 +252,7 @@ function addEditorSettings (toggleButton: HTMLElement, editor: HTMLElement) {
 
 							selectEl.appendChild(optionEl);
 						}
-					}else if (optionObj instanceof BoolSelect || optionObj instanceof TextSelect) {
+					} else if (optionObj instanceof BoolSelect || optionObj instanceof TextSelect) {
 						for (let i = 0; i < optionObj.values.length; i++) {
 							const optionEl = document.createElement("option");
 							optionEl.innerHTML = optionObj.valueLabels[i];
@@ -264,7 +267,7 @@ function addEditorSettings (toggleButton: HTMLElement, editor: HTMLElement) {
 					}
 					selectEl.selectedIndex = selectedIndex!;
 					rowEl.appendChild(document.createElement("td")).appendChild(selectEl);
-				}else if (optionObj instanceof TextInput){
+				} else if (optionObj instanceof TextInput) {
 					const inputEl = document.createElement("input");
 					inputEl.type = "text";
 					inputEl.placeholder = optionObj.placeholder;
@@ -272,7 +275,7 @@ function addEditorSettings (toggleButton: HTMLElement, editor: HTMLElement) {
 					inputEl.addEventListener("change", updateEditorSettings);
 					rowEl.appendChild(document.createElement("td")).appendChild(inputEl);
 				}
-			}else if (optionObj instanceof BoolRadio){
+			} else if (optionObj instanceof BoolRadio) {
 				for (let i = 0; i < optionObj.values.length; i++) {
 					const td = document.createElement("td");
 					const labelEl = document.createElement("label");
@@ -292,8 +295,35 @@ function addEditorSettings (toggleButton: HTMLElement, editor: HTMLElement) {
 				}
 			}
 
-			container.appendChild(table).appendChild(rowEl);
+			table.appendChild(rowEl);
 		}
+
+		const hideEditorWrap = document.createElement("tr");
+		hideEditorWrap.setAttribute("colspan", "2");
+		const hideEditorToggle = document.createElement("input");
+		hideEditorToggle.type = "checkbox";
+		hideEditorToggle.name = hideEditorToggle.id = "kae-hide-editor";
+		hideEditorToggle.checked = localStorage.kaeEditorHidden === "true" ? false : true;
+		hideEditorToggle.addEventListener("change", () => {
+			const editorWrap = <HTMLDivElement>document.querySelector(".scratchpad-editor-wrap");
+			if (editorWrap.parentElement) {
+				editorWrap.parentElement.classList.toggle("kae-hidden-editor-wrap", !hideEditorToggle.checked);
+			}else {
+				throw new Error("Can't find scratchpad wrap.");
+			}
+
+			localStorage.kaeEditorHidden = hideEditorToggle.checked ? "false" : "true";
+		});
+
+		const hideEditorLabel = document.createElement("label");
+		hideEditorLabel.setAttribute("for", "kae-hide-editor");
+		hideEditorLabel.textContent = "Show Editor: ";
+		hideEditorWrap.appendChild(hideEditorLabel);
+		hideEditorWrap.appendChild(hideEditorToggle);
+		table.appendChild(hideEditorWrap);
+
+		container.appendChild(table);
+
 		return container;
 	}
 
@@ -303,13 +333,13 @@ function addEditorSettings (toggleButton: HTMLElement, editor: HTMLElement) {
 		toggledOn = !toggledOn;
 		if (toggledOn) {
 			container.style.display = "block";
-		}else {
+		} else {
 			container.style.display = "none";
 		}
 	});
 
 	const mode = aceEditor.getSession().getMode().$id;
-	aceEditor.getSession().setMode(new ((window as any).ace.require(mode).Mode)());
+	aceEditor.getSession().setMode(new (window.ace.require(mode).Mode)());
 
 	aceEditor.setOptions(currentOptions);
 

@@ -30,7 +30,7 @@ class UsernameOrKaid {
 		return this.type === IdType.KAID ? this.toString() : null;
 	}
 	asUsername (): string | null {
-		return this.type === IdType.KAID ? this.toString() : null;
+		return this.type === IdType.USERNAME ? this.toString() : null;
 	}
 }
 
@@ -132,9 +132,15 @@ interface UserProfileData {
 	dateJoined: string;
 	kaid: string;
 	isPhantom: boolean;
+	username: string;
+}
+
+interface User {
+	discussion_banned?: boolean;
 }
 
 interface KA {
+	kaid: string;
 	_userProfileData?: UserProfileData;
 }
 
@@ -168,9 +174,49 @@ interface NotifElm {
 	feedback: string;
 }
 
+interface ScratchpadUI {
+	scratchpad: {
+		id: number;
+		attributes: Program;
+	};
+}
+
+interface EditorOptions {
+	fontFamily: string;
+	showInvisibles: boolean;
+	tabSize: number;
+	theme: string;
+	useSoftTabs: boolean;
+	wrap: boolean;
+	useWorker: boolean;
+	behavioursEnabled: boolean;
+	wrapBehavioursEnabled: boolean;
+}
+
+interface ACE {
+	edit: (e: HTMLElement) => {
+		setOptions: (o: EditorOptions) => void;
+		setOption: (o: string, val: ACE_OPTION) => void;
+		getSession: () => {
+			getMode: () => {
+				$id: string;
+			};
+			setMode: (mode: any) => void; /* tslint:disable-line:no-any */
+		};
+	};
+	config: {
+		set: (o: string, val: string) => void;
+	};
+	require: (mode: string) => { Mode: any }; /* tslint:disable-line:no-any */
+}
+
+type ACE_OPTION = boolean | number | string;
+
 export {
 	InvalidUsernameOrKaid, IdType, UsernameOrKaid,
 	CommentSortType, Program, Notification,
 	Scratchpads, KA, UserProfileData,
-	NotifObj, Feedback, NotifElm
+	NotifObj, Feedback, NotifElm, ScratchpadUI,
+	EditorOptions, ACE, ACE_OPTION,
+	User
 };

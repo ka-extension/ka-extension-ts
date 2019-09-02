@@ -1,4 +1,4 @@
-import { UsernameOrKaid, Scratchpads, UserProfileData } from "./types/data";
+import { UsernameOrKaid, Scratchpads, UserProfileData, User } from "./types/data";
 import { querySelectorPromise, querySelectorAllPromise } from "./util/promise-util";
 import { getJSON } from "./util/api-util";
 import { formatDate } from "./util/text-util";
@@ -31,7 +31,7 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 		return prev + (parseInt(badge.textContent || "") || 0);
 	}, 0) || 0;
 
-	const entries: any = {
+	const entries = {
 		"Programs": totals.programs,
 		"Total votes received": totals.votes,
 		"Total spinoffs received": totals.spinoffs,
@@ -40,7 +40,7 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 		"Total badges": totalBadges,
 		"Inspiration badges": totals.inspiration,
 		"More info": `<a href="${userEndpoint}/profile?${uok.type}=${uok.id}&format=pretty" target="_blank">API endpoint</a>`
-	};
+	} as { [key: string]: string | number; };
 
 	for (const entry in entries) {
 		table.innerHTML += `<tr>
@@ -58,8 +58,23 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 			const dateElement = document.querySelectorAll("td")[1];
 			dateElement!.title = formatDate(User.dateJoined);
 
-			if(DEVELOPERS.includes(User.kaid)) {
-				table.innerHTML += `<span class="kae-green user-statistics-label">KA Extension Developer</span>`;
+			if (DEVELOPERS.includes(User.kaid)) {
+				table.innerHTML += `<div class="kae-green user-statistics-label">KA Extension Developer</div>`;
+			}
+
+			if (User.kaid === window.KA.kaid) {
+				getJSON(`${window.location.origin}/api/v1/user`, {"discussion_banned":1}).then((data: User) => {
+					//If something messes up I don't want to accedently tell someone they're banned
+					if (!data.hasOwnProperty("discussion_banned")) {
+						throw new Error("Error loading ban information.");
+					}else if (data.discussion_banned === false) {
+						table.innerHTML += `<div>You are not banned</div>`;
+					}else if (data.discussion_banned === true) {
+						table.innerHTML += `<div style="color: red">You are discussion banned</div>`;
+					}else {
+						throw new Error("Error loading ban information.");
+					}
+				});
 			}
 		});
 
