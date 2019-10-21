@@ -1,5 +1,15 @@
 [
     {
+        "version": "4.7.1",
+        "new": [
+            "Nothing"
+        ],
+        "fixes": [
+            "Fixes a bug that caused voting to fail.",
+            "Fixes the background color of the Editor Setting button in some browsers."
+        ]
+    },
+    {
         "version": "4.7.0",
         "new": [
             "Add syntax highlighting to code blocks in comments",

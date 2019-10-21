@@ -61,7 +61,9 @@ body .kae-hidden-editor-wrap {
     line-height: 20px;
     cursor: pointer;
     outline: none;
-    margin-right: 16px}
+    margin-right: 16px;
+    background: white;
+}
 
 #kae-toggle-editor-settings:hover, #kae-hide-button:hover {
     border: 1px solid transparent !important;
