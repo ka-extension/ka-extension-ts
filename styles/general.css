@@ -146,10 +146,6 @@ body ._1wnf0g1k:hover {
 }
 
 /** Profile tweaks **/
-/*Fix a small UI bug with the Edit Profile button*/
-#nav-container .user-card-edit-menu {
-    top: 0;
-}
 
 /*Style for the Projects link we add to the left sidebar on a profile*/
 .kae-projects-profile-link {

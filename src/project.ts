@@ -48,14 +48,14 @@ function addProgramInfo (program: Program, uok: string): void {
 
 			const statusTd = hiddenRow.querySelector(".kae-td:last-child") as HTMLElement;
 			if (hidden) {
-				const programShowAPI = "https://www.khanacademy.org/api/internal/show_scratchpad?projection={}&scratchpad_id=";
+				/*const programShowAPI = "https://www.khanacademy.org/api/internal/show_scratchpad?projection={}&scratchpad_id=";
 
 				fetch(programShowAPI + program.id).then((response: Response): void => {
 					if (response.status === 404) {
 						statusTd.innerHTML = "Completely";
 						statusTd.style.color = "red";
 					}
-				}).catch(console.error);
+				}).catch(console.error);*/
 
 				statusTd.style.color = "orange";
 			} else if (approved) {

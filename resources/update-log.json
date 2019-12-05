@@ -1,5 +1,14 @@
 [
     {
+        "version": "4.7.2",
+        "new": [
+            "Nothing"
+        ],
+        "fixes": [
+            "Removes checking if your program is \"Completely\" hidden, to fix an issue where viewing programs hidden from the hotlist would log you out."
+        ]
+    },
+    {
         "version": "4.7.1",
         "new": [
             "Nothing"
