@@ -139,11 +139,6 @@ interface User {
 	discussion_banned?: boolean;
 }
 
-interface KA {
-	kaid: string;
-	_userProfileData?: UserProfileData;
-}
-
 interface NotifObj {
 	cursor: string;
 	notifications: Notification[];
@@ -215,7 +210,7 @@ type ACE_OPTION = boolean | number | string;
 export {
 	InvalidUsernameOrKaid, IdType, UsernameOrKaid,
 	CommentSortType, Program, Notification,
-	Scratchpads, KA, UserProfileData,
+	Scratchpads, UserProfileData,
 	NotifObj, Feedback, NotifElm, ScratchpadUI,
 	EditorOptions, ACE, ACE_OPTION,
 	User

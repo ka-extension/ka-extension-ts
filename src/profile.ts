@@ -3,6 +3,7 @@ import { querySelectorPromise, querySelectorAllPromise } from "./util/promise-ut
 import { getJSON } from "./util/api-util";
 import { formatDate } from "./util/text-util";
 import { DEVELOPERS } from "./types/names";
+import {getKAID} from "./util/data-util";
 
 async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 	const userEndpoint = `${window.location.origin}/api/internal/user`;
@@ -63,7 +64,7 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 				table.innerHTML += `<div class="kae-green user-statistics-label">KA Extension Developer</div>`;
 			}
 
-			if (User.kaid === window.KA.kaid) {
+			if (User.kaid === getKAID()) {
 				getJSON(`${window.location.origin}/api/v1/user`, {"discussion_banned":1}).then((data: User) => {
 					//If something messes up I don't want to accidentally tell someone they're banned
 					if (!data.hasOwnProperty("discussion_banned")) {

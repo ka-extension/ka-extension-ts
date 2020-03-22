@@ -1,6 +1,7 @@
 import { UsernameOrKaid, Program } from "./types/data";
 import { querySelectorPromise } from "./util/promise-util";
 import { ScratchpadUI } from "./types/data";
+import { getKAID } from "./util/data-util";
 
 const getScratchpadUI = (): Promise<ScratchpadUI> =>
 	new Promise((resolve, reject) => {
@@ -37,7 +38,7 @@ abstract class Extension {
 		if (window.location.host.includes("khanacademy.org")) {
 			this.onPage();
 
-			const kaid = window.KA.kaid;
+			const kaid = getKAID();
 
 			//Check for discussion page, 10 seconds max. (Element isn't used, just used to check for discussion page)
 			querySelectorPromise("[data-test-id=\"discussion-tab\"]", 100, 100).then (_ =>

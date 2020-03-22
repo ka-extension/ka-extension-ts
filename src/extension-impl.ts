@@ -5,7 +5,8 @@ import { /*addReportButtonDiscussionPosts,*/ addProfileReportButton } from "./re
 import { addUserInfo, addProjectsLink } from "./profile";
 import { addProgramInfo, keyboardShortcuts, addEditorSettingsButton, checkHiddenOrDeleted } from "./project";
 import { loadButtonMods } from "./buttons";
-import { deleteNotifButtons, updateNotifIndicator } from "./notif";
+// import { deleteNotifButtons } from "./notif";
+import { getKAID } from "./util/data-util";
 
 class ExtensionImpl extends Extension {
 	async onProgramPage (program: Program) {
@@ -13,12 +14,12 @@ class ExtensionImpl extends Extension {
 		addEditorSettingsButton();
 	}
 	async onProgramAboutPage (program: Program) {
-		const kaid = window.KA.kaid;
+		const kaid = getKAID();
 		loadButtonMods(program);
 		addProgramInfo(program, kaid);
 	}
 	async onProfilePage (uok: UsernameOrKaid) {
-		const kaid = window.KA.kaid;
+		const kaid = getKAID();
 		if (kaid) {
 			addProfileReportButton(uok, kaid);
 		}
@@ -47,8 +48,7 @@ class ExtensionImpl extends Extension {
 		console.info("On the hotlist");
 	}
 	onPage () {
-		deleteNotifButtons();
-		updateNotifIndicator();
+		// deleteNotifButtons();
 	}
 	onProgram404Page () {
 		checkHiddenOrDeleted();

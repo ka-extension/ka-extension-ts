@@ -3,6 +3,7 @@ import { querySelectorPromise } from "./util/promise-util";
 import { QUEUE_ROOT } from "./types/names";
 import { getCSRF } from "./util/cookie-util";
 import { buildQuery } from "./util/text-util";
+import { getKAID } from "./util/data-util";
 
 //Replace KA's vote button with one that updates after you vote and allows undoing votes
 function replaceVoteButton (buttons: HTMLDivElement, program: Program): void {
@@ -33,38 +34,29 @@ function replaceVoteButton (buttons: HTMLDivElement, program: Program): void {
 	}
 	updateVoteDisplay();
 
-	const profileData = window.KA._userProfileData;
-	if (!profileData || profileData.isPhantom) {
-		console.log("Not logged in.", voteButton);
-		voteButton.setAttribute("style", "cursor: default !important");
-		voteButton.addEventListener("click", function () {
-			alert("You must be logged in in order to vote.");
-		});
-	} else {
-		newWrap.addEventListener("click", function () {
-			voted = !voted;
-			updateVoteDisplay();
+	newWrap.addEventListener("click", function () {
+		voted = !voted;
+		updateVoteDisplay();
 
-			fetch(`${VOTE_URL}?entity_key=${program.key}&vote_type=${voted ? 1 : 0}`, {
-				method: "POST",
-				headers: { "X-KA-FKey": getCSRF() },
-				credentials: "same-origin"
-			}).then((response: Response): void => {
-				//If there's an error, undo the vote
-				if (response.status !== 204) {
-					response.json().then((res: { error?: string }): void => {
-						if (res.error) {
-							alert("Failed with error:\n\n" + res.error);
-						}
-					}).catch(() => {
-						alert(`Voting failed with status ${response.status}`);
-					});
-					voted = !voted;
-					updateVoteDisplay();
-				}
-			}).catch(console.error);
-		});
-	}
+		fetch(`${VOTE_URL}?entity_key=${program.key}&vote_type=${voted ? 1 : 0}`, {
+			method: "POST",
+			headers: { "X-KA-FKey": getCSRF() },
+			credentials: "same-origin"
+		}).then((response: Response): void => {
+			//If there's an error, undo the vote
+			if (response.status !== 204) {
+				response.json().then((res: { error?: string }): void => {
+					if (res.error) {
+						alert("Failed with error:\n\n" + res.error);
+					}
+				}).catch(() => {
+					alert(`Voting failed with status ${response.status}`);
+				});
+				voted = !voted;
+				updateVoteDisplay();
+			}
+		}).catch(console.error);
+	});
 
 	if (wrap.parentNode) {
 		wrap.parentNode.insertBefore(newWrap, wrap);
@@ -118,10 +110,10 @@ function addProgramFlags (buttons: HTMLDivElement, program: Program) {
 	const programFlags: string[] = program.flags;
 	const flagButton: HTMLElement = <HTMLElement>controls.childNodes[2];
 	const reasons: string = programFlags.length > 0 ? programFlags.reduce((total, current) => total += `${current}\n`) : "No flags here!";
-	const profileData = window.KA._userProfileData;
+	const kaid = getKAID();
 	//TODO: Allow viewing flags on your own program (where there's normally not a flag button)
 	//TODO: Bug: errors on offical programs (no flag button)
-	if (profileData && profileData.kaid !== program.kaid && profileData.isModerator === false) {
+	if (kaid !== program.kaid) {
 		flagButton.textContent += ` • ${programFlags.length}`;
 		flagButton.title = reasons;
 	}
@@ -151,7 +143,7 @@ function findOtherButtons (buttons: HTMLDivElement): void {
 }
 
 function loadButtonMods (program: Program): void {
-	const kaid:string = window.KA.kaid;
+	const kaid:string = getKAID();
 
 	querySelectorPromise(".voting-wrap")
 		.then(votingWrap => votingWrap.parentNode)

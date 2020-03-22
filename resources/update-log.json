@@ -1,5 +1,17 @@
 [
     {
+        "version": "4.7.3",
+        "new": [
+            "Nothing"
+        ],
+        "fixes": [
+            "Fixes voting on programs.",
+            "No longer put the full number of notifications in the bubble.",
+            "Can no longer check for moderator status, which may lead to issues for moderators using the extension.",
+            "A number of other miscellaneous fixes following a KA update."
+        ]
+    },
+    {
         "version": "4.7.2",
         "new": [
             "Nothing"
