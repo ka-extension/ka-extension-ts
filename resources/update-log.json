@@ -1,4 +1,13 @@
 [
+	{
+		"version": "4.7.4",
+		"new": [
+			"Update source dependencies. No actual changes."
+		],
+		"fixes": [
+			"Nothing"
+		]
+	},
     {
         "version": "4.7.3",
         "new": [
