@@ -26,6 +26,17 @@ function buildQuery (params: { [key: string]: string }): string {
 	return ret;
 }
 
+function parseQuery (queryString: string): {[key: string]: string} {
+	const params: {[key: string]: string} = {};
+	const queries = queryString.split("&");
+	for (const query of queries) {
+		console.log(query);
+		const temp = decodeURIComponent(query).split("=");
+		params[temp[0]] = temp[1];
+	}
+	return params;
+}
+
 function formatDate (date: string): string {
 	const d: Date = new Date(date);
 	return `${("0" + (d.getMonth() + 1)).slice(-2)}/${("0" + d.getDate()).slice(-2)}/${d.getFullYear()} ${("0" + d.getHours()).slice(-2)}:${("0" + d.getMinutes()).slice(-2)}`;
@@ -54,6 +65,6 @@ function escapeHTML (str: string): string {
 }
 
 export {
-	HTMLtoKAMarkdown, KAMarkdowntoHTML, buildQuery,
+	HTMLtoKAMarkdown, KAMarkdowntoHTML, buildQuery, parseQuery,
 	formatDate, escapeHTML, urlUnencode
 };

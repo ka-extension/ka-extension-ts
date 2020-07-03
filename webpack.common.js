@@ -1,7 +1,6 @@
 const path = require("path");
 
 module.exports = {
-	mode: "production",
 	entry: {
 		index: ["babel-polyfill", "whatwg-fetch", "./src/index.ts"],
 		background: ["babel-polyfill", "whatwg-fetch", "./src/background.ts"],

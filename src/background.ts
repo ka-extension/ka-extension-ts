@@ -1,13 +1,12 @@
-import { MessageTypes, Message } from "./types/message-types";
+import { MessageTypes, Message, KAID_MESSAGE } from "./types/message-types";
 import { CSRF_HEADER, COOKIE } from "./types/names";
 import { getChromeFkey, getChromeCookies } from "./util/cookie-util";
 import { UserProfileData } from "./types/data";
 
 let kaid: string;
 
-chrome.runtime.onMessage.addListener((arg: any, sender: chrome.runtime.MessageSender) => {
-	console.log("Internal Message: ", arg);
-	arg = arg as Message;
+chrome.runtime.onMessage.addListener((arg: Message) => {
+	console.log("Internal Message", arg);
 	switch (arg.type) {
 		case MessageTypes.COLOUR_ICON:
 			chrome.browserAction.setIcon({
@@ -26,7 +25,7 @@ chrome.runtime.onMessage.addListener((arg: any, sender: chrome.runtime.MessageSe
 			});
 			break;
 		case MessageTypes.KAID:
-			kaid = arg.message.kaid;
+			kaid = (arg.message as KAID_MESSAGE).kaid;
 			break;
 	}
 });

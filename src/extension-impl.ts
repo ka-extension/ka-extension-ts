@@ -1,61 +1,54 @@
-import { Extension, getKaid } from "./extension";
-import { Program, UsernameOrKaid, KA } from "./types/data";
-import { commentsButtonEventListener, commentsAddEditUI } from "./comment-data";
-import { addProgramFlags } from "./flag";
-import { addReportButton, addReportButtonDiscussionPosts, addProfileReportButton } from "./report";
-import { addUserInfo, addLocationInput, duplicateBadges, } from "./profile";
-import { addProgramInfo, hideEditor, keyboardShortcuts, addEditorSettingsButton, checkHiddenOrDeleted, addProgramAuthorHoverCard } from "./project";
-import { addLinkButton, replaceVoteButton } from "./buttons";
-import { deleteNotifButtons, updateNotifIndicator } from "./notif";
+import { Extension } from "./extension";
+import { Program, UsernameOrKaid } from "./types/data";
+import { switchToTipsAndThanks, commentsButtonEventListener } from "./discussion";
+import { /*addReportButtonDiscussionPosts,*/ addProfileReportButton } from "./report";
+import { addUserInfo, addProjectsLink } from "./profile";
+import { addProgramInfo, keyboardShortcuts, addEditorSettingsButton, checkHiddenOrDeleted } from "./project";
+import { loadButtonMods } from "./buttons";
+// import { deleteNotifButtons } from "./notif";
+import { getKAID } from "./util/data-util";
 
 class ExtensionImpl extends Extension {
 	async onProgramPage (program: Program) {
-		hideEditor(program);
 		keyboardShortcuts(program);
-		addProgramAuthorHoverCard(program);
 		addEditorSettingsButton();
 	}
 	async onProgramAboutPage (program: Program) {
-		const kaid = await getKaid() as string;
-		addReportButton(program, kaid);
+		const kaid = getKAID();
+		loadButtonMods(program);
 		addProgramInfo(program, kaid);
-		addProgramFlags(program, kaid);
-		addLinkButton(program);
-		replaceVoteButton(program);
-	}
-	async onRepliesPage (uok: UsernameOrKaid) {
-		const kaid = await getKaid();
-		commentsButtonEventListener(uok, kaid);
-		console.info("On replies page");
 	}
 	async onProfilePage (uok: UsernameOrKaid) {
-		const kaid = await getKaid();
+		const kaid = getKAID();
 		if (kaid) {
 			addProfileReportButton(uok, kaid);
 		}
-		const KA = (window as any).KA as KA;
-		if (KA!._userProfileData!.kaid === kaid) {
+
+		//TODO: Duplicate badges is currently patched. Fix or report to KA
+		/*if ((uok.asUsername() && uok.asUsername() === window.KA._userProfileData!.username) || (uok.asKaid() && uok.asKaid() === kaid)) {
 			setInterval(duplicateBadges, 100);
-		}
+		}*/
+
+		addProjectsLink(uok);
 		addUserInfo(uok);
 	}
 	onHomePage (uok: UsernameOrKaid) {
-		addLocationInput(uok);
+
 	}
-	onDetailedDiscussionPage (focusId: string, focusKind: string) {
-		setInterval(addReportButtonDiscussionPosts.bind(null, focusId, focusKind), 100);
-		setInterval(commentsAddEditUI.bind(null, focusId, focusKind), 100);
-		console.info("On detailed discussion page");
+	onDiscussionPage () {
+		//TODO: fix report button for discussion
+		// setInterval(addReportButtonDiscussionPosts.bind(null, focusId, focusKind), 100);
+
+		switchToTipsAndThanks();
+
+		commentsButtonEventListener();
+		console.info("On discussion page");
 	}
 	onHotlistPage () {
 		console.info("On the hotlist");
 	}
 	onPage () {
-		deleteNotifButtons();
-		updateNotifIndicator();
-	}
-	onNewProgramPage () {
-		addEditorSettingsButton();
+		// deleteNotifButtons();
 	}
 	onProgram404Page () {
 		checkHiddenOrDeleted();

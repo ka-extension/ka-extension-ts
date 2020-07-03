@@ -1,17 +1,17 @@
 import { deleteNotif } from "./util/api-util";
 import { urlUnencode } from "./util/text-util";
 import { EXTENSION_MODIFIED_NOTIF, SVG_NAMESPACE, DELETE_BUTTON } from "./types/names";
-import { querySelectorPromise } from "./util/promise-util";
 
-const toSelect = `[class^=notification_ayl7f7]:not(.${EXTENSION_MODIFIED_NOTIF})`;
+const toSelect = `[data-test-id="notifications-dropdown"] > li > div:not(.${EXTENSION_MODIFIED_NOTIF})`;
 
 function deleteNotifButtons (): void {
 	setInterval(() => Array.from(document.querySelectorAll(toSelect)).forEach(notif => {
-		const innerLink = notif.getElementsByClassName("link_9objhk")[0] as HTMLAnchorElement;
+		const innerLink = notif.getElementsByTagName("a")[0] as HTMLAnchorElement;
 		if (innerLink && innerLink.href.indexOf("/notifications") > 0) {
 			const paramsString = innerLink.href.substr(innerLink.href.indexOf("?") + 1);
 			const params = urlUnencode(paramsString);
 
+			// This button isn't showing up for some reason (it's in the DOM, but not visible). Debugging SVGs isn't my goal today
 			const deleteButton = document.createElement("span");
 			deleteButton.className = DELETE_BUTTON;
 
@@ -38,12 +38,4 @@ function deleteNotifButtons (): void {
 	}), 100);
 }
 
-function updateNotifIndicator (): void {
-	querySelectorPromise(".notificationsBadge_1j1j5ke")
-		.then(greenCircle => {
-			const notifs: number = (window as any).KA._userProfileData.countBrandNewNotifications;
-			greenCircle.textContent = notifs.toString();
-		}).catch(console.error);
-}
-
-export { deleteNotifButtons, updateNotifIndicator };
+export { deleteNotifButtons };

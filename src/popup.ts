@@ -89,7 +89,7 @@ function getContent (notif: Notification): string {
 function getAuthorNote (notif: Notification): string {
 	if (notif.modNickname) {
 		/* Moderator Message */
-		return `<b>${escapeHTML(notif.modNickname)}</b> send you a guardian message:`;
+		return `<b>${escapeHTML(notif.modNickname)}</b> sent you a guardian message:`;
 	} else if (notif.authorNickname) {
 		/* New Comment or Reply */
 		return `<b>${escapeHTML(notif.authorNickname)}</b> added a comment on <b>${escapeHTML(notif.translatedFocusTitle || notif.translatedScratchpadTitle || "")}</b>`;

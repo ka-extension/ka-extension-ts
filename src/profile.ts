@@ -1,9 +1,9 @@
-import { UsernameOrKaid, Scratchpads, UserLocation, UserProfileData } from "./types/data";
+import { UsernameOrKaid, Scratchpads, UserProfileData, User } from "./types/data";
 import { querySelectorPromise, querySelectorAllPromise } from "./util/promise-util";
 import { getJSON } from "./util/api-util";
 import { formatDate } from "./util/text-util";
-import { getCSRF } from "./util/cookie-util";
 import { DEVELOPERS } from "./types/names";
+import {getKAID} from "./util/data-util";
 
 async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 	const userEndpoint = `${window.location.origin}/api/internal/user`;
@@ -15,6 +15,7 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 		}]
 	}) as Scratchpads;
 
+	//TODO: Never fires and we don't get info if the user has thier statistics hidden
 	const table = await querySelectorPromise(".user-statistics-table > tbody") as HTMLElement;
 
 	const totals = Scratchpads.scratchpads.reduce((current, scratch) => {
@@ -32,7 +33,7 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 		return prev + (parseInt(badge.textContent || "") || 0);
 	}, 0) || 0;
 
-	const entries: any = {
+	const entries = {
 		"Programs": totals.programs,
 		"Total votes received": totals.votes,
 		"Total spinoffs received": totals.spinoffs,
@@ -41,7 +42,7 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 		"Total badges": totalBadges,
 		"Inspiration badges": totals.inspiration,
 		"More info": `<a href="${userEndpoint}/profile?${uok.type}=${uok.id}&format=pretty" target="_blank">API endpoint</a>`
-	};
+	} as { [key: string]: string | number; };
 
 	for (const entry in entries) {
 		table.innerHTML += `<tr>
@@ -59,59 +60,37 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 			const dateElement = document.querySelectorAll("td")[1];
 			dateElement!.title = formatDate(User.dateJoined);
 
-			if(DEVELOPERS.includes(User.kaid)) {
-				table.innerHTML += `<span class="kae-green user-statistics-label">KA Extension Developer</span>`;
+			if (DEVELOPERS.includes(User.kaid)) {
+				table.innerHTML += `<div class="kae-green user-statistics-label">KA Extension Developer</div>`;
+			}
+
+			if (User.kaid === getKAID()) {
+				getJSON(`${window.location.origin}/api/v1/user`, {"discussion_banned":1}).then((data: User) => {
+					//If something messes up I don't want to accidentally tell someone they're banned
+					if (!data.hasOwnProperty("discussion_banned")) {
+						throw new Error("Error loading ban information.");
+					}else {
+						let bannedHTML = `<tr><td class="user-statistics-label">Banned</td>`;
+
+						if (data.discussion_banned === false) {
+							bannedHTML += `<td>No</td>`;
+						}else if (data.discussion_banned === true) {
+							bannedHTML += `<td style="color: red">Discussion banned</td>`;
+						}else {
+							throw new Error("Error loading ban information.");
+						}
+
+						const lastTR = table.querySelector("tr:last-of-type");
+						if (!lastTR) { throw new Error("Table has no tr"); }
+						lastTR.outerHTML = bannedHTML + `</tr>` + lastTR.outerHTML;
+					}
+				});
 			}
 		});
 
 }
 
-function addLocationInput (uok: UsernameOrKaid): void {
-	getJSON(`${window.location.origin}/api/internal/user/profile?${uok.type}=${uok}`, {
-		userLocation: 1
-	})
-		.then(userData => userData as UserProfileData)
-		.then(userData => userData.userLocation as UserLocation)
-		.then(locationData => {
-			console.log(locationData);
-			querySelectorPromise("#s2id_autogen1")
-				.then(locationElement => locationElement as HTMLDivElement)
-				.then(locationElement => {
-					console.log(locationElement);
-					const locationInput: HTMLInputElement = <HTMLInputElement>document.createElement("input");
-					locationInput.type = "text";
-					locationInput.id = "kae-location-input";
-					locationInput.value = locationData.displayText;
-
-					const parent = locationElement.parentNode as HTMLDivElement;
-					parent.replaceChild(locationInput, locationElement);
-
-					const submitButton: HTMLAnchorElement = <HTMLAnchorElement>document.querySelectorAll(".modal-footer button")[1];
-					submitButton.addEventListener("click", e => {
-						const bioLocation: HTMLDivElement = <HTMLDivElement>document.querySelector(".location-text");
-						bioLocation.textContent = locationInput.value;
-						setTimeout(() => {
-							const userKey = (window as any).KA._userProfileData.userKey;
-
-							const req: XMLHttpRequest = <XMLHttpRequest>new XMLHttpRequest();
-							req.open("POST", `${window.location.origin}/api/internal/user/profile`);
-							req.setRequestHeader("x-ka-fkey", getCSRF());
-							req.setRequestHeader("content-type", "application/json");
-							req.send(JSON.stringify({
-								userKey: userKey,
-								userLocation: {
-									displayText: bioLocation.textContent
-								}
-							}));
-						}, 500);
-					});
-
-					const privacy: HTMLDivElement = <HTMLDivElement>document.getElementById("edit-profile-privacy-indicator");
-					privacy.parentNode && privacy.parentNode.removeChild(privacy);
-				}).catch(console.error);
-		}).catch(console.error);
-}
-
+//TODO: Fix or report to KA, currently disabled
 function duplicateBadges (): void {
 	const usedBadges = document.getElementsByClassName("used");
 	if (usedBadges.length > 0) {
@@ -121,4 +100,30 @@ function duplicateBadges (): void {
 	}
 }
 
-export { addUserInfo, addLocationInput, duplicateBadges };
+//TODO: Doesn't fire if switching from one profile page to another
+//e.g: Opening khanacademy.com or clicking "Learner Home" to go to your own profile when on someone else's profile
+function addProjectsLink (uok: UsernameOrKaid): void {
+	querySelectorPromise("nav[data-test-id=\"side-nav\"] section:last-child ul").then(sidebarLinks => {
+		//If we're on the projects page already, don't worry about adding it
+		if (window.location.pathname.indexOf("projects") === -1) {
+			let profileLink = document.querySelector("nav[data-test-id=\"side-nav\"] a[data-test-id=\"side-nav-profile\"]") as HTMLElement;
+			console.log(profileLink.textContent);
+			if (!profileLink || !profileLink.parentElement) {
+				throw new Error("Failed to find profile element");
+			}
+			profileLink = profileLink.parentElement;
+
+			profileLink.style.color = "red";
+
+			const projectsLink = document.createElement("a");
+
+			projectsLink.innerText = "Projects";
+			projectsLink.href = `/profile/${uok}/projects`;
+			projectsLink.classList.add("kae-projects-profile-link");
+
+			profileLink.appendChild(projectsLink);
+		}
+	}).catch(console.error);
+}
+
+export { addUserInfo, duplicateBadges, addProjectsLink };

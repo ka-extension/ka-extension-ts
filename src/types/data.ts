@@ -30,7 +30,7 @@ class UsernameOrKaid {
 		return this.type === IdType.KAID ? this.toString() : null;
 	}
 	asUsername (): string | null {
-		return this.type === IdType.KAID ? this.toString() : null;
+		return this.type === IdType.USERNAME ? this.toString() : null;
 	}
 }
 
@@ -126,27 +126,17 @@ interface Scratchpads {
 	scratchpads: Scratchpad[];
 }
 
-interface UserLocation {
-	city: string;
-	country: string;
-	displayText: string;
-	googlePlacesId: string;
-	lastModified: string;
-	postalCode: string;
-	state: string;
-}
-
 interface UserProfileData {
 	countBrandNewNotifications: number;
 	isModerator?: boolean;
 	dateJoined: string;
 	kaid: string;
-	userLocation: UserLocation;
 	isPhantom: boolean;
+	username: string;
 }
 
-interface KA {
-	_userProfileData?: UserProfileData;
+interface User {
+	discussion_banned?: boolean;
 }
 
 interface NotifObj {
@@ -179,9 +169,49 @@ interface NotifElm {
 	feedback: string;
 }
 
+interface ScratchpadUI {
+	scratchpad: {
+		id: number;
+		attributes: Program;
+	};
+}
+
+interface EditorOptions {
+	fontFamily: string;
+	showInvisibles: boolean;
+	tabSize: number;
+	theme: string;
+	useSoftTabs: boolean;
+	wrap: boolean;
+	useWorker: boolean;
+	behavioursEnabled: boolean;
+	wrapBehavioursEnabled: boolean;
+}
+
+interface ACE {
+	edit: (e: HTMLElement) => {
+		setOptions: (o: EditorOptions) => void;
+		setOption: (o: string, val: ACE_OPTION) => void;
+		getSession: () => {
+			getMode: () => {
+				$id: string;
+			};
+			setMode: (mode: any) => void; /* tslint:disable-line:no-any */
+		};
+	};
+	config: {
+		set: (o: string, val: string) => void;
+	};
+	require: (mode: string) => { Mode: any }; /* tslint:disable-line:no-any */
+}
+
+type ACE_OPTION = boolean | number | string;
+
 export {
 	InvalidUsernameOrKaid, IdType, UsernameOrKaid,
 	CommentSortType, Program, Notification,
-	Scratchpads, KA, UserLocation, UserProfileData,
-	NotifObj, Feedback, NotifElm
+	Scratchpads, UserProfileData,
+	NotifObj, Feedback, NotifElm, ScratchpadUI,
+	EditorOptions, ACE, ACE_OPTION,
+	User
 };

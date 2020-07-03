@@ -1,12 +1,16 @@
 interface Message {
 	type: MessageTypes;
-	message?: object;
+	message?: KAID_MESSAGE;
 }
 
-enum MessageTypes {
+const enum MessageTypes {
 	COLOUR_ICON = "colour_icon",
 	GREY_ICON = "grey_icon",
 	KAID = "kaid",
 }
 
-export { MessageTypes, Message };
+interface KAID_MESSAGE {
+	kaid: string;
+}
+
+export { MessageTypes, Message, KAID_MESSAGE };
