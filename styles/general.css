@@ -32,6 +32,11 @@ body .scratchpad-wrap-outer > div {
     max-width: none !important;
 }
 
+/** Widen spinoff container **/
+body .scratchpad-wrap-outer ._1l3b5m2 > div {
+    max-width: none !important;
+}
+
 /** Hide editor feature **/
 body .kae-hidden-editor-wrap {
     text-align: center;
