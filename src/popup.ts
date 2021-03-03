@@ -288,4 +288,5 @@ version!.onchange = function (e): void {
 };
 
 versionPage(0);
-page(0);
+page(1);
+getNotifs();
