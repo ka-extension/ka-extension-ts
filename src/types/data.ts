@@ -118,6 +118,7 @@ interface Notification {
 	imageSource?: string;
 	missionName?: string;
 	translatedDisplayName?: string;
+	translatedRequirements: string[];
 	thumbnailSrc?: string;
 }
 

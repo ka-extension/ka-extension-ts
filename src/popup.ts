@@ -70,7 +70,7 @@ function getImageSrc (notif: Notification): string {
 	if (isModMessage(notif)) {
 		return "../images/guardian.png";
 	}
-	return notif.iconSrc || notif.authorAvatarSrc || notif.topicIconUrl || notif.imageSource || "../images/hand.png";
+	return notif.iconSrc || notif.authorAvatarSrc || notif.topicIconUrl || notif.imageSource || notif.thumbnailSrc || "../images/hand.png";
 }
 
 function getContent (notif: Notification): string {
@@ -80,6 +80,8 @@ function getContent (notif: Notification): string {
 		return escapeHTML(notif.text);
 	} else if (notif.extendedDescription) {
 		return escapeHTML(notif.extendedDescription);
+	} else if (notif.translatedRequirements) {
+		return escapeHTML(notif.translatedRequirements[0]);
 	} else {
 		console.error(`Possible Unhandled notif type: ${JSON.stringify(notif, null, 4)}`);
 		return "";
