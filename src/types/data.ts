@@ -104,6 +104,7 @@ interface Notification {
 	focusTitle?: string;
 	kaid?: string;
 	kind: string;
+	name: string;
 	read: boolean;
 	translatedFocusTitle?: string;
 	translatedScratchpadTitle?: string;

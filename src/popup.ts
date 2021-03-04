@@ -136,7 +136,13 @@ function genNotif (notif: NotifElm): string {
 
 function newNotif (notif: Notification): string {
 	const notifToReturn: NotifElm = {
-		href: `https://www.khanacademy.org/notifications/read?keys=${notif.urlsafeKey}&redirect_url=${notif.url || "/"}`,
+		href: (() => {
+			if (notif.class_.includes("AvatarPartNotification")) {
+				return `https://www.khanacademy.org/profile/${notif.kaid}?show_avatar_customizer=1&selected_avatar_part=${notif.name}`;
+			} else {
+				return `https://www.khanacademy.org/notifications/read?keys=${notif.urlsafeKey}&redirect_url=${notif.url || "/"}`;
+			}
+		})(),
 		imgSrc: getImageSrc(notif),
 		content: getContent(notif),
 		date: formatDate(notif.date),
