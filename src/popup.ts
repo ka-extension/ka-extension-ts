@@ -86,54 +86,74 @@ function getContent (notif: Notification): string {
 	}
 }
 
-function getAuthorNote (notif: Notification): string {
+function getAuthorNote (notif: Notification): Node {
+	const noteTag = document.createElement("p");
+	const authorTag = document.createElement("b");
+	const titleTag = document.createElement("b");
+
 	if (notif.modNickname) {
 		/* Moderator Message */
-		return `<b>${escapeHTML(notif.modNickname)}</b> sent you a guardian message:`;
+		authorTag.innerHTML = notif.modNickname;
+		noteTag.appendChild(authorTag);
+		noteTag.innerText = noteTag.innerText + " sent you a guardian message:";
 	} else if (notif.authorNickname) {
 		/* New Comment or Reply */
-		return `<b>${escapeHTML(notif.authorNickname)}</b> added a comment on <b>${escapeHTML(notif.translatedFocusTitle || notif.translatedScratchpadTitle || "")}</b>`;
+		authorTag.innerHTML = notif.authorNickname;
+		noteTag.appendChild(authorTag);
+		noteTag.innerText = noteTag.innerText + " added a comment on ";
+		titleTag.innerHTML = notif.translatedFocusTitle || notif.translatedScratchpadTitle || "";
+		noteTag.appendChild(titleTag);
 	} else if (notif.coachName && notif.contentTitle) {
 		/* Coach Assignment */
-		return `<b>${escapeHTML(notif.coachName)}</b> assigned you <b>${escapeHTML(notif.contentTitle)}</b>`;
+		authorTag.innerHTML = notif.coachName;
+		noteTag.appendChild(authorTag);
+		noteTag.innerText = noteTag.innerText + " assigned you ";
+		titleTag.innerHTML = notif.contentTitle;
+		noteTag.appendChild(titleTag);
 	} else if (notif.missionName && notif.class_.includes("ClassMissionNotification")) {
 		/* New Mission */
-		return `New Mission: <b>${escapeHTML(notif.missionName)}</b>`;
+		noteTag.innerText = "New Mission: ";
+		authorTag.innerHTML = notif.missionName;
+		noteTag.appendChild(authorTag);
 	} else if (notif.translatedDisplayName && notif.class_.includes("RewardNotification")) {
 		/* New Reward (?) */
-		return `New Reward: <b>${escapeHTML(notif.translatedDisplayName)}</b>`;
+		noteTag.innerText = "New Reward: ";
+		authorTag.innerHTML = notif.translatedDisplayName;
+		noteTag.appendChild(authorTag);
 	} else if (notif.iconSrc && notif.extendedDescription && notif.description) {
 		/* New Badge */
-		return `New Badge: <b>${escapeHTML(notif.description)}</b>`;
+		noteTag.innerText = "New Badge: ";
+		authorTag.innerHTML = notif.description;
+		noteTag.appendChild(authorTag);
 	}
 
-	return "";
+	return noteTag;
 }
 
 function genNotif (notif: NotifElm): Node {
-	let container = document.createElement("div")
+	const container = document.createElement("div");
 	container.className = "new-notif";
 
-	let linkTag = document.createElement("a");
+	const linkTag = document.createElement("a");
 	linkTag.target = "_blank";
 	linkTag.href = notif.href;
 
-	let wrapTag = document.createElement("div");
+	const wrapTag = document.createElement("div");
 	wrapTag.className = "notif-wrap";
 
-	let imgTag = document.createElement("img");
+	const imgTag = document.createElement("img");
 	imgTag.className = "notif-img";
 	imgTag.src = notif.imgSrc;
 
-	let noteTag = document.createElement("p");
+	const noteTag = document.createElement("p");
 	noteTag.className = "author-note";
-	noteTag.innerText = notif.authorNote;
+	noteTag.appendChild(notif.authorNote);
 
-	let contentTag = document.createElement("p");
+	const contentTag = document.createElement("p");
 	contentTag.className = "notif-content";
 	contentTag.innerText = notif.content;
 
-	let dateTag = document.createElement("div");
+	const dateTag = document.createElement("div");
 	dateTag.className = "notif-date";
 	dateTag.innerText = notif.date;
 
@@ -144,16 +164,16 @@ function genNotif (notif: NotifElm): Node {
 	linkTag.appendChild(wrapTag);
 	container.appendChild(linkTag);
 
-	let replyTag = document.createElement("div");
+	const replyTag = document.createElement("div");
 	replyTag.className = "reply";
 	replyTag.setAttribute("programID", notif.programID);
 	replyTag.setAttribute("feedback", notif.feedback);
 
-	let replyButtonTag = document.createElement("a")
+	const replyButtonTag = document.createElement("a");
 	replyButtonTag.className = "reply-button";
 	replyButtonTag.innerText = "Reply";
 
-	let replyTextTag = document.createElement("textarea");
+	const replyTextTag = document.createElement("textarea");
 	replyTextTag.className = "reply-text hide";
 
 	if (notif.isComment) {

@@ -163,7 +163,7 @@ interface NotifElm {
 	imgSrc: string;
 	content: string;
 	date: string;
-	authorNote: string;
+	authorNote: Node;
 	isComment: boolean;
 	programID: string;
 	feedback: string;
