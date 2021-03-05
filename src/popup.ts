@@ -110,29 +110,62 @@ function getAuthorNote (notif: Notification): string {
 	return "";
 }
 
-function genNotif (notif: NotifElm): string {
-	return notif.authorNote && `
-		<div class="new-notif">
-			<a target="_blank" href="${notif.href}">
-				<div class="notif-wrap">
-					<img class="notif-img" src="${notif.imgSrc}">
-					<p class="author-note">${notif.authorNote}</p>
-					${notif.content && `<p class="notif-content">${notif.content}</p>`}
-					<div class="notif-date">${notif.date}</div>
-				</div>
-			</a>
-			${(() => {
-			if (!notif.isComment) { return ""; }
-			return `
-				<div class="reply" programID="${notif.programID}" feedback="${notif.feedback}">
-					<a class="reply-button">Reply</a>
-					<textarea class="reply-text hide"></textarea>
-				</div>`;
-		})()}
-		<div>`;
+function genNotif (notif: NotifElm): Node {
+	let container = document.createElement("div")
+	container.className = "new-notif";
+
+	let linkTag = document.createElement("a");
+	linkTag.target = "_blank";
+	linkTag.href = notif.href;
+
+	let wrapTag = document.createElement("div");
+	wrapTag.className = "notif-wrap";
+
+	let imgTag = document.createElement("img");
+	imgTag.className = "notif-img";
+	imgTag.src = notif.imgSrc;
+
+	let noteTag = document.createElement("p");
+	noteTag.className = "author-note";
+	noteTag.innerText = notif.authorNote;
+
+	let contentTag = document.createElement("p");
+	contentTag.className = "notif-content";
+	contentTag.innerText = notif.content;
+
+	let dateTag = document.createElement("div");
+	dateTag.className = "notif-date";
+	dateTag.innerText = notif.date;
+
+	wrapTag.appendChild(imgTag);
+	wrapTag.appendChild(noteTag);
+	if (notif.content) { wrapTag.appendChild(contentTag); }
+	wrapTag.appendChild(dateTag);
+	linkTag.appendChild(wrapTag);
+	container.appendChild(linkTag);
+
+	let replyTag = document.createElement("div");
+	replyTag.className = "reply";
+	replyTag.setAttribute("programID", notif.programID);
+	replyTag.setAttribute("feedback", notif.feedback);
+
+	let replyButtonTag = document.createElement("a")
+	replyButtonTag.className = "reply-button";
+	replyButtonTag.innerText = "Reply";
+
+	let replyTextTag = document.createElement("textarea");
+	replyTextTag.className = "reply-text hide";
+
+	if (notif.isComment) {
+		replyTag.appendChild(replyButtonTag);
+		replyTag.appendChild(replyTextTag);
+		container.appendChild(replyTag);
+	}
+
+	return container;
 }
 
-function newNotif (notif: Notification): string {
+function newNotif (notif: Notification): Node {
 	const notifToReturn: NotifElm = {
 		href: `https://www.khanacademy.org/notifications/read?keys=${notif.urlsafeKey}&redirect_url=${notif.url || "/"}`,
 		imgSrc: getImageSrc(notif),
@@ -218,10 +251,10 @@ function displayNotifs (notifJson: NotifObj) {
 	notifJson.notifications.forEach((notif: Notification) => {
 		if (notif.notes) {
 			notif.notes.forEach((note: Notification) => {
-				notifsContainer!.innerHTML += newNotif(note);
+				notifsContainer!.appendChild(newNotif(note));
 			});
 		} else {
-			notifsContainer!.innerHTML += newNotif(notif);
+			notifsContainer!.appendChild(newNotif(notif));
 		}
 	});
 }
