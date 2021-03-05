@@ -88,6 +88,7 @@ function getContent (notif: Notification): string {
 
 function getAuthorNote (notif: Notification): Node {
 	const noteTag = document.createElement("p");
+	noteTag.className = "author-note";
 	const authorTag = document.createElement("b");
 	const titleTag = document.createElement("b");
 
@@ -145,10 +146,6 @@ function genNotif (notif: NotifElm): Node {
 	imgTag.className = "notif-img";
 	imgTag.src = notif.imgSrc;
 
-	const noteTag = document.createElement("p");
-	noteTag.className = "author-note";
-	noteTag.appendChild(notif.authorNote);
-
 	const contentTag = document.createElement("p");
 	contentTag.className = "notif-content";
 	contentTag.innerText = notif.content;
@@ -158,7 +155,7 @@ function genNotif (notif: NotifElm): Node {
 	dateTag.innerText = notif.date;
 
 	wrapTag.appendChild(imgTag);
-	wrapTag.appendChild(noteTag);
+	wrapTag.appendChild(notif.authorNote);
 	if (notif.content) { wrapTag.appendChild(contentTag); }
 	wrapTag.appendChild(dateTag);
 	linkTag.appendChild(wrapTag);
