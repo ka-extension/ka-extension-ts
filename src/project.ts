@@ -105,7 +105,24 @@ function checkHiddenOrDeleted () {
 		if (response.status === 200) {
 			const PROGRAM_VIEW = `https://khan.github.io/live-editor/demos/simple/?scratchpad=${id}`;
 
-			msg.innerHTML = `This <a class="kae-white" style="text-decoration: none" href="${PROGRAM_VIEW}">program</a> is completely hidden. (<a class="kae-white" href="${API_URL}?format=pretty">API</a>)`;
+			msg.innerHTML = "This ";
+
+			const programTag = document.createElement("a");
+			programTag.className = "kae-white";
+			programTag.style.textDecoration = "none";
+			programTag.href = PROGRAM_VIEW;
+			programTag.innerText = "program";
+			msg.appendChild(programTag);
+
+			msg.innerHTML = msg.innerHTML + " is completely hidden. (";
+
+			const apiTag = document.createElement("a");
+			apiTag.className = "kae-white";
+			apiTag.href = API_URL + "?format=pretty";
+			apiTag.innerText = "API";
+			msg.appendChild(apiTag);
+
+			msg.innerHTML = msg.innerHTML + ")";
 		} else if (response.status === 404) {
 			msg.innerHTML = "This program is actually deleted.";
 		}

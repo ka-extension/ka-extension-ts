@@ -22,12 +22,14 @@ async function addProfileReportButton (uok: UsernameOrKaid, loggedInKaid: string
 		const button: HTMLAnchorElement = document.createElement("a");
 		button.id = "kae-report-button";
 		button.classList.add("kae-user-report-button");
-		button.innerHTML = "<span>Report user</span>";
 		button.href = `${QUEUE_ROOT}submit?${buildQuery({
 			type: "user",
 			id: kaid,
 			callback: window.location.href
 		})}`;
+		const buttonText = document.createElement("span");
+		buttonText.innerText = "Report user";
+		button.appendChild(buttonText);
 		const dWidget = document.getElementById("discussion-widget");
 		const widget = discussionWidget.getElementsByClassName("profile-widget-contents")[0];
 		dWidget && dWidget.children[0] ? dWidget.insertBefore(button, dWidget.children[0]) : widget.appendChild(button);

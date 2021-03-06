@@ -70,8 +70,10 @@ function addLinkButton (buttons: HTMLDivElement, program: Program): void {
 	copyLinkButton.id = "kae-link-button";
 
 	copyLinkButton.setAttribute("role", "button");
-	copyLinkButton.innerHTML = "<span>Copy Link</span>";
 	copyLinkButton.classList.add("kae-program-button");
+	const copyLinkText = document.createElement("span");
+	copyLinkText.innerText = "Copy Link";
+	copyLinkButton.appendChild(copyLinkText);
 	copyLinkButton.addEventListener("click", function () {
 		if (window.navigator.hasOwnProperty("clipboard")) {
 			window.navigator.clipboard.writeText(`https://khanacademy.org/cs/i/${program.id}`).catch((err: Error) => {
@@ -131,7 +133,9 @@ function addProgramReportButton (buttons: HTMLDivElement, program: Program, kaid
 			callback: window.location.href
 		})}`;
 		reportButton.setAttribute("role", "button");
-		reportButton.innerHTML = "<span>Report</span>";
+		const reportText = document.createElement("span");
+		reportText.innerText = "Report";
+		reportButton.appendChild(reportText);
 		buttons.insertBefore(reportButton, buttons.children[1]);
 		buttons.insertBefore(document.createTextNode(" "), reportButton.nextSibling);
 	}

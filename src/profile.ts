@@ -41,14 +41,27 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 		"Average spinoffs received": averageSpinoffs,
 		"Total badges": totalBadges,
 		"Inspiration badges": totals.inspiration,
-		"More info": `<a href="${userEndpoint}/profile?${uok.type}=${uok.id}&format=pretty" target="_blank">API endpoint</a>`
+		"More info": `API endpoint`
 	} as { [key: string]: string | number; };
 
 	for (const entry in entries) {
-		table.innerHTML += `<tr>
-				<td class="user-statistics-label">${entry}</td>
-				<td>${entries[entry]}</td>
-			</tr>`;
+		const trTag = document.createElement("tr");
+		const tdLabelTag = document.createElement("td");
+		tdLabelTag.className = "user-statistics-label";
+		tdLabelTag.innerText = entry;
+		trTag.appendChild(tdLabelTag);
+		const tdEntryTag = document.createElement("td");
+		if (entry !== "More info") {
+			tdEntryTag.innerText = `${entries[entry]}`;
+		} else {
+			const profileLinkTag = document.createElement("a");
+			profileLinkTag.href = `${userEndpoint}/profile?${uok.type}=${uok.id}&format=pretty`;
+			profileLinkTag.target = "_blank";
+			profileLinkTag.innerText = `${entries[entry]}`;
+			tdEntryTag.appendChild(profileLinkTag);
+		}
+		trTag.appendChild(tdEntryTag);
+		table.appendChild(trTag);
 	}
 
 	getJSON(`${userEndpoint}/profile?${uok.type}=${uok.id}`, {
@@ -61,7 +74,10 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 			dateElement!.title = formatDate(User.dateJoined);
 
 			if (DEVELOPERS.includes(User.kaid)) {
-				table.innerHTML += `<div class="kae-green user-statistics-label">KA Extension Developer</div>`;
+				const statsLabelTag = document.createElement("div");
+				statsLabelTag.className = "kae-green user-statistics-label";
+				statsLabelTag.innerText = "KA Extension Developer";
+				table.appendChild(statsLabelTag);
 			}
 
 			if (User.kaid === getKAID()) {
@@ -70,12 +86,23 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 					if (!data.hasOwnProperty("discussion_banned")) {
 						throw new Error("Error loading ban information.");
 					}else {
-						let bannedHTML = `<tr><td class="user-statistics-label">Banned</td>`;
+						// TODO - REMOVE BANNEDHTML AFTER SOLVING ISSUE
+						const bannedHTML = `<tr><td class="user-statistics-label">Banned</td>`;
+						const bannedTag = document.createElement("tr");
+						const bannedLabelTag = document.createElement("td");
+						bannedLabelTag.className = "user-statistics-label";
+						bannedLabelTag.innerText = "Banned";
+						bannedTag.appendChild(bannedLabelTag);
 
 						if (data.discussion_banned === false) {
-							bannedHTML += `<td>No</td>`;
+							const bannedLabelTag2 = document.createElement("td");
+							bannedLabelTag2.innerText = "No";
+							bannedTag.appendChild(bannedLabelTag2);
 						}else if (data.discussion_banned === true) {
-							bannedHTML += `<td style="color: red">Discussion banned</td>`;
+							const bannedLabelTag2 = document.createElement("td");
+							bannedLabelTag2.style.color = "red";
+							bannedLabelTag2.innerText = "Discussion banned";
+							bannedTag.appendChild(bannedLabelTag2);
 						}else {
 							throw new Error("Error loading ban information.");
 						}

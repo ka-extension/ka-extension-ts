@@ -254,8 +254,11 @@ function addReplyListeners (): void {
 }
 
 function fkeyNotFound () {
-	notifsContainer!.innerHTML =
-		"<h2 class=\"please-sign-in\">Please visit KA and make sure you're signed in</h2>";
+	notifsContainer!.innerHTML = "";
+	const infoTag = document.createElement("h2");
+	infoTag.className = "please-sign-in";
+	infoTag.innerText = "Please visit KA and make sure you're signed in";
+	notifsContainer!.appendChild(infoTag);
 }
 
 function displayNotifs (notifJson: NotifObj) {
