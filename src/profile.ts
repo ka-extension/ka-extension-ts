@@ -86,8 +86,6 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 					if (!data.hasOwnProperty("discussion_banned")) {
 						throw new Error("Error loading ban information.");
 					}else {
-						// TODO - REMOVE BANNEDHTML AFTER SOLVING ISSUE
-						const bannedHTML = `<tr><td class="user-statistics-label">Banned</td>`;
 						const bannedTag = document.createElement("tr");
 						const bannedLabelTag = document.createElement("td");
 						bannedLabelTag.className = "user-statistics-label";
@@ -109,7 +107,9 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 
 						const lastTR = table.querySelector("tr:last-of-type");
 						if (!lastTR) { throw new Error("Table has no tr"); }
-						lastTR.outerHTML = bannedHTML + `</tr>` + lastTR.outerHTML;
+						// TODO - need to finish this
+						lastTR.parentNode.replaceChild(bannedTag, lastTR)
+						//lastTR.outerHTML = bannedHTML + `</tr>` + lastTR.outerHTML;
 					}
 				});
 			}
