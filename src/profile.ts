@@ -52,12 +52,12 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 		trTag.appendChild(tdLabelTag);
 		const tdEntryTag = document.createElement("td");
 		if (entry !== "More info") {
-			tdEntryTag.textContent = `${entries[entry]}`;
+			tdEntryTag.textContent = entries[entry].toString();
 		} else {
 			const profileLinkTag = document.createElement("a");
 			profileLinkTag.href = `${userEndpoint}/profile?${uok.type}=${uok.id}&format=pretty`;
 			profileLinkTag.target = "_blank";
-			profileLinkTag.textContent = `${entries[entry]}`;
+			profileLinkTag.textContent = entries[entry].toString();
 			tdEntryTag.appendChild(profileLinkTag);
 		}
 		trTag.appendChild(tdEntryTag);
