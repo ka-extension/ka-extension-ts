@@ -72,7 +72,7 @@ function addLinkButton (buttons: HTMLDivElement, program: Program): void {
 	copyLinkButton.setAttribute("role", "button");
 	copyLinkButton.classList.add("kae-program-button");
 	const copyLinkText = document.createElement("span");
-	copyLinkText.innerText = "Copy Link";
+	copyLinkText.textContent = "Copy Link";
 	copyLinkButton.appendChild(copyLinkText);
 	copyLinkButton.addEventListener("click", function () {
 		if (window.navigator.hasOwnProperty("clipboard")) {
@@ -134,7 +134,7 @@ function addProgramReportButton (buttons: HTMLDivElement, program: Program, kaid
 		})}`;
 		reportButton.setAttribute("role", "button");
 		const reportText = document.createElement("span");
-		reportText.innerText = "Report";
+		reportText.textContent = "Report";
 		reportButton.appendChild(reportText);
 		buttons.insertBefore(reportButton, buttons.children[1]);
 		buttons.insertBefore(document.createTextNode(" "), reportButton.nextSibling);

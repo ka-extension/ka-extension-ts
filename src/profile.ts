@@ -48,16 +48,16 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 		const trTag = document.createElement("tr");
 		const tdLabelTag = document.createElement("td");
 		tdLabelTag.className = "user-statistics-label";
-		tdLabelTag.innerText = entry;
+		tdLabelTag.textContent = entry;
 		trTag.appendChild(tdLabelTag);
 		const tdEntryTag = document.createElement("td");
 		if (entry !== "More info") {
-			tdEntryTag.innerText = `${entries[entry]}`;
+			tdEntryTag.textContent = `${entries[entry]}`;
 		} else {
 			const profileLinkTag = document.createElement("a");
 			profileLinkTag.href = `${userEndpoint}/profile?${uok.type}=${uok.id}&format=pretty`;
 			profileLinkTag.target = "_blank";
-			profileLinkTag.innerText = `${entries[entry]}`;
+			profileLinkTag.textContent = `${entries[entry]}`;
 			tdEntryTag.appendChild(profileLinkTag);
 		}
 		trTag.appendChild(tdEntryTag);
@@ -76,7 +76,7 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 			if (DEVELOPERS.includes(User.kaid)) {
 				const statsLabelTag = document.createElement("div");
 				statsLabelTag.className = "kae-green user-statistics-label";
-				statsLabelTag.innerText = "KA Extension Developer";
+				statsLabelTag.textContent = "KA Extension Developer";
 				table.appendChild(statsLabelTag);
 			}
 
@@ -86,30 +86,19 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 					if (!data.hasOwnProperty("discussion_banned")) {
 						throw new Error("Error loading ban information.");
 					}else {
-						const bannedTag = document.createElement("tr");
-						const bannedLabelTag = document.createElement("td");
-						bannedLabelTag.className = "user-statistics-label";
-						bannedLabelTag.innerText = "Banned";
-						bannedTag.appendChild(bannedLabelTag);
+						let bannedHTML = `<tr><td class="user-statistics-label">Banned</td>`;
 
 						if (data.discussion_banned === false) {
-							const bannedLabelTag2 = document.createElement("td");
-							bannedLabelTag2.innerText = "No";
-							bannedTag.appendChild(bannedLabelTag2);
+							bannedHTML += `<td>No</td>`;
 						}else if (data.discussion_banned === true) {
-							const bannedLabelTag2 = document.createElement("td");
-							bannedLabelTag2.style.color = "red";
-							bannedLabelTag2.innerText = "Discussion banned";
-							bannedTag.appendChild(bannedLabelTag2);
+							bannedHTML += `<td style="color: red">Discussion banned</td>`;
 						}else {
 							throw new Error("Error loading ban information.");
 						}
 
 						const lastTR = table.querySelector("tr:last-of-type");
 						if (!lastTR) { throw new Error("Table has no tr"); }
-						// TODO - need to finish this
-						lastTR.parentNode.replaceChild(bannedTag, lastTR)
-						//lastTR.outerHTML = bannedHTML + `</tr>` + lastTR.outerHTML;
+						lastTR.outerHTML = bannedHTML + `</tr>` + lastTR.outerHTML;
 					}
 				});
 			}

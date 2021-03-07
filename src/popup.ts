@@ -94,37 +94,37 @@ function getAuthorNote (notif: Notification): Node {
 
 	if (notif.modNickname) {
 		/* Moderator Message */
-		authorTag.innerHTML = notif.modNickname;
+		authorTag.textContent = notif.modNickname;
 		noteTag.appendChild(authorTag);
-		noteTag.innerText = noteTag.innerText + " sent you a guardian message:";
+		noteTag.textContent = noteTag.textContent + " sent you a guardian message:";
 	} else if (notif.authorNickname) {
 		/* New Comment or Reply */
-		authorTag.innerHTML = notif.authorNickname;
+		authorTag.textContent = notif.authorNickname;
 		noteTag.appendChild(authorTag);
-		noteTag.innerText = noteTag.innerText + " added a comment on ";
-		titleTag.innerHTML = notif.translatedFocusTitle || notif.translatedScratchpadTitle || "";
+		noteTag.textContent = noteTag.textContent + " added a comment on ";
+		titleTag.textContent = notif.translatedFocusTitle || notif.translatedScratchpadTitle || "";
 		noteTag.appendChild(titleTag);
 	} else if (notif.coachName && notif.contentTitle) {
 		/* Coach Assignment */
-		authorTag.innerHTML = notif.coachName;
+		authorTag.textContent = notif.coachName;
 		noteTag.appendChild(authorTag);
-		noteTag.innerText = noteTag.innerText + " assigned you ";
-		titleTag.innerHTML = notif.contentTitle;
+		noteTag.textContent = noteTag.textContent + " assigned you ";
+		titleTag.textContent = notif.contentTitle;
 		noteTag.appendChild(titleTag);
 	} else if (notif.missionName && notif.class_.includes("ClassMissionNotification")) {
 		/* New Mission */
-		noteTag.innerText = "New Mission: ";
-		authorTag.innerHTML = notif.missionName;
+		noteTag.textContent = "New Mission: ";
+		authorTag.textContent = notif.missionName;
 		noteTag.appendChild(authorTag);
 	} else if (notif.translatedDisplayName && notif.class_.includes("RewardNotification")) {
 		/* New Reward (?) */
-		noteTag.innerText = "New Reward: ";
-		authorTag.innerHTML = notif.translatedDisplayName;
+		noteTag.textContent = "New Reward: ";
+		authorTag.textContent = notif.translatedDisplayName;
 		noteTag.appendChild(authorTag);
 	} else if (notif.iconSrc && notif.extendedDescription && notif.description) {
 		/* New Badge */
-		noteTag.innerText = "New Badge: ";
-		authorTag.innerHTML = notif.description;
+		noteTag.textContent = "New Badge: ";
+		authorTag.textContent = notif.description;
 		noteTag.appendChild(authorTag);
 	}
 
@@ -148,11 +148,11 @@ function genNotif (notif: NotifElm): Node {
 
 	const contentTag = document.createElement("p");
 	contentTag.className = "notif-content";
-	contentTag.innerText = notif.content;
+	contentTag.textContent = notif.content;
 
 	const dateTag = document.createElement("div");
 	dateTag.className = "notif-date";
-	dateTag.innerText = notif.date;
+	dateTag.textContent = notif.date;
 
 	wrapTag.appendChild(imgTag);
 	wrapTag.appendChild(notif.authorNote);
@@ -168,7 +168,7 @@ function genNotif (notif: NotifElm): Node {
 
 	const replyButtonTag = document.createElement("a");
 	replyButtonTag.className = "reply-button";
-	replyButtonTag.innerText = "Reply";
+	replyButtonTag.textContent = "Reply";
 
 	const replyTextTag = document.createElement("textarea");
 	replyTextTag.className = "reply-text hide";
@@ -257,7 +257,7 @@ function fkeyNotFound () {
 	notifsContainer!.innerHTML = "";
 	const infoTag = document.createElement("h2");
 	infoTag.className = "please-sign-in";
-	infoTag.innerText = "Please visit KA and make sure you're signed in";
+	infoTag.textContent = "Please visit KA and make sure you're signed in";
 	notifsContainer!.appendChild(infoTag);
 }
 

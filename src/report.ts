@@ -28,7 +28,7 @@ async function addProfileReportButton (uok: UsernameOrKaid, loggedInKaid: string
 			callback: window.location.href
 		})}`;
 		const buttonText = document.createElement("span");
-		buttonText.innerText = "Report user";
+		buttonText.textContent = "Report user";
 		button.appendChild(buttonText);
 		const dWidget = document.getElementById("discussion-widget");
 		const widget = discussionWidget.getElementsByClassName("profile-widget-contents")[0];
