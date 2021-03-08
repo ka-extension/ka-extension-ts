@@ -127,6 +127,11 @@ body ._1wnf0g1k:hover {
     text-align: center;
 }
 
+/** Always show Computer Programming link **/
+._j57eg2 {
+    display: unset !important;
+}
+
 /** Notification delete button **/
 .kae-notif-delete {
     cursor: pointer;
