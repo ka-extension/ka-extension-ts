@@ -128,6 +128,7 @@ interface Scratchpads {
 
 interface UserProfileData {
 	countBrandNewNotifications: number;
+	countVideosCompleted: number;
 	isModerator?: boolean;
 	dateJoined: string;
 	kaid: string;
