@@ -7,7 +7,7 @@ import { getKAID } from "./util/data-util";
 
 //Replace KA's vote button with one that updates after you vote and allows undoing votes
 function replaceVoteButton (buttons: HTMLDivElement, program: Program): void {
-	const wrap = buttons.querySelector(".voting-wrap .discussion-meta-controls span");
+	const wrap = buttons.querySelector(".discussion-meta .discussion-meta-controls span");
 
 	//TODO: Handle non-English
 	if (!(wrap instanceof HTMLElement) || !wrap.innerText.includes("Vote")) {
@@ -145,7 +145,7 @@ function findOtherButtons (buttons: HTMLDivElement): void {
 function loadButtonMods (program: Program): void {
 	const kaid:string = getKAID();
 
-	querySelectorPromise(".voting-wrap")
+	querySelectorPromise(".discussion-meta")
 		.then(votingWrap => votingWrap.parentNode)
 		.then(buttons => buttons as HTMLDivElement)
 		.then(buttons => {
