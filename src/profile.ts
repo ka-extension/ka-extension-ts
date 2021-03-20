@@ -86,19 +86,28 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 					if (!data.hasOwnProperty("discussion_banned")) {
 						throw new Error("Error loading ban information.");
 					}else {
-						let bannedHTML = `<tr><td class="user-statistics-label">Banned</td>`;
+						const bannedTag = document.createElement("tr");
+						const bannedLabel = document.createElement("td");
+						bannedLabel.className = "user-statistics-label";
+						bannedLabel.textContent = "Banned";
+						bannedTag.appendChild(bannedLabel);
+
+						const bannedOutput = document.createElement("td");
 
 						if (data.discussion_banned === false) {
-							bannedHTML += `<td>No</td>`;
+							bannedOutput.textContent = "No";
+							bannedTag.appendChild(bannedTag);
 						}else if (data.discussion_banned === true) {
-							bannedHTML += `<td style="color: red">Discussion banned</td>`;
+							bannedOutput.style.color = "red";
+							bannedOutput.textContent = "Discussion banned";
+							bannedTag.appendChild(bannedTag);
 						}else {
 							throw new Error("Error loading ban information.");
 						}
 
 						const lastTR = table.querySelector("tr:last-of-type");
 						if (!lastTR) { throw new Error("Table has no tr"); }
-						lastTR.outerHTML = bannedHTML + `</tr>` + lastTR.outerHTML;
+						table.insertBefore(bannedTag, lastTR);
 					}
 				});
 			}
