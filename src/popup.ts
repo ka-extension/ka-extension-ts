@@ -156,7 +156,7 @@ function genNotif (notif: NotifElm): Node {
 
 	wrapTag.appendChild(imgTag);
 	wrapTag.appendChild(notif.authorNote);
-	if (notif.content) { wrapTag.appendChild(contentTag); }
+	wrapTag.appendChild(contentTag);
 	wrapTag.appendChild(dateTag);
 	linkTag.appendChild(wrapTag);
 	container.appendChild(linkTag);
