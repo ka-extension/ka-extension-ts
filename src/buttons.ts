@@ -94,8 +94,11 @@ function addLinkButton (buttons: HTMLDivElement, program: Program): void {
 		}
 	});
 
-	buttons.insertBefore(copyLinkButton, buttons.children[buttons.children.length - 1]);
-	buttons.insertBefore(document.createTextNode(" "), copyLinkButton.nextSibling);
+	const spacing = document.createElement("div");
+	spacing.className = "_4bsxcct";
+
+	buttons.insertBefore(spacing, buttons.children[buttons.children.length - 1]);
+	buttons.insertBefore(copyLinkButton, spacing.nextSibling);
 }
 
 //Add the number of flags and title text to the program flag button
@@ -132,8 +135,12 @@ function addProgramReportButton (buttons: HTMLDivElement, program: Program, kaid
 		})}`;
 		reportButton.setAttribute("role", "button");
 		reportButton.innerHTML = "<span>Report</span>";
-		buttons.insertBefore(reportButton, buttons.children[1]);
-		buttons.insertBefore(document.createTextNode(" "), reportButton.nextSibling);
+
+		const spacing = document.createElement("div");
+		spacing.className = "_4bsxcct";
+
+		buttons.insertBefore(spacing, buttons.children[1]);
+		buttons.insertBefore(reportButton, spacing.nextSibling);
 	}
 }
 
@@ -145,8 +152,8 @@ function findOtherButtons (buttons: HTMLDivElement): void {
 function loadButtonMods (program: Program): void {
 	const kaid:string = getKAID();
 
-	querySelectorPromise(".discussion-meta")
-		.then(votingWrap => votingWrap.parentNode)
+	querySelectorPromise("._7z5jsor")
+		.then(votingWrap => votingWrap)
 		.then(buttons => buttons as HTMLDivElement)
 		.then(buttons => {
 			findOtherButtons(buttons);
