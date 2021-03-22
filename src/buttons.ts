@@ -25,7 +25,6 @@ function replaceVoteButton (buttons: HTMLDivElement, program: Program): void {
 	const voteButton = document.createElement("a");
 	const voteText = document.createElement("span");
 	voteButton.setAttribute("role", "button");
-	voteButton.classList.add("kae-program-button");
 	voteButton.appendChild(voteText);
 	newWrap.appendChild(voteButton);
 
@@ -70,8 +69,7 @@ function addLinkButton (buttons: HTMLDivElement, program: Program): void {
 	copyLinkButton.id = "kae-link-button";
 
 	copyLinkButton.setAttribute("role", "button");
-	copyLinkButton.innerHTML = "<span>Copy Link</span>";
-	copyLinkButton.classList.add("kae-program-button");
+	copyLinkButton.classList.add("_1s8r0xd3");
 	copyLinkButton.addEventListener("click", function () {
 		if (window.navigator.hasOwnProperty("clipboard")) {
 			window.navigator.clipboard.writeText(`https://khanacademy.org/cs/i/${program.id}`).catch((err: Error) => {
@@ -97,6 +95,11 @@ function addLinkButton (buttons: HTMLDivElement, program: Program): void {
 	const spacing = document.createElement("div");
 	spacing.className = "_4bsxcct";
 
+	const copyLinkText = document.createElement("span");
+	copyLinkText.className = "_1alfwn7n";
+	copyLinkText.textContent = "Copy Link";
+	copyLinkButton.appendChild(copyLinkText);
+
 	buttons.insertBefore(spacing, buttons.children[buttons.children.length - 1]);
 	buttons.insertBefore(copyLinkButton, spacing.nextSibling);
 }
@@ -117,8 +120,14 @@ function addProgramFlags (buttons: HTMLDivElement, program: Program) {
 	//TODO: Allow viewing flags on your own program (where there's normally not a flag button)
 	//TODO: Bug: errors on offical programs (no flag button)
 	if (kaid !== program.kaid) {
-		flagButton.textContent += ` • ${programFlags.length}`;
+		flagButton.innerHTML = "";
 		flagButton.title = reasons;
+
+		const flagText = document.createElement("span");
+		flagText.className = "_1alfwn7n";
+		flagText.textContent = `Flag • ${programFlags.length}`;
+		flagButton.appendChild(flagText);
+
 	}
 }
 
@@ -127,14 +136,17 @@ function addProgramReportButton (buttons: HTMLDivElement, program: Program, kaid
 	if (kaid !== program.kaid) {
 		const reportButton: HTMLAnchorElement = document.createElement("a");
 		reportButton.id = "kae-report-button";
-		reportButton.classList.add("kae-program-button");
+		reportButton.classList.add("_1s8r0xd3");
 		reportButton.href = `${QUEUE_ROOT}submit?${buildQuery({
 			type: "program",
 			id: program.id.toString(),
 			callback: window.location.href
 		})}`;
 		reportButton.setAttribute("role", "button");
-		reportButton.innerHTML = "<span>Report</span>";
+		const reportText = document.createElement("span");
+		reportText.className = "_1alfwn7n";
+		reportText.textContent = "Report";
+		reportButton.appendChild(reportText);
 
 		const spacing = document.createElement("div");
 		spacing.className = "_4bsxcct";
@@ -144,11 +156,6 @@ function addProgramReportButton (buttons: HTMLDivElement, program: Program, kaid
 	}
 }
 
-function findOtherButtons (buttons: HTMLDivElement): void {
-	/*Add the kae-program-button class to all other program buttons so we can restyle them */
-	Array.from(buttons.querySelectorAll("a[role=\"button\"]")).forEach(el => el.classList.add("kae-program-button"));
-}
-
 function loadButtonMods (program: Program): void {
 	const kaid:string = getKAID();
 
@@ -156,11 +163,16 @@ function loadButtonMods (program: Program): void {
 		.then(votingWrap => votingWrap)
 		.then(buttons => buttons as HTMLDivElement)
 		.then(buttons => {
-			findOtherButtons(buttons);
 			addLinkButton(buttons, program);
+			addProgramReportButton(buttons, program, kaid);
+		});
+
+	querySelectorPromise(".discussion-meta")
+		.then(votingWrap => votingWrap.parentNode)
+		.then(buttons => buttons as HTMLDivElement)
+		.then(buttons => {
 			replaceVoteButton(buttons, program);
 			addProgramFlags(buttons, program);
-			addProgramReportButton(buttons, program, kaid);
 		});
 
 	querySelectorPromise("#child-account-notice")
@@ -168,7 +180,6 @@ function loadButtonMods (program: Program): void {
 		.then(childNotice => childNotice.parentNode)
 		.then(buttons => buttons as HTMLDivElement)
 		.then(buttons => {
-			findOtherButtons(buttons);
 			addLinkButton(buttons, program);
 			//TODO, let voting run here too
 		});

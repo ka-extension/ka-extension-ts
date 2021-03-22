@@ -85,25 +85,17 @@ body .kae-hidden-editor-wrap {
 }
 
 /** Make buttons under the program blue **/
-body .kae-program-button {
-    margin: 0 !important;
-    padding: 8px !important;
-    font-size: 15px !important;
-    line-height: 23px !important;
-    font-weight: 400 !important;
-    border-radius: 4px !important;
-    display: inline-block !important;
-    cursor: pointer !important;
-    text-decoration: none !important;
-    margin-right: 0 !important;
-    border: 1px solid transparent !important;
-    color: white !important;
+._1s8r0xd3, ._qaciyjd {
     background: #1865f2 !important;
+    color: white !important;
 }
-body .kae-program-button:hover {
+._2hadq8u, ._17c51t64 {
     background: #0f52cf !important;
     color: white !important;
-    border: 1px solid transparent !important;
+    border-color: rgba(33,36,44,0.50) !important;
+    border-width: 2px !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
 }
 
 /** Evenly space program buttons **/
@@ -205,23 +197,21 @@ body ._1wnf0g1k:hover {
 }
 
 /** Report button under programs and on profile pages **/
-body #kae-report-button {
+body #kae-report-button, body #kae-link-button {
     background: #c93f3f !important;
-}
-
-body #kae-report-button:hover {
-    background: #ac3030 !important;
-}
-
-.kae-user-report-button {
-    display: block;
-    text-decoration: none;
     color: white !important;
-    border-radius: 4px;
-    font-size: 15px;
-    padding: 8px;
-    margin-bottom: 10px;
-    text-align: center;
+    border-color: rgba(33,36,44,0.50) !important;
+}
+
+body #kae-report-button:hover, body #kae-link-button:hover {
+    background: #ac3030 !important;
+    border-width: 2px !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+}
+
+body #kae-report-button:active, body #kae-link-button:active {
+    background: #fb7b7b !important;
 }
 
 /** Misc **/
