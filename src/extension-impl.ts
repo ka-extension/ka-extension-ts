@@ -2,7 +2,7 @@ import { Extension } from "./extension";
 import { Program, UsernameOrKaid } from "./types/data";
 import { switchToTipsAndThanks, commentsButtonEventListener } from "./discussion";
 import { /*addReportButtonDiscussionPosts,*/ addProfileReportButton } from "./report";
-import { addUserInfo, addProjectsLink } from "./profile";
+import { addUserInfo, addProjectsLink, addBadgeInfo } from "./profile";
 import { addProgramInfo, keyboardShortcuts, addEditorSettingsButton, checkHiddenOrDeleted } from "./project";
 import { loadButtonMods } from "./buttons";
 // import { deleteNotifButtons } from "./notif";
@@ -34,6 +34,9 @@ class ExtensionImpl extends Extension {
 	}
 	onHomePage (uok: UsernameOrKaid) {
 
+	}
+	async onBadgesPage (url: Array<string>) {
+		addBadgeInfo(url);
 	}
 	onDiscussionPage () {
 		//TODO: fix report button for discussion

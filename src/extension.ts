@@ -31,12 +31,17 @@ abstract class Extension {
 	abstract onHotlistPage (): void;
 	abstract onProfilePage (uok: UsernameOrKaid): void;
 	abstract onHomePage (uok: UsernameOrKaid): void;
+	abstract onBadgesPage (url: Array<string>): void | Promise<void>;
 	abstract onPage (): void;
 	abstract onProgram404Page (): void;
 	abstract onDiscussionPage (): void;
 	async init (): Promise<void> {
 		if (window.location.host.includes("khanacademy.org")) {
 			this.onPage();
+
+			if ((this.url[3] === "profile" && this.url[5] === "badges") || this.url[3] === "badges") {
+				this.onBadgesPage(this.url);
+			}
 
 			const kaid = getKAID();
 

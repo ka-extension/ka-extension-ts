@@ -126,4 +126,24 @@ function addProjectsLink (uok: UsernameOrKaid): void {
 	}).catch(console.error);
 }
 
-export { addUserInfo, duplicateBadges, addProjectsLink };
+function addBadgeInfo (url: Array<string>): void {
+	if (url[3] === "profile") {
+		querySelectorAllPromise(".inset-container").then(badgesContainer => {
+			// Set description for Tesla badge
+			const bHBadges = document.querySelector("#category-4");
+			bHBadges!.querySelectorAll(".achievement-desc")[2].textContent = "Earn 10,000,000 energy points";
+		}).catch(console.error);
+	} else if (url[3] === "badges") {
+		querySelectorAllPromise(".badge-spotlight").then(badgesContainer => {
+			// Set description for Tesla badge
+			if (url[4] === "tesla") {
+				const teslaDesc = document.querySelector(".badge-spotlight");
+				teslaDesc!.querySelectorAll(".description")[0].textContent = "Earn 10,000,000 energy points";
+				const bHBadges = document.querySelectorAll(".category-4")[2];
+				bHBadges!.querySelectorAll(".achievement-desc")[0].textContent = "Earn 10,000,000 energy points";
+			}
+		}).catch(console.error);
+	}
+}
+
+export { addUserInfo, duplicateBadges, addProjectsLink, addBadgeInfo };
