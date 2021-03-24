@@ -31,7 +31,7 @@ abstract class Extension {
 	abstract onHotlistPage (): void;
 	abstract onProfilePage (uok: UsernameOrKaid): void;
 	abstract onHomePage (uok: UsernameOrKaid): void;
-	abstract onBadgesPage (url: Array<string>): void | Promise<void>;
+	abstract onBadgesPage (url: Array<string>): void;
 	abstract onPage (): void;
 	abstract onProgram404Page (): void;
 	abstract onDiscussionPage (): void;
