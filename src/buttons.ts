@@ -21,19 +21,14 @@ function replaceVoteButton (buttons: HTMLDivElement, program: Program): void {
 
 	const orgVotes = program.sumVotesIncremented - (voted ? 1 : 0);
 
-	const newWrap = document.createElement("span");
-	const voteButton = document.createElement("a");
 	const voteText = document.createElement("span");
-	voteButton.setAttribute("role", "button");
-	voteButton.appendChild(voteText);
-	newWrap.appendChild(voteButton);
 
 	function updateVoteDisplay () {
 		voteText.innerText = (voted ? "Voted Up!" : "Vote Up") + " • " + (orgVotes + (voted ? 1 : 0));
 	}
 	updateVoteDisplay();
 
-	newWrap.addEventListener("click", function () {
+	voteText.addEventListener("click", function () {
 		voted = !voted;
 		updateVoteDisplay();
 
@@ -56,11 +51,6 @@ function replaceVoteButton (buttons: HTMLDivElement, program: Program): void {
 			}
 		}).catch(console.error);
 	});
-
-	if (wrap.parentNode) {
-		wrap.parentNode.insertBefore(newWrap, wrap);
-		wrap.parentNode.removeChild(wrap);
-	}
 }
 
 //Add a "Copy Link" button
