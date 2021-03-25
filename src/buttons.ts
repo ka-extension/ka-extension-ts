@@ -122,7 +122,6 @@ function addProgramFlags (buttons: HTMLDivElement, program: Program) {
 
 	const flagButton = controls.childNodes[2];
 	const programFlags: string[] = program.flags;
-	const reasons: string = programFlags.length > 0 ? programFlags.reduce((total, current) => total += `${current}\n`) : "No flags here!";
 	flagButton.childNodes[0].textContent = `Flag • ${programFlags.length}`;
 }
 

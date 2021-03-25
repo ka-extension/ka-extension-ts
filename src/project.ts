@@ -39,8 +39,17 @@ function addProgramInfo (program: Program, uok: string): void {
 			const hidden: boolean = program.hideFromHotlist;
 			const approved: boolean = program.definitelyNotSpam;
 
-			if (program.kaid === uok) {
-				table.appendChild(tableRow("Flags", program.flags.length.toString(), program.flags.join("\n")));
+			if (program.flags.length > 0) {
+				let uniqueReasons = "";
+
+				program.flags.forEach(function(flag, index) {
+					const formatReason = flag[0].toUpperCase() + flag.slice(1, -2);
+					if (uniqueReasons.includes(formatReason) === false) {
+						uniqueReasons += formatReason + ", ";
+					}
+				});
+
+				table.appendChild(tableRow("Flags", uniqueReasons.slice(0, -2), program.flags.join("\n")));
 			}
 
 			//Hidden		 No | From Hotlist | Completely | Guardian Approved
