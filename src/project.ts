@@ -40,16 +40,13 @@ function addProgramInfo (program: Program, uok: string): void {
 			const approved: boolean = program.definitelyNotSpam;
 
 			if (program.flags.length > 0) {
-				let uniqueReasons = "";
-
-				program.flags.forEach(function(flag, index) {
-					const formatReason = flag[0].toUpperCase() + flag.slice(1, -2);
-					if (uniqueReasons.includes(formatReason) === false) {
-						uniqueReasons += formatReason + ", ";
-					}
+				const programFlags = program.flags.map(function (flag) {
+					let reason = flag.split(":")[0];
+					reason = reason[0].toUpperCase() + reason.slice(1);
+					return reason;
 				});
 
-				table.appendChild(tableRow("Flags", uniqueReasons.slice(0, -2), program.flags.join("\n")));
+				table.appendChild(tableRow("Flags", programFlags.join(", ")));
 			}
 
 			//Hidden		 No | From Hotlist | Completely | Guardian Approved
