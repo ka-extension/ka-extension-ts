@@ -55,10 +55,8 @@ function replaceVoteButton (buttons: HTMLDivElement, program: Program): void {
 
 //Add a "Copy Link" button
 function addLinkButton (buttons: HTMLDivElement, program: Program): void {
-	const copyLinkButton: HTMLAnchorElement = document.createElement("a");
+	const copyLinkButton = document.createElement("button");
 	copyLinkButton.id = "kae-link-button";
-
-	copyLinkButton.setAttribute("role", "button");
 	copyLinkButton.classList.add("_1s8r0xd3");
 	copyLinkButton.addEventListener("click", function () {
 		if (window.navigator.hasOwnProperty("clipboard")) {
@@ -103,22 +101,29 @@ function addProgramFlags (buttons: HTMLDivElement, program: Program) {
 		throw new Error("Button controls should be loaded.");
 	}
 
-	const programFlags: string[] = program.flags;
-	const flagButton: HTMLElement = <HTMLElement>controls.childNodes[2];
-	const reasons: string = programFlags.length > 0 ? programFlags.reduce((total, current) => total += `${current}\n`) : "No flags here!";
-	const kaid = getKAID();
-	//TODO: Allow viewing flags on your own program (where there's normally not a flag button)
-	//TODO: Bug: errors on offical programs (no flag button)
-	if (kaid !== program.kaid) {
-		flagButton.innerHTML = "";
-		flagButton.title = reasons;
+	if (controls.childNodes.length < 2) {
+		const flagButton = document.createElement("button");
+		flagButton.id = "kae-flag-button";
+		flagButton.classList.add("_1s8r0xd3");
+		flagButton.setAttribute("tabindex", "0");
 
-		const flagText = document.createElement("span");
-		flagText.className = "_1alfwn7n";
-		flagText.textContent = `Flag • ${programFlags.length}`;
-		flagButton.appendChild(flagText);
+		const spacing = document.createElement("span");
+		const spacingSeparator = document.createElement("span");
+		spacingSeparator.className = "discussion-meta-separator";
+		spacing.appendChild(spacingSeparator);
 
+		const flagButtonText = document.createElement("span");
+		flagButtonText.className = "_1alfwn7n";
+		flagButtonText.textContent = "Flag";
+		flagButton.appendChild(flagButtonText);
+		controls.appendChild(spacing);
+		controls.insertBefore(flagButton, spacing.nextSibling);
 	}
+
+	const flagButton = controls.childNodes[2];
+	const programFlags: string[] = program.flags;
+	const reasons: string = programFlags.length > 0 ? programFlags.reduce((total, current) => total += `${current}\n`) : "No flags here!";
+	flagButton.childNodes[0].textContent = `Flag • ${programFlags.length}`;
 }
 
 //Add a button to report the program
