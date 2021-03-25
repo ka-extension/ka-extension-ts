@@ -203,20 +203,13 @@ body ._1wnf0g1k:hover {
 
 /** Report button under programs and on profile pages **/
 body #kae-report-button, body #kae-link-button {
-    background: #c93f3f !important;
     color: white !important;
-    border-color: rgba(33,36,44,0.50) !important;
 }
 
 body #kae-report-button:hover, body #kae-link-button:hover {
-    background: #ac3030 !important;
     border-width: 2px !important;
     padding-left: 15px !important;
     padding-right: 15px !important;
-}
-
-body #kae-report-button:active, body #kae-link-button:active {
-    background: #fb7b7b !important;
 }
 
 /** Misc **/

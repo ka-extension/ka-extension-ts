@@ -41,9 +41,8 @@ function addProgramInfo (program: Program, uok: string): void {
 
 			if (program.flags.length > 0) {
 				const programFlags = program.flags.map(function (flag) {
-					let reason = flag.split(":")[0];
-					reason = reason[0].toUpperCase() + reason.slice(1);
-					return reason;
+					const reason = flag.split(":")[0];
+					return reason[0].toUpperCase() + reason.slice(1);
 				});
 
 				table.appendChild(tableRow("Flags", programFlags.join(", ")));
