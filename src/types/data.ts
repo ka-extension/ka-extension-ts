@@ -104,6 +104,7 @@ interface Notification {
 	focusTitle?: string;
 	kaid?: string;
 	kind: string;
+	name?: string;
 	read: boolean;
 	translatedFocusTitle?: string;
 	translatedScratchpadTitle?: string;
@@ -118,6 +119,7 @@ interface Notification {
 	imageSource?: string;
 	missionName?: string;
 	translatedDisplayName?: string;
+	translatedRequirements?: string[];
 	thumbnailSrc?: string;
 }
 
