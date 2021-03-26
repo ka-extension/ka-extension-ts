@@ -70,8 +70,8 @@ function updateComments (): void {
 				comment.classList.add(EXTENSION_COMMENT_CLASSNAME);
 
 				//Init syntax highlighting
-				const blocks = document.querySelectorAll("pre code.discussion-code-block");
-				Array.from(blocks).forEach(hljs.highlightBlock);
+				const blocks = document.querySelectorAll<HTMLElement>("pre code.discussion-code-block");
+				Array.from(blocks).forEach(el => hljs.highlightBlock(el));
 			}
 		}).catch(e => {
 			if (e.toString().indexOf("Error: Could not find") === 0) {
