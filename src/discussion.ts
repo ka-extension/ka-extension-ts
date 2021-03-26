@@ -41,7 +41,7 @@ function updateComments (): void {
 						if (flagButton && data && data.flags) {
 							const flagText = flagButton.querySelector("div");
 							//TODO: Bug: when not logged in there is more to textContent
-							flagText!.textContent += ` (${data.flags.length})`;
+							flagText!.textContent = flagText!.textContent!.split(" ")[0] + ` (${data.flags.length})`;
 							flagButton.setAttribute("title", data.flags.join("\n"));
 						}
 					}).catch(console.error);
@@ -104,7 +104,7 @@ function commentsButtonEventListener (): void {
 }
 
 function switchToTipsAndThanks () {
-	querySelectorPromise("#ka-uid-discussiontabbedpanel-1--tabbedpanel-tab-1").then(tabButton => tabButton as HTMLButtonElement).then(tabButton => {
+	querySelectorPromise("#ka-uid-discussiontabbedpanel-0--tabbedpanel-tab-1").then(tabButton => tabButton as HTMLButtonElement).then(tabButton => {
 		//Don't switch to T&T if you have followed a direct link to question
 		if (parseQuery(window.location.search.substr(1)).hasOwnProperty("qa_expand_key")) {
 			return;
