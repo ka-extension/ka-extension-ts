@@ -53,12 +53,16 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 
 	getJSON(`${userEndpoint}/profile?${uok.type}=${uok.id}`, {
 		dateJoined: 1,
+		countVideosCompleted: 1,
 		kaid: 1
 	})
 		.then(data => data as UserProfileData)
 		.then(User => {
 			const dateElement = document.querySelectorAll("td")[1];
 			dateElement!.title = formatDate(User.dateJoined);
+
+			const videoCountElement = document.querySelectorAll("td")[5];
+			videoCountElement!.innerText = User.countVideosCompleted.toString();
 
 			if (DEVELOPERS.includes(User.kaid)) {
 				table.innerHTML += `<div class="kae-green user-statistics-label">KA Extension Developer</div>`;
