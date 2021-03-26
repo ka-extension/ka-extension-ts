@@ -104,7 +104,7 @@ function commentsButtonEventListener (): void {
 }
 
 function switchToTipsAndThanks () {
-	querySelectorPromise("#ka-uid-discussiontabbedpanel-1--tabbedpanel-tab-1").then(tabButton => tabButton as HTMLButtonElement).then(tabButton => {
+	querySelectorPromise("#ka-uid-discussiontabbedpanel-0--tabbedpanel-tab-1").then(tabButton => tabButton as HTMLButtonElement).then(tabButton => {
 		//Don't switch to T&T if you have followed a direct link to question
 		if (parseQuery(window.location.search.substr(1)).hasOwnProperty("qa_expand_key")) {
 			return;
