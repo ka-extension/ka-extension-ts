@@ -1,4 +1,4 @@
-import { UsernameOrKaid, Scratchpads, UserProfileData, User } from "./types/data";
+import { UsernameOrKaid, Scratchpads, UserProfileData } from "./types/data";
 import { querySelectorPromise, querySelectorAllPromise } from "./util/promise-util";
 import { getJSON } from "./util/api-util";
 import { formatDate } from "./util/text-util";
@@ -54,6 +54,7 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 	getJSON(`${userEndpoint}/profile?${uok.type}=${uok.id}`, {
 		dateJoined: 1,
 		countVideosCompleted: 1,
+		isPublic: 1,
 		kaid: 1
 	})
 		.then(data => data as UserProfileData)
@@ -69,26 +70,21 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 			}
 
 			if (User.kaid === getKAID()) {
-				getJSON(`${window.location.origin}/api/v1/user`, {"discussion_banned":1}).then((data: User) => {
-					//If something messes up I don't want to accidentally tell someone they're banned
-					if (!data.hasOwnProperty("discussion_banned")) {
-						throw new Error("Error loading ban information.");
-					}else {
+				//If something messes up I don't want to accidentally tell someone they're banned
+				if (!User.hasOwnProperty("isPublic")) {
+					throw new Error("Error loading ban information.");
+				}else {
+					if (User.isPublic === false) {
 						let bannedHTML = `<tr><td class="user-statistics-label">Banned</td>`;
-
-						if (data.discussion_banned === false) {
-							bannedHTML += `<td>No</td>`;
-						}else if (data.discussion_banned === true) {
-							bannedHTML += `<td style="color: red">Discussion banned</td>`;
-						}else {
-							throw new Error("Error loading ban information.");
-						}
+						bannedHTML += `<td style="color: red">Discussion banned</td>`;
 
 						const lastTR = table.querySelector("tr:last-of-type");
 						if (!lastTR) { throw new Error("Table has no tr"); }
 						lastTR.outerHTML = bannedHTML + `</tr>` + lastTR.outerHTML;
+					} else if (User.isPublic !== true) {
+						throw new Error("Error loading ban information.");
 					}
-				});
+				}
 			}
 		});
 

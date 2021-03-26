@@ -130,6 +130,7 @@ interface UserProfileData {
 	countBrandNewNotifications: number;
 	countVideosCompleted: number;
 	isModerator?: boolean;
+	isPublic?: boolean;
 	dateJoined: string;
 	kaid: string;
 	isPhantom: boolean;
