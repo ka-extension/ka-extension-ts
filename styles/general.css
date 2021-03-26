@@ -150,6 +150,11 @@ body ._1wnf0g1k:hover {
     background: #dddddd;
 }
 
+/** Style refresh button on project feedback page **/
+.discussion-list-refresh {
+    color: #1865f2 !important;
+}
+
 /** Profile tweaks **/
 
 /*Allow scrolling on the badge achievement description*/
