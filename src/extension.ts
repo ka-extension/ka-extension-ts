@@ -33,7 +33,7 @@ abstract class Extension {
 	abstract onHomePage (uok: UsernameOrKaid): void;
 	abstract onPage (): void;
 	abstract onProgram404Page (): void;
-	abstract onDiscussionPage (): void;
+	abstract onDiscussionPage (type: Array<string>): void;
 	async init (): Promise<void> {
 		if (window.location.host.includes("khanacademy.org")) {
 			this.onPage();
@@ -41,8 +41,8 @@ abstract class Extension {
 			const kaid = getKAID();
 
 			//Check for discussion page, 10 seconds max. (Element isn't used, just used to check for discussion page)
-			querySelectorPromise("[data-test-id=\"discussion-tab\"]", 100, 100).then (_ =>
-				this.onDiscussionPage()
+			querySelectorPromise("._3p5c27i", 100, 100).then (_ =>
+				this.onDiscussionPage(this.url)
 			).catch(console.warn);
 
 

@@ -20,9 +20,12 @@ function updateComments (): void {
 	querySelectorAllPromise(`div[data-test-id='discussion-post']:not(.${EXTENSION_COMMENT_CLASSNAME})`, 100 /*ms*/, 40 /*attempts*/)
 		.then((unalteredComments: NodeList) => {
 			//Find the load more comments button, and attach an event listener to it.
-			const moreCommentsButton = Array.from((unalteredComments[0].parentNode!.parentNode!.parentNode!.parentNode as HTMLElement).children).slice(-1)[0];
+			const moreCommentsButton = Array.from(document.getElementsByClassName("_1f0fvyce")).slice(-1)[0];
 			if (moreCommentsButton && moreCommentsButton instanceof HTMLButtonElement) {
 				console.assert(moreCommentsButton.textContent!.slice(-3) === "...");
+				moreCommentsButton.addEventListener("click", updateComments);
+			} else {
+				const moreCommentsButton = Array.from(document.getElementsByClassName("simple-button discussion-list-more")).slice(-1)[0];
 				moreCommentsButton.addEventListener("click", updateComments);
 			}
 
@@ -83,9 +86,17 @@ function updateComments (): void {
 		});
 }
 
-function commentsButtonEventListener (): void {
-	//Select tab buttons. The check for being on a discussion page saw that these were loaded
-	const discussionTabs = document.querySelectorAll("[data-test-id=\"discussion-tab\"]");
+function commentsButtonEventListener (url: Array<string>): void {
+	let discussionTabs : NodeListOf<Element>;
+	let selectedClass : string;
+
+	if (url[3] === "computer-programming") {
+		discussionTabs = document.querySelectorAll("[data-test-id=\"discussion-tab\"]");
+		selectedClass = "kae-discussion-tab-selected";
+	} else {
+		discussionTabs = document.getElementsByClassName("discussion-list-sort")[0].childNodes as NodeListOf<Element>;
+		selectedClass = "selected";
+	}
 
 	if (!discussionTabs || !discussionTabs.length) {
 		console.error("Discussion tabs were loaded but now aren't.");
@@ -94,9 +105,11 @@ function commentsButtonEventListener (): void {
 	//Listeners for switching discussion tabs
 	Array.from(discussionTabs).map(discussionTab => discussionTab as HTMLButtonElement).forEach(discussionTab =>
 		discussionTab.addEventListener("click", () => {
-			if (!discussionTab.classList.contains("kae-discussion-tab-selected")) {
-				Array.from(document.querySelectorAll(".kae-discussion-tab-selected")).forEach(el => el.classList.remove("kae-discussion-tab-selected"));
-				discussionTab.classList.add("kae-discussion-tab-selected");
+			if (!discussionTab.classList.contains(selectedClass)) {
+				if (selectedClass === "kae-discussion-tab-selected") {
+					Array.from(document.querySelectorAll(".kae-discussion-tab-selected")).forEach(el => el.classList.remove("kae-discussion-tab-selected"));
+					discussionTab.classList.add("kae-discussion-tab-selected");
+				}
 				updateComments();
 			}
 		})
@@ -121,4 +134,4 @@ function switchToTipsAndThanks () {
 	}).catch(console.error);
 }
 
-export { commentsButtonEventListener, switchToTipsAndThanks };
+export { commentsButtonEventListener, switchToTipsAndThanks, updateComments};
