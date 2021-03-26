@@ -147,6 +147,11 @@ body ._1wnf0g1k:hover {
 
 /** Profile tweaks **/
 
+/*Allow scrolling on the badge achievement description*/
+.achievement-desc {
+    overflow: auto !important;
+}
+
 /*Style for the Projects link we add to the left sidebar on a profile*/
 .kae-projects-profile-link {
     background-color: transparent !important;
