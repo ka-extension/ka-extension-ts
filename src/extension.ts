@@ -39,10 +39,6 @@ abstract class Extension {
 		if (window.location.host.includes("khanacademy.org")) {
 			this.onPage();
 
-			if ((this.url[3] === "profile" && this.url[5] === "badges") || this.url[3] === "badges") {
-				this.onBadgesPage(this.url);
-			}
-
 			const kaid = getKAID();
 
 			//Check for discussion page, 10 seconds max. (Element isn't used, just used to check for discussion page)
@@ -86,6 +82,9 @@ abstract class Extension {
 				this.onHomePage(identifier);
 			}
 
+			if ((this.url[3] === "profile" && this.url[5] === "badges") || this.url[3] === "badges") {
+				this.onBadgesPage(this.url);
+			}
 
 			if (this.url.length <= 4) {
 				const identifier: UsernameOrKaid = new UsernameOrKaid(kaid as string);
