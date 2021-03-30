@@ -31,6 +31,7 @@ abstract class Extension {
 	abstract onHotlistPage (): void;
 	abstract onProfilePage (uok: UsernameOrKaid): void;
 	abstract onHomePage (uok: UsernameOrKaid): void;
+	abstract onBadgesPage (url: Array<string>): void;
 	abstract onPage (): void;
 	abstract onProgram404Page (): void;
 	abstract onDiscussionPage (): void;
@@ -81,6 +82,9 @@ abstract class Extension {
 				this.onHomePage(identifier);
 			}
 
+			if ((this.url[3] === "profile" && this.url[5] === "badges") || this.url[3] === "badges") {
+				this.onBadgesPage(this.url);
+			}
 
 			if (this.url.length <= 4) {
 				const identifier: UsernameOrKaid = new UsernameOrKaid(kaid as string);
