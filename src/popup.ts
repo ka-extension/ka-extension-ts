@@ -70,7 +70,7 @@ function getImageSrc (notif: Notification): string {
 	if (isModMessage(notif)) {
 		return "../images/guardian.png";
 	}
-	return notif.iconSrc || notif.authorAvatarSrc || notif.topicIconUrl || notif.imageSource || "../images/hand.png";
+	return notif.iconSrc || notif.authorAvatarSrc || notif.topicIconUrl || notif.imageSource || notif.thumbnailSrc || "../images/hand.png";
 }
 
 function getContent (notif: Notification): string {
@@ -80,6 +80,8 @@ function getContent (notif: Notification): string {
 		return escapeHTML(notif.text);
 	} else if (notif.extendedDescription) {
 		return escapeHTML(notif.extendedDescription);
+	} else if (notif.translatedRequirements) {
+		return escapeHTML(notif.translatedRequirements[0]);
 	} else {
 		console.error(`Possible Unhandled notif type: ${JSON.stringify(notif, null, 4)}`);
 		return "";
@@ -134,7 +136,13 @@ function genNotif (notif: NotifElm): string {
 
 function newNotif (notif: Notification): string {
 	const notifToReturn: NotifElm = {
-		href: `https://www.khanacademy.org/notifications/read?keys=${notif.urlsafeKey}&redirect_url=${notif.url || "/"}`,
+		href: (() => {
+			if (notif.class_.includes("AvatarPartNotification")) {
+				return `https://www.khanacademy.org/profile/${notif.kaid}?show_avatar_customizer=1&selected_avatar_part=${notif.name}`;
+			} else {
+				return `https://www.khanacademy.org/notifications/read?keys=${notif.urlsafeKey}&redirect_url=${notif.url || "/"}`;
+			}
+		})(),
 		imgSrc: getImageSrc(notif),
 		content: getContent(notif),
 		date: formatDate(notif.date),
