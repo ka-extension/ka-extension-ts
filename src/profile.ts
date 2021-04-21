@@ -41,14 +41,27 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 		"Average spinoffs received": averageSpinoffs,
 		"Total badges": totalBadges,
 		"Inspiration badges": totals.inspiration,
-		"More info": `<a href="${userEndpoint}/profile?${uok.type}=${uok.id}&format=pretty" target="_blank">API endpoint</a>`
+		"More info": `API endpoint`
 	} as { [key: string]: string | number; };
 
 	for (const entry in entries) {
-		table.innerHTML += `<tr>
-				<td class="user-statistics-label">${entry}</td>
-				<td>${entries[entry]}</td>
-			</tr>`;
+		const trTag = document.createElement("tr");
+		const tdLabelTag = document.createElement("td");
+		tdLabelTag.className = "user-statistics-label";
+		tdLabelTag.textContent = entry;
+		trTag.appendChild(tdLabelTag);
+		const tdEntryTag = document.createElement("td");
+		if (entry !== "More info") {
+			tdEntryTag.textContent = entries[entry].toString();
+		} else {
+			const profileLinkTag = document.createElement("a");
+			profileLinkTag.href = `${userEndpoint}/profile?${uok.type}=${uok.id}&format=pretty`;
+			profileLinkTag.target = "_blank";
+			profileLinkTag.textContent = entries[entry].toString();
+			tdEntryTag.appendChild(profileLinkTag);
+		}
+		trTag.appendChild(tdEntryTag);
+		table.appendChild(trTag);
 	}
 
 	getJSON(`${userEndpoint}/profile?${uok.type}=${uok.id}`, {
@@ -65,7 +78,10 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 			videoCountElement!.innerText = User.countVideosCompleted.toString();
 
 			if (DEVELOPERS.includes(User.kaid)) {
-				table.innerHTML += `<div class="kae-green user-statistics-label">KA Extension Developer</div>`;
+				const statsLabelTag = document.createElement("div");
+				statsLabelTag.className = "kae-green user-statistics-label";
+				statsLabelTag.textContent = "KA Extension Developer";
+				table.appendChild(statsLabelTag);
 			}
 
 			if (User.kaid === getKAID()) {
@@ -74,19 +90,28 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 					if (!data.hasOwnProperty("discussion_banned")) {
 						throw new Error("Error loading ban information.");
 					}else {
-						let bannedHTML = `<tr><td class="user-statistics-label">Banned</td>`;
+						const bannedTag = document.createElement("tr");
+						const bannedLabel = document.createElement("td");
+						bannedLabel.className = "user-statistics-label";
+						bannedLabel.textContent = "Banned";
+						bannedTag.appendChild(bannedLabel);
+
+						const bannedOutput = document.createElement("td");
 
 						if (data.discussion_banned === false) {
-							bannedHTML += `<td>No</td>`;
+							bannedOutput.textContent = "No";
+							bannedTag.appendChild(bannedTag);
 						}else if (data.discussion_banned === true) {
-							bannedHTML += `<td style="color: red">Discussion banned</td>`;
+							bannedOutput.style.color = "red";
+							bannedOutput.textContent = "Discussion banned";
+							bannedTag.appendChild(bannedTag);
 						}else {
 							throw new Error("Error loading ban information.");
 						}
 
 						const lastTR = table.querySelector("tr:last-of-type");
 						if (!lastTR) { throw new Error("Table has no tr"); }
-						lastTR.outerHTML = bannedHTML + `</tr>` + lastTR.outerHTML;
+						table.insertBefore(bannedTag, lastTR);
 					}
 				});
 			}

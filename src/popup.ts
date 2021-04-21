@@ -88,53 +88,103 @@ function getContent (notif: Notification): string {
 	}
 }
 
-function getAuthorNote (notif: Notification): string {
+function getAuthorNote (notif: Notification): Node {
+	const noteTag = document.createElement("p");
+	noteTag.className = "author-note";
+	const authorTag = document.createElement("b");
+	const titleTag = document.createElement("b");
+
 	if (notif.modNickname) {
 		/* Moderator Message */
-		return `<b>${escapeHTML(notif.modNickname)}</b> sent you a guardian message:`;
+		authorTag.textContent = notif.modNickname;
+		noteTag.appendChild(authorTag);
+		noteTag.textContent = noteTag.textContent + " sent you a guardian message:";
 	} else if (notif.authorNickname) {
 		/* New Comment or Reply */
-		return `<b>${escapeHTML(notif.authorNickname)}</b> added a comment on <b>${escapeHTML(notif.translatedFocusTitle || notif.translatedScratchpadTitle || "")}</b>`;
+		authorTag.textContent = notif.authorNickname;
+		noteTag.appendChild(authorTag);
+		noteTag.textContent = noteTag.textContent + " added a comment on ";
+		titleTag.textContent = notif.translatedFocusTitle || notif.translatedScratchpadTitle || "";
+		noteTag.appendChild(titleTag);
 	} else if (notif.coachName && notif.contentTitle) {
 		/* Coach Assignment */
-		return `<b>${escapeHTML(notif.coachName)}</b> assigned you <b>${escapeHTML(notif.contentTitle)}</b>`;
+		authorTag.textContent = notif.coachName;
+		noteTag.appendChild(authorTag);
+		noteTag.textContent = noteTag.textContent + " assigned you ";
+		titleTag.textContent = notif.contentTitle;
+		noteTag.appendChild(titleTag);
 	} else if (notif.missionName && notif.class_.includes("ClassMissionNotification")) {
 		/* New Mission */
-		return `New Mission: <b>${escapeHTML(notif.missionName)}</b>`;
+		noteTag.textContent = "New Mission: ";
+		authorTag.textContent = notif.missionName;
+		noteTag.appendChild(authorTag);
 	} else if (notif.translatedDisplayName && notif.class_.includes("RewardNotification")) {
 		/* New Reward (?) */
-		return `New Reward: <b>${escapeHTML(notif.translatedDisplayName)}</b>`;
+		noteTag.textContent = "New Reward: ";
+		authorTag.textContent = notif.translatedDisplayName;
+		noteTag.appendChild(authorTag);
 	} else if (notif.iconSrc && notif.extendedDescription && notif.description) {
 		/* New Badge */
-		return `New Badge: <b>${escapeHTML(notif.description)}</b>`;
+		noteTag.textContent = "New Badge: ";
+		authorTag.textContent = notif.description;
+		noteTag.appendChild(authorTag);
 	}
 
-	return "";
+	return noteTag;
 }
 
-function genNotif (notif: NotifElm): string {
-	return notif.authorNote && `
-		<div class="new-notif">
-			<a target="_blank" href="${notif.href}">
-				<div class="notif-wrap">
-					<img class="notif-img" src="${notif.imgSrc}">
-					<p class="author-note">${notif.authorNote}</p>
-					${notif.content && `<p class="notif-content">${notif.content}</p>`}
-					<div class="notif-date">${notif.date}</div>
-				</div>
-			</a>
-			${(() => {
-			if (!notif.isComment) { return ""; }
-			return `
-				<div class="reply" programID="${notif.programID}" feedback="${notif.feedback}">
-					<a class="reply-button">Reply</a>
-					<textarea class="reply-text hide"></textarea>
-				</div>`;
-		})()}
-		<div>`;
+function genNotif (notif: NotifElm): Node {
+	const container = document.createElement("div");
+	container.className = "new-notif";
+
+	const linkTag = document.createElement("a");
+	linkTag.target = "_blank";
+	linkTag.href = notif.href;
+
+	const wrapTag = document.createElement("div");
+	wrapTag.className = "notif-wrap";
+
+	const imgTag = document.createElement("img");
+	imgTag.className = "notif-img";
+	imgTag.src = notif.imgSrc;
+
+	const contentTag = document.createElement("p");
+	contentTag.className = "notif-content";
+	contentTag.textContent = notif.content;
+
+	const dateTag = document.createElement("div");
+	dateTag.className = "notif-date";
+	dateTag.textContent = notif.date;
+
+	wrapTag.appendChild(imgTag);
+	wrapTag.appendChild(notif.authorNote);
+	wrapTag.appendChild(contentTag);
+	wrapTag.appendChild(dateTag);
+	linkTag.appendChild(wrapTag);
+	container.appendChild(linkTag);
+
+	const replyTag = document.createElement("div");
+	replyTag.className = "reply";
+	replyTag.setAttribute("programID", notif.programID);
+	replyTag.setAttribute("feedback", notif.feedback);
+
+	const replyButtonTag = document.createElement("a");
+	replyButtonTag.className = "reply-button";
+	replyButtonTag.textContent = "Reply";
+
+	const replyTextTag = document.createElement("textarea");
+	replyTextTag.className = "reply-text hide";
+
+	if (notif.isComment) {
+		replyTag.appendChild(replyButtonTag);
+		replyTag.appendChild(replyTextTag);
+		container.appendChild(replyTag);
+	}
+
+	return container;
 }
 
-function newNotif (notif: Notification): string {
+function newNotif (notif: Notification): Node {
 	const notifToReturn: NotifElm = {
 		href: (() => {
 			if (notif.class_.includes("AvatarPartNotification")) {
@@ -212,8 +262,11 @@ function addReplyListeners (): void {
 }
 
 function fkeyNotFound () {
-	notifsContainer!.innerHTML =
-		"<h2 class=\"please-sign-in\">Please visit KA and make sure you're signed in</h2>";
+	notifsContainer!.innerHTML = "";
+	const infoTag = document.createElement("h2");
+	infoTag.className = "please-sign-in";
+	infoTag.textContent = "Please visit KA and make sure you're signed in";
+	notifsContainer!.appendChild(infoTag);
 }
 
 function displayNotifs (notifJson: NotifObj) {
@@ -226,10 +279,10 @@ function displayNotifs (notifJson: NotifObj) {
 	notifJson.notifications.forEach((notif: Notification) => {
 		if (notif.notes) {
 			notif.notes.forEach((note: Notification) => {
-				notifsContainer!.innerHTML += newNotif(note);
+				notifsContainer!.appendChild(newNotif(note));
 			});
 		} else {
-			notifsContainer!.innerHTML += newNotif(notif);
+			notifsContainer!.appendChild(newNotif(notif));
 		}
 	});
 }
