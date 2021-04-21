@@ -1,4 +1,4 @@
-import * as updateLog from "../resources/update-log.json";
+import updateLog from "../resources/update-log.json";
 import { getChromeCookies, getChromeFkey } from "./util/cookie-util";
 import { formatDate, escapeHTML, KAMarkdowntoHTML } from "./util/text-util";
 import { CSRF_HEADER, COOKIE, API_ORIGIN } from "./types/names";
