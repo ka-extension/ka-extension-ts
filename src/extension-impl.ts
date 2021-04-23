@@ -1,6 +1,6 @@
 import { Extension } from "./extension";
 import { Program, UsernameOrKaid } from "./types/data";
-import { switchToTipsAndThanks, commentsButtonEventListener } from "./discussion";
+import { switchToTipsAndThanks, commentsButtonEventListener, updateComments } from "./discussion";
 import { /*addReportButtonDiscussionPosts,*/ addProfileReportButton } from "./report";
 import { addUserInfo, addProjectsLink, addBadgeInfo } from "./profile";
 import { addProgramInfo, keyboardShortcuts, addEditorSettingsButton, checkHiddenOrDeleted } from "./project";
@@ -38,13 +38,19 @@ class ExtensionImpl extends Extension {
 	async onBadgesPage (url: Array<string>) {
 		addBadgeInfo(url);
 	}
-	onDiscussionPage () {
+	onDiscussionPage (url: Array<string>) {
 		//TODO: fix report button for discussion
 		// setInterval(addReportButtonDiscussionPosts.bind(null, focusId, focusKind), 100);
 
-		switchToTipsAndThanks();
+		if (url[3] === "computer-programming") {
+			switchToTipsAndThanks();
+		} else {
+			updateComments();
+		}
 
-		commentsButtonEventListener();
+		if (url[5] !== "d") {
+			commentsButtonEventListener(url);
+		}
 		console.info("On discussion page");
 	}
 	onHotlistPage () {
