@@ -26,3 +26,4 @@ PRs are welcomed!
 * [Scott Schraeder](https://github.com/CosignCosine)
 * [Literally Void](https://github.com/LiterallyVoid)
 * [cursorweb](https://github.com/cursorweb)
+* [An0n3m0us](https://github.com/An0n3m0us)

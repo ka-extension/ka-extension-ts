@@ -1,13 +1,46 @@
 [
-	{
-		"version": "4.7.4",
-		"new": [
-			"Update source dependencies. No actual changes."
-		],
-		"fixes": [
-			"Nothing"
-		]
-	},
+    {
+        "version": "4.7.7",
+        "new": [
+            "Shows the description for how to obtain the Tesla badge",
+            "The Notifications tab is now default when opening the extension popup",
+            "Adds a margin for project feedback tabs",
+            "Adds link styling to refresh button on project feedback page",
+            "Adds support for avatar reward notifications in the built-in notification viewer",
+            "Replaces the internal code build system with a modern one",
+            "Thanks to @An0n3m0us for help with many of these features and bug fixes"
+        ],
+        "fixes": [
+            "Syntax highlighting in comments didn't work",
+            "Can now undo program votes again",
+            "Re-adds the Copy Link button under programs",
+            "Once again will switch to the Tips & Thanks after opening a program",
+            "Program info on a user's profile will now work again"
+        ]
+    },
+    {
+        "version": "4.7.6",
+        "new": [
+            "Update requested features to comply with Chrome Web Store request."
+        ],
+        "fixes": []
+    },
+    {
+        "version": "4.7.5",
+        "new": [
+            "Remove functionality no longer allowed on the Chrome Web Store."
+        ],
+        "fixes": []
+    },
+    {
+        "version": "4.7.4",
+        "new": [
+            "Update source dependencies. No actual changes."
+        ],
+        "fixes": [
+            "Nothing"
+        ]
+    },
     {
         "version": "4.7.3",
         "new": [
