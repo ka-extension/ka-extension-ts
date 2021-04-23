@@ -10,7 +10,7 @@ interface LogEntry {
 	fixes: string[];
 }
 
-let currentPage: number = 0;
+let currentPage: number = 1;
 let currentCursor: string = "";
 
 const log: LogEntry[] = <LogEntry[]>Object.assign([], updateLog);

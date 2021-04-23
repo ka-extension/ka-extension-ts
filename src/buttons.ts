@@ -128,8 +128,6 @@ function findOtherButtons (buttons: HTMLDivElement): void {
 }
 
 function loadButtonMods (program: Program): void {
-	const kaid:string = getKAID();
-
 	querySelectorPromise("[data-user-kaid]")
 		.then(userLink => userLink as HTMLAnchorElement)
 		.then(userLink => userLink.parentNode!.parentNode!.firstElementChild)
