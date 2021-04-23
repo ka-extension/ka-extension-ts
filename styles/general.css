@@ -90,40 +90,28 @@ body .kae-hidden-editor-wrap {
 }
 
 /** Make buttons under the program blue **/
-body .kae-program-button {
-    margin: 0 !important;
-    padding: 8px !important;
-    font-size: 15px !important;
-    line-height: 23px !important;
-    font-weight: 400 !important;
-    border-radius: 4px !important;
-    display: inline-block !important;
-    cursor: pointer !important;
-    text-decoration: none !important;
-    margin-right: 0 !important;
-    border: 1px solid transparent !important;
-    color: white !important;
-    background: #1865f2 !important;
+.kae-program-button {
+    user-select: none;
+    background: #1865f2;
+    color: #ffffff;
+    padding-left: 16px;
+    padding-right: 16px;
+    border-radius: 4px;
+    height: 40px;
+    cursor: pointer;
+    align-items: center;
+    border: none !important;
 }
-body .kae-program-button:hover {
-    background: #0f52cf !important;
-    color: white !important;
-    border: 1px solid transparent !important;
-}
-
-/** Evenly space program buttons **/
-.voting-wrap .discussion-meta .discussion-meta-controls > span:nth-child(2) {
+.kae-program-button span {
+    line-height: 20px !important;
+    font-family: Lato, "Noto Sans", sans-serif !important;
+    font-size: 16px !important;
+    font-weight: bold !important;
+    white-space: nowrap !important;
     display: inline-block;
-    width: 3px;
 }
-
-/* Make the sort selecting elements on the browse projects page blue */
-body ._1wnf0g1k, body ._11pveom5 {
-    color: #1152b0 !important;
-}
-
-body ._1wnf0g1k:hover {
-    color: #0d3d82 !important;
+.kae-program-button:hover {
+    box-shadow: 0 0 0 1px #ffffff, 0 0 0 3px #1865f2;
 }
 
 /** Center program titles **/
