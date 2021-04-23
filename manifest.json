@@ -6,7 +6,7 @@
 	"homepage_url": "https://github.com/ka-extension",
 	"version": "4.7.7",
 	"description": "A Browser Extension for Khan Academy that adds more features to the site",
-	"minimum_chrome_version": "33.0.1750",
+	"minimum_chrome_version": "51.0.2704",
 	"icons": {
 		"16": "images/colour/icon16.png",
 		"48": "images/colour/icon48.png",

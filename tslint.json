@@ -4,8 +4,6 @@
         "no-any": true,
         "no-eval": true,
         "no-string-literal": true,
-        "no-unused-variable": true,
-        "no-use-before-declare": true,
         "no-var-keyword": true,
         "triple-equals": true,
         "eofline": true,
