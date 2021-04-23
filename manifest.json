@@ -1,7 +1,9 @@
 {
     "manifest_version": 2,
     "name": "The Khan Academy Extension",
-    "short_name": "The KA Extension",
+    "short_name": "KA Extension",
+	"author": "Khan Academy Extension Developers",
+	"homepage_url": "https://github.com/ka-extension",
     "version": "4.7.7",
     "description": "A Browser Extension for Khan Academy that adds more features to the site",
     "minimum_chrome_version": "33.0.1750",
@@ -36,8 +38,5 @@
     ],
     "background": {
       "scripts": ["dist/background.js"]
-    },
-    "externally_connectable": {
-      "matches": ["*://*.khanacademy.org/*"]
     }
 }
