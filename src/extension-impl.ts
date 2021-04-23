@@ -1,7 +1,6 @@
 import { Extension } from "./extension";
 import { Program, UsernameOrKaid } from "./types/data";
 import { switchToTipsAndThanks, commentsButtonEventListener } from "./discussion";
-import { /*addReportButtonDiscussionPosts,*/ addProfileReportButton } from "./report";
 import { addUserInfo, addProjectsLink, addBadgeInfo } from "./profile";
 import { addProgramInfo, keyboardShortcuts, addEditorSettingsButton, checkHiddenOrDeleted } from "./project";
 import { loadButtonMods } from "./buttons";
@@ -19,11 +18,6 @@ class ExtensionImpl extends Extension {
 		addProgramInfo(program, kaid);
 	}
 	async onProfilePage (uok: UsernameOrKaid) {
-		const kaid = getKAID();
-		if (kaid) {
-			addProfileReportButton(uok, kaid);
-		}
-
 		//TODO: Duplicate badges is currently patched. Fix or report to KA
 		/*if ((uok.asUsername() && uok.asUsername() === window.KA._userProfileData!.username) || (uok.asKaid() && uok.asKaid() === kaid)) {
 			setInterval(duplicateBadges, 100);

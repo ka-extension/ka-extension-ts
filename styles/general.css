@@ -219,26 +219,6 @@ body ._1wnf0g1k:hover {
     border-top-right-radius: 0;
 }
 
-/** Report button under programs and on profile pages **/
-body #kae-report-button {
-    background: #c93f3f !important;
-}
-
-body #kae-report-button:hover {
-    background: #ac3030 !important;
-}
-
-.kae-user-report-button {
-    display: block;
-    text-decoration: none;
-    color: white !important;
-    border-radius: 4px;
-    font-size: 15px;
-    padding: 8px;
-    margin-bottom: 10px;
-    text-align: center;
-}
-
 /** Misc **/
 .kae-green {
     color: #3eaa23 !important;

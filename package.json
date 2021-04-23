@@ -1,6 +1,6 @@
 {
 	"name": "ka-extension-ts",
-	"version": "4.7.4",
+	"version": "4.7.6",
 	"description": "A chrome extension for the Khan Academy Computer Programming section",
 	"private": true,
 	"scripts": {
@@ -22,7 +22,6 @@
 		"url": "https://github.com/ka-extension/ka-extension-ts"
 	},
 	"devDependencies": {
-		"@types/bluebird": "^3.5.20",
 		"@types/chrome": "0.0.63",
 		"@types/core-js": "^2.5.4",
 		"esbuild": "^0.11.12",

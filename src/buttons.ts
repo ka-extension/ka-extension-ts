@@ -1,8 +1,6 @@
 import { Program } from "./types/data";
 import { querySelectorPromise } from "./util/promise-util";
-import { QUEUE_ROOT } from "./types/names";
 import { getCSRF } from "./util/cookie-util";
-import { buildQuery } from "./util/text-util";
 import { getKAID } from "./util/data-util";
 
 //Replace KA's vote button with one that updates after you vote and allows undoing votes
@@ -119,24 +117,6 @@ function addProgramFlags (buttons: HTMLDivElement, program: Program) {
 	}
 }
 
-//Add a button to report the program
-function addProgramReportButton (buttons: HTMLDivElement, program: Program, kaid: string) {
-	if (kaid !== program.kaid) {
-		const reportButton: HTMLAnchorElement = document.createElement("a");
-		reportButton.id = "kae-report-button";
-		reportButton.classList.add("kae-program-button");
-		reportButton.href = `${QUEUE_ROOT}submit?${buildQuery({
-			type: "program",
-			id: program.id.toString(),
-			callback: window.location.href
-		})}`;
-		reportButton.setAttribute("role", "button");
-		reportButton.innerHTML = "<span>Report</span>";
-		buttons.insertBefore(reportButton, buttons.children[1]);
-		buttons.insertBefore(document.createTextNode(" "), reportButton.nextSibling);
-	}
-}
-
 function findOtherButtons (buttons: HTMLDivElement): void {
 	/*Add the kae-program-button class to all other program buttons so we can restyle them */
 	Array.from(buttons.querySelectorAll("a[role=\"button\"]")).forEach(el => el.classList.add("kae-program-button"));
@@ -153,7 +133,6 @@ function loadButtonMods (program: Program): void {
 			addLinkButton(buttons, program);
 			replaceVoteButton(buttons, program);
 			addProgramFlags(buttons, program);
-			addProgramReportButton(buttons, program, kaid);
 		});
 
 	querySelectorPromise("#child-account-notice")
@@ -166,7 +145,7 @@ function loadButtonMods (program: Program): void {
 			//TODO, let voting run here too
 		});
 
-	//TODO: Find the buttons wrap on offical project pages (maybe for voting or link copying. Might not be useful)
+	//TODO: Find the buttons wrap on official project pages (maybe for voting or link copying. Might not be useful)
 	//https://www.khanacademy.org/computing/computer-programming/programming/drawing-basics/pc/challenge-waving-snowman
 }
 

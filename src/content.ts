@@ -6,6 +6,7 @@ import { MessageTypes, KAID_MESSAGE } from "./types/message-types";
 	const scriptTag: HTMLScriptElement = <HTMLScriptElement>document.createElement("script");
 	const firstScriptTag: HTMLScriptElement = <HTMLScriptElement>document.getElementsByTagName("script")[0];
 	scriptTag.src = chrome.extension.getURL("./dist/index.js");
+	scriptTag.id = "ka-extension-script";
 	scriptTag.type = "text/javascript";
 	firstScriptTag!.parentNode!.insertBefore(scriptTag, firstScriptTag);
 

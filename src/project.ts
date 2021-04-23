@@ -118,15 +118,12 @@ async function addEditorSettingsButton () {
 
 	const ace = window.ace;
 
-	ace.config.set("basePath", "https://cdn.jsdelivr.net/gh/ajaxorg/ace-builds@1.1.4/src-min-noconflict");
+	const extScriptEl = document.getElementById("ka-extension-script") as HTMLScriptElement;
+	const extId = extScriptEl.src.split("/")[2];
+	ace.config.set("basePath", `chrome-extension://${extId}/styles/ace-themes/`);
 
 	if (!ace.require("ace/ext/language_tools")) {
-		const scriptEl = document.createElement("script");
-		scriptEl.setAttribute("src", "https://cdn.jsdelivr.net/gh/ajaxorg/ace-builds@1.1.4/src-min-noconflict/ext-language_tools.js");
-		scriptEl.addEventListener("load", function () {
-			ace.require("ace/ext/language_tools");
-		});
-		document!.head!.appendChild(scriptEl);
+		throw new Error("KA removed ace language tools.");
 	}else {
 		window.ScratchpadAutosuggest.enableLiveCompletion = function () {};
 	}

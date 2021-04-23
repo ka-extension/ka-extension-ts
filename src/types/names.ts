@@ -4,7 +4,6 @@ const COOKIE: string = "cookie";
 const EXTENSION_COMMENT_CLASSNAME: string = "ka-extension-modified-comment";
 const EXTENSION_ITEM_CLASSNAME: string = "ka-extension-modified-item";
 const EXTENSION_MODIFIED_NOTIF: string = "ka-extension-notif-delete";
-const QUEUE_ROOT: string = "https://reportqueue.herokuapp.com/";
 const PREFIX: string = "ka-extension-";
 const SVG_NAMESPACE: string = "http://www.w3.org/2000/svg";
 const DELETE_BUTTON: string = "kae-notif-delete";
@@ -18,7 +17,7 @@ const DEVELOPERS: string[] = [
 
 export {
 	CSRF_NAME, CSRF_HEADER, COOKIE,
-	QUEUE_ROOT, EXTENSION_COMMENT_CLASSNAME,
+	EXTENSION_COMMENT_CLASSNAME,
 	PREFIX, EXTENSION_ITEM_CLASSNAME, EXTENSION_MODIFIED_NOTIF,
 	SVG_NAMESPACE, DELETE_BUTTON, API_ORIGIN, DEVELOPERS
 };

@@ -26,9 +26,9 @@ if [ $NOTES_VER != $MAN_VER ]; then # mismatched version check
 	if [ $? != 0 ]; then
 		exit 1
 	fi
-fi	
+fi
 
-if [ $1 ]; then 
+if [ $1 ]; then
 	if [ $1 == "--source" ]; then
 		git archive -o "$REL$MAN_VER.src.zip" HEAD
 		echo "Source code zipped!"
@@ -45,5 +45,5 @@ if [ -f $ZIP ]; then # overwrite check
 	rm $ZIP
 fi
 
-zip -r $ZIP dist popup styles/general.css images manifest.json -q # zip it all up
+zip -r $ZIP dist popup styles images manifest.json -q # zip it all up
 echo "Zipped! $MAN_VER is now ready."

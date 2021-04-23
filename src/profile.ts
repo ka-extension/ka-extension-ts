@@ -28,6 +28,7 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 	const averageSpinoffs = Math.round(totals.spinoffs / totals.programs || 0);
 	const averageVotes = Math.round(totals.votes / totals.programs || 0);
 
+	//TODO: All stats fail to load if the user doesn't have badge counts visible
 	const badges = await querySelectorAllPromise(".badge-category-count", 10, 500);
 	const totalBadges = Array.from(badges).reduce((prev, badge): number => {
 		return prev + (parseInt(badge.textContent || "") || 0);
