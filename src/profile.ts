@@ -1,6 +1,6 @@
 import { UsernameOrKaid, Scratchpads, UserProfileData, User } from "./types/data";
 import { querySelectorPromise, querySelectorAllPromise } from "./util/promise-util";
-import { getJSON } from "./util/api-util";
+import { getJSON, getUserData } from "./util/api-util";
 import { formatDate } from "./util/text-util";
 import { DEVELOPERS } from "./types/names";
 import {getKAID} from "./util/data-util";
@@ -42,7 +42,6 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 		"Average spinoffs received": averageSpinoffs,
 		"Total badges": totalBadges,
 		"Inspiration badges": totals.inspiration,
-		"More info": `<a href="${userEndpoint}/profile?${uok.type}=${uok.id}&format=pretty" target="_blank">API endpoint</a>`
 	} as { [key: string]: string | number; };
 
 	for (const entry in entries) {
@@ -52,6 +51,42 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 			</tr>`;
 	}
 
+	getUserData(uok).then(User => {
+		const dateElement = document.querySelectorAll("td")[1];
+		dateElement!.title = formatDate(User.joined);
+
+		const videoCountElement = document.querySelectorAll("td")[5];
+		videoCountElement!.innerText = (User.countVideosCompleted).toString();
+
+		if (DEVELOPERS.includes(User.kaid)) {
+			table.innerHTML += `<div class="kae-green user-statistics-label">KA Extension Developer</div>`;
+		}
+		console.log(User.newNotificationCount)
+
+		/*if (User.kaid === getKAID()) {
+			getJSON(`${window.location.origin}/api/v1/user`, {"discussion_banned":1}).then((data: User) => {
+				//If something messes up I don't want to accidentally tell someone they're banned
+				if (!data.hasOwnProperty("discussion_banned")) {
+					throw new Error("Error loading ban information.");
+				}else {
+					let bannedHTML = `<tr><td class="user-statistics-label">Banned</td>`;
+
+					if (data.discussion_banned === false) {
+						bannedHTML += `<td>No</td>`;
+					}else if (data.discussion_banned === true) {
+						bannedHTML += `<td style="color: red">Discussion banned</td>`;
+					}else {
+						throw new Error("Error loading ban information.");
+					}
+
+					const lastTR = table.querySelector("tr:last-of-type");
+					if (!lastTR) { throw new Error("Table has no tr"); }
+					lastTR.outerHTML = bannedHTML + `</tr>` + lastTR.outerHTML;
+				}
+			});
+		}*/
+	});/*
+
 	getJSON(`${userEndpoint}/profile?${uok.type}=${uok.id}`, {
 		dateJoined: 1,
 		countVideosCompleted: 1,
@@ -60,7 +95,7 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 		.then(data => data as UserProfileData)
 		.then(User => {
 			const dateElement = document.querySelectorAll("td")[1];
-			dateElement!.title = formatDate(User.dateJoined);
+			dateElement!.title = formatDate(User.joined);
 
 			const videoCountElement = document.querySelectorAll("td")[5];
 			videoCountElement!.innerText = User.countVideosCompleted.toString();
@@ -91,7 +126,7 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 					}
 				});
 			}
-		});
+		});*/
 
 }
 

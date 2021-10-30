@@ -1,9 +1,7 @@
-import { MessageTypes, Message, KAID_MESSAGE } from "./types/message-types";
-import { CSRF_HEADER, COOKIE } from "./types/names";
+import { MessageTypes, Message } from "./types/message-types";
+import { CSRF_HEADER } from "./types/names";
 import { getChromeFkey, getChromeCookies } from "./util/cookie-util";
-import { UserProfileData } from "./types/data";
-
-let kaid: string;
+import queries from "./graphqlQueries.json";
 
 chrome.runtime.onMessage.addListener((arg: Message) => {
 	console.log("Internal Message", arg);
@@ -24,9 +22,6 @@ chrome.runtime.onMessage.addListener((arg: Message) => {
 				}
 			});
 			break;
-		case MessageTypes.KAID:
-			kaid = (arg.message as KAID_MESSAGE).kaid;
-			break;
 	}
 });
 
@@ -35,31 +30,26 @@ chrome.browserAction.setBadgeBackgroundColor({
 });
 
 setInterval((): void => {
-	if (!kaid) { return; }
 	getChromeFkey().then(fkey => {
-		fetch(`https://www.khanacademy.org/api/internal/user/profile?kaid=${kaid}&projection=${JSON.stringify({
-			countBrandNewNotifications: 1
-		})}`, {
-				method: "GET",
-				headers: {
-					[CSRF_HEADER]: fkey.toString(),
-					[COOKIE]: getChromeCookies()
-				},
-				credentials: "same-origin"
-			})
-			.then(res => res.json())
-			.then(data => data as UserProfileData)
-			.then(data => {
-				if (data.countBrandNewNotifications > 0) {
-					chrome.browserAction.setBadgeText({
-						text: data.countBrandNewNotifications.toString()
-					});
-					return;
-				}
-				chrome.browserAction.setBadgeText({
-					text: ""
-				});
-			}).catch(console.error);
-	}).catch(console.error);
+		return fetch("https://www.khanacademy.org/api/internal/graphql/getFullUserProfile", {
+			method: "POST",
+			headers: {
+				[CSRF_HEADER]: fkey,
+				"content-type": "application/json"
+			},
+			body: JSON.stringify({
+				operationName: "getFullUserProfile",
+				query: queries.user,
+			}),
+			credentials: "same-origin"
+		}).then(e => {
+			return e.json();
+		});
+	}).then(data => {
+		const count = data.data.user.newNotificationCount;
 
+		chrome.browserAction.setBadgeText({
+			text: count > 0 ? count.toString() : ""
+		});
+	}).catch(console.error);
 }, 750);

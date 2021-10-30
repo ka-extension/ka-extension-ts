@@ -1,4 +1,4 @@
-import { CSRF_NAME } from "../types/names";
+import { CSRF_NAME, CSRF_HEADER, COOKIE } from "../types/names";
 
 function getCookies (): { [name: string]: string; } {
 	const cookies: { [name: string]: string; } = {};
@@ -23,8 +23,8 @@ function getCSRF (): string {
 	return getCookies()[CSRF_NAME];
 }
 
-function getChromeFkey (): Promise<{}> {
-	const cookiePromise: Promise<{}> = new Promise((resolve, reject) => {
+function getChromeFkey (): Promise<string> {
+	const cookiePromise: Promise<string> = new Promise((resolve, reject) => {
 		chrome.cookies.get({
 			url: "https://www.khanacademy.org",
 			name: "fkey"
