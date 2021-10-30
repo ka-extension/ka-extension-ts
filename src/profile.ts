@@ -61,7 +61,6 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 		if (DEVELOPERS.includes(User.kaid)) {
 			table.innerHTML += `<div class="kae-green user-statistics-label">KA Extension Developer</div>`;
 		}
-		console.log(User.newNotificationCount)
 
 		/*if (User.kaid === getKAID()) {
 			getJSON(`${window.location.origin}/api/v1/user`, {"discussion_banned":1}).then((data: User) => {
@@ -85,49 +84,7 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 				}
 			});
 		}*/
-	});/*
-
-	getJSON(`${userEndpoint}/profile?${uok.type}=${uok.id}`, {
-		dateJoined: 1,
-		countVideosCompleted: 1,
-		kaid: 1
-	})
-		.then(data => data as UserProfileData)
-		.then(User => {
-			const dateElement = document.querySelectorAll("td")[1];
-			dateElement!.title = formatDate(User.joined);
-
-			const videoCountElement = document.querySelectorAll("td")[5];
-			videoCountElement!.innerText = User.countVideosCompleted.toString();
-
-			if (DEVELOPERS.includes(User.kaid)) {
-				table.innerHTML += `<div class="kae-green user-statistics-label">KA Extension Developer</div>`;
-			}
-
-			if (User.kaid === getKAID()) {
-				getJSON(`${window.location.origin}/api/v1/user`, {"discussion_banned":1}).then((data: User) => {
-					//If something messes up I don't want to accidentally tell someone they're banned
-					if (!data.hasOwnProperty("discussion_banned")) {
-						throw new Error("Error loading ban information.");
-					}else {
-						let bannedHTML = `<tr><td class="user-statistics-label">Banned</td>`;
-
-						if (data.discussion_banned === false) {
-							bannedHTML += `<td>No</td>`;
-						}else if (data.discussion_banned === true) {
-							bannedHTML += `<td style="color: red">Discussion banned</td>`;
-						}else {
-							throw new Error("Error loading ban information.");
-						}
-
-						const lastTR = table.querySelector("tr:last-of-type");
-						if (!lastTR) { throw new Error("Table has no tr"); }
-						lastTR.outerHTML = bannedHTML + `</tr>` + lastTR.outerHTML;
-					}
-				});
-			}
-		});*/
-
+	});
 }
 
 //TODO: Fix or report to KA, currently disabled
