@@ -1,7 +1,10 @@
 import "whatwg-fetch";
 import { CSRF_HEADER } from "../types/names";
 import { getCSRF } from "./cookie-util";
+import { UsernameOrKaid, UserProfileData } from "../types/data";
 import { buildQuery } from "./text-util";
+import queries from "../graphqlQueries.json";
+
 
 async function getJSON (url: URL | string, projection?: object): Promise<object> {
 	url = new URL(url.toString());
@@ -200,8 +203,40 @@ function getComment (key: string): Promise<CommentData> {
 		}).then(data => data as CommentResponse).then(data => data.feedback[0]);
 }
 
+function getUserData(uok?: UsernameOrKaid) : Promise<UserProfileData> {
+	const body: any = {
+		operationName: "getFullUserProfile",
+		query: queries.user,
+	};
+
+	if (uok) {
+		const variables: any = {};
+
+		if (uok.asKaid()) {
+			variables.kaid = uok.asKaid()!;
+		} else if (uok.asUsername()) {
+			variables.username = uok.asUsername()!;
+		}
+
+		body.variables = variables;
+	}
+
+	return fetch(window.location.origin + "/api/internal/graphql/getFullUserProfile", {
+		method: "POST",
+		headers: {
+			[CSRF_HEADER]: getCSRF(),
+			"content-type": "application/json"
+		},
+		body: JSON.stringify(body),
+		credentials: "same-origin"
+	})
+		.then(e => e.json())
+		.then(e => e.data.user);
+} 
+
 export {
 	getJSON, getComment, FocusData, CommentData,
 	getConvo, FinalReply, FinalConvo,
-	DiscussionTypes, deleteNotif, putPostJSON
+	DiscussionTypes, deleteNotif, putPostJSON,
+	getUserData
 };

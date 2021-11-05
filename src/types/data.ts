@@ -129,10 +129,10 @@ interface Scratchpads {
 }
 
 interface UserProfileData {
-	countBrandNewNotifications: number;
+	newNotificationCount?: number;
 	countVideosCompleted: number;
 	isModerator?: boolean;
-	dateJoined: string;
+	joined: string;
 	kaid: string;
 	isPhantom: boolean;
 	username: string;
