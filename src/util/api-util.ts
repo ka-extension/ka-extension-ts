@@ -203,14 +203,18 @@ function getComment (key: string): Promise<CommentData> {
 		}).then(data => data as CommentResponse).then(data => data.feedback[0]);
 }
 
-function getUserData(uok?: UsernameOrKaid) : Promise<UserProfileData> {
-	const body: any = {
+function getUserData (uok?: UsernameOrKaid) : Promise<UserProfileData> {
+	const body = {
 		operationName: "getFullUserProfile",
 		query: queries.user,
+		variables: {},
 	};
 
 	if (uok) {
-		const variables: any = {};
+		const variables: {
+			kaid?: string
+			username?: string
+		} = {};
 
 		if (uok.asKaid()) {
 			variables.kaid = uok.asKaid()!;
@@ -232,7 +236,7 @@ function getUserData(uok?: UsernameOrKaid) : Promise<UserProfileData> {
 	})
 		.then(e => e.json())
 		.then(e => e.data.user);
-} 
+}
 
 export {
 	getJSON, getComment, FocusData, CommentData,

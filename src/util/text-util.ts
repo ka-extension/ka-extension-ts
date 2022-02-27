@@ -1,3 +1,5 @@
+import {DATE_FORMATTER, TIME_PERIODS} from "../types/names";
+
 function HTMLtoKAMarkdown (html: string): string {
 	return html
 		.replace(/<pre>\s*<code>([.\s\S]*?)<\/code>\s*<\/pre>/ig, (match, one) => "```\n" + one + "\n```")
@@ -42,6 +44,25 @@ function formatDate (date: string): string {
 	return `${("0" + (d.getMonth() + 1)).slice(-2)}/${("0" + d.getDate()).slice(-2)}/${d.getFullYear()} ${("0" + d.getHours()).slice(-2)}:${("0" + d.getMinutes()).slice(-2)}`;
 }
 
+function relativeDate (str: string): string {
+	if (DATE_FORMATTER === undefined) {
+		return formatDate(str);
+	}
+
+	const date = new Date(str);
+	const now = new Date();
+
+	const elapsed = date.getTime() - now.getTime();
+
+	for (const [unit, period] of Object.entries(TIME_PERIODS)) {
+		if (-elapsed > period || unit === "second") {
+			return DATE_FORMATTER.format(Math.round(elapsed / period), (unit as Intl.RelativeTimeFormatUnit));
+		}
+	}
+
+	return formatDate(str);
+}
+
 function urlUnencode (str: string): { [name: string]: string[]; } {
 	const params: { [name: string]: string[]; } = {};
 	const pairs: string[][] = str.split("&")
@@ -66,5 +87,5 @@ function escapeHTML (str: string): string {
 
 export {
 	HTMLtoKAMarkdown, KAMarkdowntoHTML, buildQuery, parseQuery,
-	formatDate, escapeHTML, urlUnencode
+	formatDate, relativeDate, escapeHTML, urlUnencode
 };
