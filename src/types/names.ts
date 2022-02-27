@@ -15,9 +15,23 @@ const DEVELOPERS: string[] = [
 	"kaid_455920429074646065838008",  // Jett
 ];
 
+const DATE_FORMATTER = typeof Intl.RelativeTimeFormat === "function"
+	? new Intl.RelativeTimeFormat(navigator.language, { numeric: "auto", style: "long" })
+	: undefined;
+
+const TIME_PERIODS = {
+  year: 24 * 60 * 60 * 1000 * 365,
+  month: (24 * 60 * 60 * 1000 * 365) / 12,
+  day: 24 * 60 * 60 * 1000,
+  hour: 60 * 60 * 1000,
+  minute: 60 * 1000,
+  second: 1000,
+};
+
 export {
 	CSRF_NAME, CSRF_HEADER, COOKIE,
 	EXTENSION_COMMENT_CLASSNAME,
 	PREFIX, EXTENSION_ITEM_CLASSNAME, EXTENSION_MODIFIED_NOTIF,
-	SVG_NAMESPACE, DELETE_BUTTON, API_ORIGIN, DEVELOPERS
+	SVG_NAMESPACE, DELETE_BUTTON, API_ORIGIN, DEVELOPERS,
+	DATE_FORMATTER, TIME_PERIODS
 };
