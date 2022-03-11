@@ -1,6 +1,6 @@
 import updateLog from "../resources/update-log.json";
 import { getChromeCookies, getChromeFkey } from "./util/cookie-util";
-import { formatDate, escapeHTML, KAMarkdowntoHTML } from "./util/text-util";
+import { formatDate, escapeHTML, KAMarkdowntoHTML, relativeDate } from "./util/text-util";
 import { CSRF_HEADER, COOKIE, API_ORIGIN } from "./types/names";
 import { Notification, NotifObj, Feedback, NotifElm } from "./types/data";
 
@@ -120,7 +120,7 @@ function genNotif (notif: NotifElm): string {
 					<img class="notif-img" src="${notif.imgSrc}">
 					<p class="author-note">${notif.authorNote}</p>
 					${notif.content && `<p class="notif-content">${notif.content}</p>`}
-					<div class="notif-date">${notif.date}</div>
+					<div class="notif-date" title="${formatDate(notif.date)}">${relativeDate(notif.date)}</div>
 				</div>
 			</a>
 			${(() => {

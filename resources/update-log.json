@@ -1,215 +1,228 @@
 [
-    {
-        "version": "4.7.7",
-        "new": [
-            "Shows the description for how to obtain the Tesla badge",
-            "The Notifications tab is now default when opening the extension popup",
-            "Adds a margin for project feedback tabs",
-            "Adds link styling to refresh button on project feedback page",
-            "Adds support for avatar reward notifications in the built-in notification viewer",
-            "Replaces the internal code build system with a modern one",
-            "Thanks to @An0n3m0us for help with many of these features and bug fixes"
-        ],
-        "fixes": [
-            "Syntax highlighting in comments didn't work",
-            "Can now undo program votes again",
-            "Re-adds the Copy Link button under programs",
-            "Once again will switch to the Tips & Thanks after opening a program",
-            "Program info on a user's profile will now work again"
-        ]
-    },
-    {
-        "version": "4.7.6",
-        "new": [
-            "Update requested features to comply with Chrome Web Store request."
-        ],
-        "fixes": []
-    },
-    {
-        "version": "4.7.5",
-        "new": [
-            "Remove functionality no longer allowed on the Chrome Web Store."
-        ],
-        "fixes": []
-    },
-    {
-        "version": "4.7.4",
-        "new": [
-            "Update source dependencies. No actual changes."
-        ],
-        "fixes": [
-            "Nothing"
-        ]
-    },
-    {
-        "version": "4.7.3",
-        "new": [
-            "Nothing"
-        ],
-        "fixes": [
-            "Fixes voting on programs.",
-            "No longer put the full number of notifications in the bubble.",
-            "Can no longer check for moderator status, which may lead to issues for moderators using the extension.",
-            "A number of other miscellaneous fixes following a KA update."
-        ]
-    },
-    {
-        "version": "4.7.2",
-        "new": [
-            "Nothing"
-        ],
-        "fixes": [
-            "Removes checking if your program is \"Completely\" hidden, to fix an issue where viewing programs hidden from the hotlist would log you out."
-        ]
-    },
-    {
-        "version": "4.7.1",
-        "new": [
-            "Nothing"
-        ],
-        "fixes": [
-            "Fixes a bug that caused voting to fail.",
-            "Fixes the background color of the Editor Setting button in some browsers."
-        ]
-    },
-    {
-        "version": "4.7.0",
-        "new": [
-            "Add syntax highlighting to code blocks in comments",
-            "Move hide editor to the Editor Settings menu",
-            "Make the comment reply box not tiny",
-            "Add a \"Projects\" button to the left sidebar on profiles",
-            "Add a check on your profile to let you know if you're banned",
-            "Fix a KA bug where the Edit Profile button would clip down"
-        ],
-        "fixes": [
-            "Moves Toggle Editor Settings button before Oh Noes, to avoid Oh Noes clipping as he changes width.",
-            "Sort selecting elements on the browse projects page are blue again",
-            "Hidden program check on the 404 page works again",
-            "Fixes bugs associated with switching to the T&T tab",
-            "Removes code for a couple of broken features that aren't worth fixing: profile hover cards under programs, toggle documentation keyboard shortcut, discussion guidelines next to the discussion area, and duplicating badges."
-        ]
-    },
-    {
-        "version": "4.6.3",
-        "new": [
-            "Nothing"
-        ],
-        "fixes": [
-            "The most critical features of the extension, after a major KA source update.",
-            "A number of discussion features after the previous discussion update.",
-            "There are still known bugs. 4.6.4 is already planned."
-        ]
-    },
-    {
-        "version": "4.6.2",
-        "new": [
-            "Nothing"
-        ],
-        "fixes": [
-            "Fixes discussion and program features after a KA update",
-            "Fixes a bug that causes the page to be scrolled automatically on pages with discussion"
-        ]
-    },
-    {
-        "version": "4.6.1",
-        "new": [
-            "Nothing"
-        ],
-        "fixes": [
-            "Style bugs with buttons"
-        ]
-    },
-    {
-        "version": "4.6.0",
-        "new": [
-            "Makes T/T the default page for program dicussions"
-        ],
-        "fixes": [
-            "Fixes features broken by KA's discussion update"
-        ]
-    },
-    {
-        "version": "4.5.0",
-        "new": [
-            "Five new editor themes",
-            "A rework of the profile information table",
-            "User info distinguishment on <a href=\"https://www.khanacademy.org/profile/lukekrikorian\">developer profiles</a>"
-        ],
-        "fixes": [
-            "Fixed a bug where clicking on the \"About\" tab would duplicate program info",
-            "Fixed horizontal spacing for buttons underneath programs",
-            "Removed location editing feature due to user locations removal"
-        ]
-    },
-    {
-        "version": "4.4.1",
-        "new": [
-            "Nothing"
-        ],
-        "fixes": [
-            "Fixes the toggle editor button"
-        ]
-    },
-    {
-        "version": "4.4.0",
-        "new": [
-            "Nothing"
-        ],
-        "fixes": [
-            "Fixes the editor settings panel for the new KA user interface"
-        ]
-    },
-    {
-        "version": "4.3.0",
-        "new": [
-            "New editor settings tab, with several different customizable editor settings",
-            "Extension now hides old KA user survey popup"
-        ],
-        "fixes": [
-            "Improved button styling for Chrome",
-            "Vote button fixes for early versions of Chrome"
-        ]
-    },
-    {
-        "version": "4.2.0",
-        "new": [
-            "Copy link button on program pages copies a shortened link to the program",
-            "You can now tell if your program has been hidden from the hotlist, from everywhere, or is guardian approved from the program stats section",
-            "Program titles are now centred in the middle of the page",
-            "Program page is now themed blue, like the rest of KA's ui"
-        ],
-        "fixes": [
-            "Hovercards have now been added back to project pages"
-        ]
-    },
-    {
-        "version": "4.1.0",
-        "new": [
-            "You can now reply to notifications from within the popup",
-            "Overhaul of the notification page, with new styling and layout",
-            "Notifications page now uses infinite scrolling instead of the load more button"
-        ],
-        "fixes": [
-            "None"
-        ]
-    },
-    {
-        "version": "4.0.3",
-        "new": [ "None" ],
-        "fixes": [
-            "Fixed update log issue"
-        ]
-    },
-    {
-        "version": "4.0.2",
-        "new": [ "None" ],
-        "fixes": [
-            "Fixed location text editing",
-            "Dark theme toggle now appears when editing a new program",
-            "Program info now reloads when switching between editor tabs"
-        ]
-    },
+	{
+		"version": "4.7.8",
+		"new": [
+			"Nothing"
+		],
+		"fixes": [
+			"Fix for deprecation of internal API user profile endpoint"
+		]
+	},
+	{
+		"version": "4.7.7",
+		"new": [
+			"Shows the description for how to obtain the Tesla badge",
+			"The Notifications tab is now default when opening the extension popup",
+			"Adds a margin for project feedback tabs",
+			"Adds link styling to refresh button on project feedback page",
+			"Adds support for avatar reward notifications in the built-in notification viewer",
+			"Replaces the internal code build system with a modern one",
+			"Thanks to @An0n3m0us for help with many of these features and bug fixes"
+		],
+		"fixes": [
+			"Syntax highlighting in comments didn't work",
+			"Can now undo program votes again",
+			"Re-adds the Copy Link button under programs",
+			"Once again will switch to the Tips & Thanks after opening a program",
+			"Program info on a user's profile will now work again"
+		]
+	},
+	{
+		"version": "4.7.6",
+		"new": [
+			"Update requested features to comply with Chrome Web Store request."
+		],
+		"fixes": []
+	},
+	{
+		"version": "4.7.5",
+		"new": [
+			"Remove functionality no longer allowed on the Chrome Web Store."
+		],
+		"fixes": []
+	},
+	{
+		"version": "4.7.4",
+		"new": [
+			"Update source dependencies. No actual changes."
+		],
+		"fixes": [
+			"Nothing"
+		]
+	},
+	{
+		"version": "4.7.3",
+		"new": [
+			"Nothing"
+		],
+		"fixes": [
+			"Fixes voting on programs.",
+			"No longer put the full number of notifications in the bubble.",
+			"Can no longer check for moderator status, which may lead to issues for moderators using the extension.",
+			"A number of other miscellaneous fixes following a KA update."
+		]
+	},
+	{
+		"version": "4.7.2",
+		"new": [
+			"Nothing"
+		],
+		"fixes": [
+			"Removes checking if your program is \"Completely\" hidden, to fix an issue where viewing programs hidden from the hotlist would log you out."
+		]
+	},
+	{
+		"version": "4.7.1",
+		"new": [
+			"Nothing"
+		],
+		"fixes": [
+			"Fixes a bug that caused voting to fail.",
+			"Fixes the background color of the Editor Setting button in some browsers."
+		]
+	},
+	{
+		"version": "4.7.0",
+		"new": [
+			"Add syntax highlighting to code blocks in comments",
+			"Move hide editor to the Editor Settings menu",
+			"Make the comment reply box not tiny",
+			"Add a \"Projects\" button to the left sidebar on profiles",
+			"Add a check on your profile to let you know if you're banned",
+			"Fix a KA bug where the Edit Profile button would clip down"
+		],
+		"fixes": [
+			"Moves Toggle Editor Settings button before Oh Noes, to avoid Oh Noes clipping as he changes width.",
+			"Sort selecting elements on the browse projects page are blue again",
+			"Hidden program check on the 404 page works again",
+			"Fixes bugs associated with switching to the T&T tab",
+			"Removes code for a couple of broken features that aren't worth fixing: profile hover cards under programs, toggle documentation keyboard shortcut, discussion guidelines next to the discussion area, and duplicating badges."
+		]
+	},
+	{
+		"version": "4.6.3",
+		"new": [
+			"Nothing"
+		],
+		"fixes": [
+			"The most critical features of the extension, after a major KA source update.",
+			"A number of discussion features after the previous discussion update.",
+			"There are still known bugs. 4.6.4 is already planned."
+		]
+	},
+	{
+		"version": "4.6.2",
+		"new": [
+			"Nothing"
+		],
+		"fixes": [
+			"Fixes discussion and program features after a KA update",
+			"Fixes a bug that causes the page to be scrolled automatically on pages with discussion"
+		]
+	},
+	{
+		"version": "4.6.1",
+		"new": [
+			"Nothing"
+		],
+		"fixes": [
+			"Style bugs with buttons"
+		]
+	},
+	{
+		"version": "4.6.0",
+		"new": [
+			"Makes T/T the default page for program dicussions"
+		],
+		"fixes": [
+			"Fixes features broken by KA's discussion update"
+		]
+	},
+	{
+		"version": "4.5.0",
+		"new": [
+			"Five new editor themes",
+			"A rework of the profile information table",
+			"User info distinguishment on <a href=\"https://www.khanacademy.org/profile/lukekrikorian\">developer profiles</a>"
+		],
+		"fixes": [
+			"Fixed a bug where clicking on the \"About\" tab would duplicate program info",
+			"Fixed horizontal spacing for buttons underneath programs",
+			"Removed location editing feature due to user locations removal"
+		]
+	},
+	{
+		"version": "4.4.1",
+		"new": [
+			"Nothing"
+		],
+		"fixes": [
+			"Fixes the toggle editor button"
+		]
+	},
+	{
+		"version": "4.4.0",
+		"new": [
+			"Nothing"
+		],
+		"fixes": [
+			"Fixes the editor settings panel for the new KA user interface"
+		]
+	},
+	{
+		"version": "4.3.0",
+		"new": [
+			"New editor settings tab, with several different customizable editor settings",
+			"Extension now hides old KA user survey popup"
+		],
+		"fixes": [
+			"Improved button styling for Chrome",
+			"Vote button fixes for early versions of Chrome"
+		]
+	},
+	{
+		"version": "4.2.0",
+		"new": [
+			"Copy link button on program pages copies a shortened link to the program",
+			"You can now tell if your program has been hidden from the hotlist, from everywhere, or is guardian approved from the program stats section",
+			"Program titles are now centred in the middle of the page",
+			"Program page is now themed blue, like the rest of KA's ui"
+		],
+		"fixes": [
+			"Hovercards have now been added back to project pages"
+		]
+	},
+	{
+		"version": "4.1.0",
+		"new": [
+			"You can now reply to notifications from within the popup",
+			"Overhaul of the notification page, with new styling and layout",
+			"Notifications page now uses infinite scrolling instead of the load more button"
+		],
+		"fixes": [
+			"None"
+		]
+	},
+	{
+		"version": "4.0.3",
+		"new": [
+			"None"
+		],
+		"fixes": [
+			"Fixed update log issue"
+		]
+	},
+	{
+		"version": "4.0.2",
+		"new": [
+			"None"
+		],
+		"fixes": [
+			"Fixed location text editing",
+			"Dark theme toggle now appears when editing a new program",
+			"Program info now reloads when switching between editor tabs"
+		]
+	},
 	{
 		"version": "4.0.1",
 		"new": [
@@ -221,59 +234,59 @@
 			"Removed unused permissions"
 		]
 	},
-    {
-        "version": "4.0.0",
-        "new": [
-            "Complete TypeScript rewrite",
-            "Notifications can now be viewed through the extension popup",
-            "Tips & Thanks threads can now be downloaded as JSON files",
-            "Tips & Thanks can now be reported",
-            "Badge totals have been added to user profiles"
-        ],
-        "fixes": [
-            "Comment edits are now escaped properly",
-            "The KAdefine issue has been sorted out"
-        ]
-    },
-    {
-        "version": "3.1.1",
-        "new": [
-            "Added a hide editor button"
-        ],
-        "fixes": [
-            "Improved some program info styling",
-            "Fixed URL coverage for programs (cs/pixar/computer-science)",
-            "Fixed small HTML parsing bug for comment editing",
-            "Total number of votes on profile is now accurate. It no longer counts the automatic vote",
-            "Extension now works in different KA subdomains",
-            "Removed the thumbnail feature"
-        ]
-    },
-    {
-        "version": "3.1.0",
-        "new": [
-            "Added some evaluation tools",
-            "Added user/program reporting. Programs and users you report will go into a Google Sheet monitored by KA Guardian Evan Lewis",
-            "You can now add duplicate badges to your showcase"
-        ],
-        "fixes": [
-            "Improved some notification styling",
-            "You can now see your own program's flags",
-            "Fixed a notif deletion bug"
-        ]
-    },
-    {
-        "version": "3.0.0",
-        "new": [
-            "Added a dark theme for the editor",
-            "You can now change your location text easily, in profile settings",
-            "You can now delete notifications",
-            "Added the ability to edit comments",
-            "You can now link to a specific comment from a user's discussion page"
-        ],
-        "fixes": [
-            "Fixed a notification bug which stopped the number of notifications from displaying properly",
-            "Fixed a notification overflow bug"
-        ]
-    }
+	{
+		"version": "4.0.0",
+		"new": [
+			"Complete TypeScript rewrite",
+			"Notifications can now be viewed through the extension popup",
+			"Tips & Thanks threads can now be downloaded as JSON files",
+			"Tips & Thanks can now be reported",
+			"Badge totals have been added to user profiles"
+		],
+		"fixes": [
+			"Comment edits are now escaped properly",
+			"The KAdefine issue has been sorted out"
+		]
+	},
+	{
+		"version": "3.1.1",
+		"new": [
+			"Added a hide editor button"
+		],
+		"fixes": [
+			"Improved some program info styling",
+			"Fixed URL coverage for programs (cs/pixar/computer-science)",
+			"Fixed small HTML parsing bug for comment editing",
+			"Total number of votes on profile is now accurate. It no longer counts the automatic vote",
+			"Extension now works in different KA subdomains",
+			"Removed the thumbnail feature"
+		]
+	},
+	{
+		"version": "3.1.0",
+		"new": [
+			"Added some evaluation tools",
+			"Added user/program reporting. Programs and users you report will go into a Google Sheet monitored by KA Guardian Evan Lewis",
+			"You can now add duplicate badges to your showcase"
+		],
+		"fixes": [
+			"Improved some notification styling",
+			"You can now see your own program's flags",
+			"Fixed a notif deletion bug"
+		]
+	},
+	{
+		"version": "3.0.0",
+		"new": [
+			"Added a dark theme for the editor",
+			"You can now change your location text easily, in profile settings",
+			"You can now delete notifications",
+			"Added the ability to edit comments",
+			"You can now link to a specific comment from a user's discussion page"
+		],
+		"fixes": [
+			"Fixed a notification bug which stopped the number of notifications from displaying properly",
+			"Fixed a notification overflow bug"
+		]
+	}
 ]
