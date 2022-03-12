@@ -14,7 +14,7 @@ class UsernameOrKaid {
 	readonly type: IdType;
 
 	constructor (id: string) {
-		if (id === "me") {
+		if (id === "me" || id === "") {
 			this.type = IdType.ME;
 		} else if (this.kaidPattern.test(id)) {
 			this.type = IdType.KAID;
