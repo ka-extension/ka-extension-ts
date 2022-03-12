@@ -58,7 +58,7 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 			cells[17].innerText = (Array.from(badges).reduce((prev, badge): number => {
 				return prev + (parseInt(badge.textContent || "") || 0);
 			}, 0) || 0).toString();
-		});
+		}).catch(console.error);
 
 	if (DEVELOPERS.includes(User.kaid)) {
 		table.innerHTML += `<div class="kae-green user-statistics-label">KA Extension Developer</div>`;
