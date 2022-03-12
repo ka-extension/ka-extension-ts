@@ -1,14 +1,14 @@
-import { UsernameOrKaid, Scratchpads, UserProfileData, User } from "./types/data";
+import { UsernameOrKaid, Scratchpads } from "./types/data";
 import { querySelectorPromise, querySelectorAllPromise } from "./util/promise-util";
 import { getJSON, getUserData } from "./util/api-util";
 import { formatDate } from "./util/text-util";
 import { DEVELOPERS } from "./types/names";
-import {getKAID} from "./util/data-util";
 
 async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 	const userEndpoint = `${window.location.origin}/api/internal/user`;
 
-	const Scratchpads = await getJSON(`${userEndpoint}/scratchpads?${uok.type}=${uok.id}&limit=1000`, {
+	const User = await getUserData(uok);
+	const Scratchpads = await getJSON(`${userEndpoint}/scratchpads?kaid=${User.kaid}&limit=1000`, {
 		scratchpads: [{
 			sumVotesIncremented: 1,
 			spinoffCount: 1
@@ -28,20 +28,14 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 	const averageSpinoffs = Math.round(totals.spinoffs / totals.programs || 0);
 	const averageVotes = Math.round(totals.votes / totals.programs || 0);
 
-	//TODO: All stats fail to load if the user doesn't have badge counts visible
-	const badges = await querySelectorAllPromise(".badge-category-count", 10, 500);
-	const totalBadges = Array.from(badges).reduce((prev, badge): number => {
-		return prev + (parseInt(badge.textContent || "") || 0);
-	}, 0) || 0;
-
 	const entries = {
 		"Programs": totals.programs,
 		"Total votes received": totals.votes,
 		"Total spinoffs received": totals.spinoffs,
 		"Average votes received": averageVotes,
 		"Average spinoffs received": averageSpinoffs,
-		"Total badges": totalBadges,
-		"Inspiration badges": totals.inspiration,
+		"Total badges": "Undisclosed",
+		"Forked programs": totals.inspiration,
 	} as { [key: string]: string | number; };
 
 	for (const entry in entries) {
@@ -51,40 +45,24 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 			</tr>`;
 	}
 
-	getUserData(uok).then(User => {
-		const dateElement = document.querySelectorAll("td")[1];
-		dateElement!.title = formatDate(User.joined);
+	const cells = table.getElementsByTagName("td");
 
-		const videoCountElement = document.querySelectorAll("td")[5];
-		videoCountElement!.innerText = (User.countVideosCompleted).toString();
+	const dateElement = cells[1];
+	dateElement!.title = formatDate(User.joined);
 
-		if (DEVELOPERS.includes(User.kaid)) {
-			table.innerHTML += `<div class="kae-green user-statistics-label">KA Extension Developer</div>`;
-		}
+	const videoCountElement = cells[5];
+	videoCountElement!.innerText = (User.countVideosCompleted).toString();
 
-		/*if (User.kaid === getKAID()) {
-			getJSON(`${window.location.origin}/api/v1/user`, {"discussion_banned":1}).then((data: User) => {
-				//If something messes up I don't want to accidentally tell someone they're banned
-				if (!data.hasOwnProperty("discussion_banned")) {
-					throw new Error("Error loading ban information.");
-				}else {
-					let bannedHTML = `<tr><td class="user-statistics-label">Banned</td>`;
+	querySelectorAllPromise(".badge-category-count", 10, 500)
+		.then(badges => {
+			cells[17].innerText = (Array.from(badges).reduce((prev, badge): number => {
+				return prev + (parseInt(badge.textContent || "") || 0);
+			}, 0) || 0).toString();
+		});
 
-					if (data.discussion_banned === false) {
-						bannedHTML += `<td>No</td>`;
-					}else if (data.discussion_banned === true) {
-						bannedHTML += `<td style="color: red">Discussion banned</td>`;
-					}else {
-						throw new Error("Error loading ban information.");
-					}
-
-					const lastTR = table.querySelector("tr:last-of-type");
-					if (!lastTR) { throw new Error("Table has no tr"); }
-					lastTR.outerHTML = bannedHTML + `</tr>` + lastTR.outerHTML;
-				}
-			});
-		}*/
-	});
+	if (DEVELOPERS.includes(User.kaid)) {
+		table.innerHTML += `<div class="kae-green user-statistics-label">KA Extension Developer</div>`;
+	}
 }
 
 //TODO: Fix or report to KA, currently disabled

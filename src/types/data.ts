@@ -4,21 +4,23 @@ class InvalidUsernameOrKaid extends Error {
 	}
 }
 
-enum IdType { USERNAME = "username", KAID = "kaid" }
+enum IdType { USERNAME = "username", KAID = "kaid", ME = "me" }
 
 class UsernameOrKaid {
 	private readonly kaidPattern: RegExp = /kaid_\d{20,30}/;
 	private readonly usernamePattern: RegExp = /[a-z][a-z0-9]{2,}/i;
+
 	readonly id: string;
 	readonly type: IdType;
+
 	constructor (id: string) {
-		if (this.kaidPattern.test(id)) {
+		if (id === "me") {
+			this.type = IdType.ME;
+		} else if (this.kaidPattern.test(id)) {
 			this.type = IdType.KAID;
-		}
-		else if (this.usernamePattern.test(id)) {
+		} else if (this.usernamePattern.test(id)) {
 			this.type = IdType.USERNAME;
-		}
-		else {
+		} else {
 			throw new InvalidUsernameOrKaid(id);
 		}
 		this.id = id;
@@ -31,6 +33,9 @@ class UsernameOrKaid {
 	}
 	asUsername (): string | null {
 		return this.type === IdType.USERNAME ? this.toString() : null;
+	}
+	isMe (): boolean {
+		return this.type === IdType.ME;
 	}
 }
 

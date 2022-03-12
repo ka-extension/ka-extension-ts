@@ -40,6 +40,7 @@ setInterval((): void => {
 			body: JSON.stringify({
 				operationName: "getFullUserProfile",
 				query: queries.user,
+				variables: {},
 			}),
 			credentials: "same-origin"
 		}).then(e => {
