@@ -2,7 +2,7 @@
 	{
 		"version": "4.7.9",
 		"new": [
-			"None"
+			"Reinstate user profile backgrounds"
 		],
 		"fixes": [
 			"Fix notification count on extension badge",
