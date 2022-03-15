@@ -1,4 +1,4 @@
-import { UsernameOrKaid, Scratchpads } from "./types/data";
+import { UsernameOrKaid, Scratchpads, OldScratchpad } from "./types/data";
 import { querySelectorPromise, querySelectorAllPromise } from "./util/promise-util";
 import { getJSON, getUserData } from "./util/api-util";
 import { formatDate } from "./util/text-util";
@@ -10,10 +10,53 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 	const User = await getUserData(uok);
 	const Scratchpads = await getJSON(`${userEndpoint}/scratchpads?kaid=${User.kaid}&limit=1000`, {
 		scratchpads: [{
+			url: 1,
 			sumVotesIncremented: 1,
 			spinoffCount: 1
 		}]
 	}) as Scratchpads;
+
+	const first = Scratchpads.scratchpads[0];
+	if (first) {
+		const url = window.location.origin +
+			"/api/internal/show_scratchpad?scratchpad_id=" +
+			first.url.split("/")[5];
+
+		Promise.all([
+			querySelectorPromise(
+				".user-info.clearfix",
+				10, 500
+			),
+			querySelectorPromise(
+				"._o77ufew",
+				10, 500
+			),
+			querySelectorPromise(
+				"._19lfck2n",
+				10, 500
+			),
+			getJSON(url, {
+				creatorProfile: {
+					backgroundSrc: 1
+				}
+			})
+		]).then(res => {
+			const [bg, name, bio, req] = res;
+
+			const src = (req as OldScratchpad).creatorProfile.backgroundSrc,
+				style =
+					`background-image: url("${src}");` +
+					"background-position: center;" +
+					"background-size: cover;",
+				textStyle = "color: #FFFFFF;";
+
+			if (src) {
+				bg.setAttribute("style", style);
+				name.setAttribute("style", textStyle);
+				bio.setAttribute("style", textStyle);
+			}
+		}).catch(console.error);
+	}
 
 	//TODO: Never fires and we don't get info if the user has thier statistics hidden
 	const table = await querySelectorPromise(".user-statistics-table > tbody") as HTMLElement;
@@ -59,6 +102,7 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 				return prev + (parseInt(badge.textContent || "") || 0);
 			}, 0) || 0).toString();
 		}).catch(console.error);
+
 
 	if (DEVELOPERS.includes(User.kaid)) {
 		table.innerHTML += `<div class="kae-green user-statistics-label">KA Extension Developer</div>`;

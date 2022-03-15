@@ -69,6 +69,13 @@ interface Program {
 	userAuthoredContentType: string;
 }
 
+interface OldScratchpad {
+	scratchpad: Program;
+	creatorProfile: {
+		backgroundSrc: string;
+	};
+}
+
 interface Scratchpad {
 	thumb: string;
 	created: string;
@@ -221,5 +228,5 @@ export {
 	Scratchpads, UserProfileData,
 	NotifObj, Feedback, NotifElm, ScratchpadUI,
 	EditorOptions, ACE, ACE_OPTION,
-	User
+	User, OldScratchpad
 };

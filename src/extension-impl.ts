@@ -1,6 +1,6 @@
 import { Extension } from "./extension";
 import { Program, UsernameOrKaid } from "./types/data";
-import { switchToTipsAndThanks, commentsButtonEventListener } from "./discussion";
+import { switchToTipsAndThanks, commentsButtonEventListener, updateComments } from "./discussion";
 import { addUserInfo, addProjectsLink, addBadgeInfo } from "./profile";
 import { addProgramInfo, keyboardShortcuts, addEditorSettingsButton, checkHiddenOrDeleted } from "./project";
 import { loadButtonMods } from "./buttons";
@@ -18,11 +18,6 @@ class ExtensionImpl extends Extension {
 		addProgramInfo(program, kaid);
 	}
 	async onProfilePage (uok: UsernameOrKaid) {
-		//TODO: Duplicate badges is currently patched. Fix or report to KA
-		/*if ((uok.asUsername() && uok.asUsername() === window.KA._userProfileData!.username) || (uok.asKaid() && uok.asKaid() === kaid)) {
-			setInterval(duplicateBadges, 100);
-		}*/
-
 		addProjectsLink(uok);
 		addUserInfo(uok);
 	}
@@ -33,11 +28,7 @@ class ExtensionImpl extends Extension {
 		addBadgeInfo(url);
 	}
 	onDiscussionPage () {
-		//TODO: fix report button for discussion
-		// setInterval(addReportButtonDiscussionPosts.bind(null, focusId, focusKind), 100);
-
 		switchToTipsAndThanks();
-
 		commentsButtonEventListener();
 		console.info("On discussion page");
 	}
@@ -45,6 +36,7 @@ class ExtensionImpl extends Extension {
 		console.info("On the hotlist");
 	}
 	onPage () {
+		updateComments();
 		// deleteNotifButtons();
 	}
 	onProgram404Page () {

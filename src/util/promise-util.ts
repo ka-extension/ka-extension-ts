@@ -1,20 +1,38 @@
 /* tslint:disable */
 // TS Promise-based utility functions for finding JS generated elements on a page
-function querySelectorAllPromise (selectorString: string, interval: number = 250, maxTrials?: number): Promise<NodeList> {
-	return new Promise((resolve: (nodes: NodeList) => void, reject: (...args: any[]) => void): void => {
+function querySelectorAllPromise (selectorString: string, interval: number = 250, maxTrials?: number): Promise<NodeListOf<Element>> {
+	return new Promise((resolve: (nodes: NodeListOf<Element>) => void, reject: (...args: any[]) => void): void => {
 		let i: number = 0;
 		(function find (): void {
-			const elements: NodeList = document.querySelectorAll(selectorString);
-			if (maxTrials !== undefined && i > maxTrials) { reject(new Error(`Could not find ${selectorString}`)); }
-			else if (elements.length === 0) { setTimeout(find, interval); }
-			else { resolve(elements); }
-			i++;
+			const elements = document.querySelectorAll(selectorString);
+
+			if (elements.length > 0) {
+				resolve(elements);
+			} else if (maxTrials !== undefined && i > maxTrials) {
+				reject(new Error(`Could not find ${selectorString}`));
+			} else {
+				i++;
+				setTimeout(find, interval);
+			}
 		})();
 	});
 }
 
-function querySelectorPromise (elementString: string, interval: number = 250, maxTrials?: number): Promise<Node> {
-	return querySelectorAllPromise(elementString, interval, maxTrials).then((e: NodeList): Node => e[0]);
+function querySelectorPromise (elementString: string, interval: number = 250, maxTrials?: number): Promise<Element> {
+	return new Promise((resolve: (node: Element) => void, reject: (...args: any[]) => void): void => {
+		let i = 0;
+		(function find (): void {
+			const element = document.querySelector(elementString);
+			if (element) {
+				resolve(element);
+			} else if (maxTrials && i > maxTrials) {
+				reject(new Error(`Could not find ${elementString}`));
+			} else {
+				i++;
+				setTimeout(find, interval);
+			}
+		})();
+	});
 }
 
 function objectNotEmptyTimer (obj: object, interval: number = 100): Promise<object> {
