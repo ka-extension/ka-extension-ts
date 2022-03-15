@@ -103,7 +103,6 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 			}, 0) || 0).toString();
 		}).catch(console.error);
 
-
 	if (DEVELOPERS.includes(User.kaid)) {
 		table.innerHTML += `<div class="kae-green user-statistics-label">KA Extension Developer</div>`;
 	}
