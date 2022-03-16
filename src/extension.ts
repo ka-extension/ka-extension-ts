@@ -23,16 +23,18 @@ const getScratchpadUI = (): Promise<ScratchpadUI> =>
 	});
 
 abstract class Extension {
-	private readonly url: string[];
+	protected url: string[];
+	protected first: boolean;
 	constructor () {
 		this.url = window.location.href.split("/");
+		this.first = true;
 	}
 	abstract onProgramPage (program: Program): void | Promise<void>;
 	abstract onProgramAboutPage (program: Program): void | Promise<void>;
 	abstract onHotlistPage (): void;
 	abstract onProfilePage (uok: UsernameOrKaid): void;
 	abstract onHomePage (uok: UsernameOrKaid): void;
-	abstract onBadgesPage (url: Array<string>): void;
+	abstract onBadgesPage (): void;
 	abstract onPage (): void;
 	abstract onProgram404Page (): void;
 	abstract onDiscussionPage (): void;
@@ -47,6 +49,8 @@ abstract class Extension {
 	}
 	async init (): Promise<void> {
 		if (window.location.host.includes("khanacademy.org")) {
+			this.url = window.location.href.split("/");
+
 			this.onPage();
 
 			const kaid = getKAID();
@@ -92,7 +96,7 @@ abstract class Extension {
 			}
 
 			if ((this.url[3] === "profile" && this.url[5] === "badges") || this.url[3] === "badges") {
-				this.onBadgesPage(this.url);
+				this.onBadgesPage();
 			}
 
 			if (this.url.length <= 4) {
@@ -106,6 +110,8 @@ abstract class Extension {
 					message: { kaid }
 				}, "*");
 			}
+
+			this.first = false;
 		}
 	}
 }

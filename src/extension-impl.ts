@@ -1,7 +1,7 @@
 import { Extension } from "./extension";
 import { Program, UsernameOrKaid } from "./types/data";
 import { switchToTipsAndThanks, commentsButtonEventListener, updateComments } from "./discussion";
-import { addUserInfo, addProjectsLink, addBadgeInfo, updateBackground } from "./profile";
+import { addUserInfo, addProjectsLink, addBadgeInfo } from "./profile";
 import { addProgramInfo, keyboardShortcuts, addEditorSettingsButton, checkHiddenOrDeleted } from "./project";
 import { loadButtonMods } from "./buttons";
 import { getKAID } from "./util/data-util";
@@ -9,23 +9,29 @@ import { Message, MessageTypes } from "./types/message-types";
 
 class ExtensionImpl extends Extension {
 	async onProgramPage (program: Program) {
-		keyboardShortcuts(program);
-		addEditorSettingsButton();
+		if (this.first) {
+			keyboardShortcuts(program);
+			addEditorSettingsButton();
+		}
 	}
 	async onProgramAboutPage (program: Program) {
-		const kaid = getKAID();
-		loadButtonMods(program);
-		addProgramInfo(program, kaid);
+		if (this.first) {
+			const kaid = getKAID();
+			loadButtonMods(program);
+			addProgramInfo(program, kaid);
+		}
 	}
 	async onProfilePage (uok: UsernameOrKaid) {
-		addProjectsLink(uok);
+		if (this.first) {
+			addProjectsLink(uok);
+		}
 		addUserInfo(uok);
 	}
 	onHomePage (uok: UsernameOrKaid) {
 
 	}
-	async onBadgesPage (url: Array<string>) {
-		addBadgeInfo(url);
+	async onBadgesPage () {
+		addBadgeInfo(this.url);
 	}
 	onDiscussionPage () {
 		switchToTipsAndThanks();
@@ -44,11 +50,8 @@ class ExtensionImpl extends Extension {
 	}
 	handler (m: Message) {
 		if (m.type === MessageTypes.PAGE_UPDATE) {
-			this.fakeRefresh();
+			this.init();
 		}
-	}
-	fakeRefresh () {
-		updateBackground();
 	}
 }
 

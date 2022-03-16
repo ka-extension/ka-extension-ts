@@ -2,48 +2,23 @@ import { UsernameOrKaid, Scratchpads, OldScratchpad, UserProfileData } from "./t
 import { querySelectorPromise, querySelectorAllPromise } from "./util/promise-util";
 import { getJSON, getUserData } from "./util/api-util";
 import { formatDate } from "./util/text-util";
-import { DEVELOPERS } from "./types/names";
+import { DEVELOPERS, EXTENSION_ITEM_CLASSNAME } from "./types/names";
 
-let User: UserProfileData;
-let backgroundUrl: string;
-
-function setBg (bg: Element) {
-	const name = document.querySelector(".user-deets > div > div"),
-		bio = document.querySelector(".user-deets > div > span");
-	if (User && backgroundUrl && name && bio) {
-
-		const style =
-				`background-image: url("${backgroundUrl}");` +
-				"background-position: center;" +
-				"background-size: cover;",
-			textStyle = "color: #FFFFFF;";
-
-		if (backgroundUrl && name && bio) {
-			bg.setAttribute("style", style);
-			name.setAttribute("style", textStyle);
-			bio.setAttribute("style", textStyle);
-		}
-	}
-}
-
-function updateBackground () {
-	querySelectorPromise(
-		".user-info.clearfix",
-		10, 500
-	).then(setBg).catch(console.error);
-}
+let cachedUser: UserProfileData | null = null;
 
 async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 	const userEndpoint = `${window.location.origin}/api/internal/user`;
 
-	User = await getUserData(uok);
+	const User = cachedUser || await getUserData(uok);
+	cachedUser = User;
+
 	const Scratchpads = await getJSON(`${userEndpoint}/scratchpads?kaid=${User.kaid}&limit=1000`, {
 		scratchpads: [{
 			url: 1,
 			sumVotesIncremented: 1,
 			spinoffCount: 1
 		}]
-	}) as Scratchpads;
+	}, true) as Scratchpads;
 
 	const first = Scratchpads.scratchpads[0];
 	if (first) {
@@ -60,18 +35,37 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 				creatorProfile: {
 					backgroundSrc: 1
 				}
-			})
+			}, true)
 		]).then(res => {
 			const [bg, req] = res;
 
-			backgroundUrl = (req as OldScratchpad).creatorProfile.backgroundSrc;
+			const backgroundUrl = (req as OldScratchpad).creatorProfile.backgroundSrc;
 
-			setBg(bg);
+			const name = document.querySelector(".user-deets > div > div"),
+				bio = document.querySelector(".user-deets > div > span");
+
+			if (backgroundUrl && name && bio) {
+				const style =
+						`background-image: url("${backgroundUrl}");` +
+						"background-position: center;" +
+						"background-size: cover;",
+					textStyle = "color: #FFFFFF;";
+
+				if (backgroundUrl && name && bio) {
+					bg.setAttribute("style", style);
+					name.setAttribute("style", textStyle);
+					bio.setAttribute("style", textStyle);
+				}
+			}
 		}).catch(console.error);
 	}
 
 	//TODO: Never fires and we don't get info if the user has thier statistics hidden
 	const table = await querySelectorPromise(".user-statistics-table > tbody") as HTMLElement;
+
+	if (table.classList.contains(EXTENSION_ITEM_CLASSNAME)) {
+		return;
+	}
 
 	const totals = Scratchpads.scratchpads.reduce((current, scratch) => {
 		current.votes += scratch.sumVotesIncremented - 1;
@@ -107,6 +101,8 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 
 	const videoCountElement = cells[5];
 	videoCountElement!.innerText = (User.countVideosCompleted).toString();
+
+	table.classList.add(EXTENSION_ITEM_CLASSNAME);
 
 	querySelectorAllPromise(".badge-category-count", 10, 500)
 		.then(badges => {
@@ -159,10 +155,11 @@ function addProjectsLink (uok: UsernameOrKaid): void {
 }
 
 function addBadgeInfo (url: Array<string>): void {
+	const teslaQuery = "category-DIAMOND";
 	if (url[3] === "profile") {
 		querySelectorAllPromise(".inset-container").then(badgesContainer => {
 			// Set description for Tesla badge
-			const bHBadges = document.querySelector("#category-4");
+			const bHBadges = document.getElementById(teslaQuery);
 			bHBadges!.querySelectorAll(".achievement-desc")[2].textContent = "Earn 10,000,000 energy points";
 		}).catch(console.error);
 	} else if (url[3] === "badges") {
@@ -178,4 +175,4 @@ function addBadgeInfo (url: Array<string>): void {
 	}
 }
 
-export { addUserInfo, duplicateBadges, addProjectsLink, addBadgeInfo, updateBackground };
+export { addUserInfo, duplicateBadges, addProjectsLink, addBadgeInfo };
