@@ -1,13 +1,42 @@
-import { UsernameOrKaid, Scratchpads, OldScratchpad } from "./types/data";
+import { UsernameOrKaid, Scratchpads, OldScratchpad, UserProfileData } from "./types/data";
 import { querySelectorPromise, querySelectorAllPromise } from "./util/promise-util";
 import { getJSON, getUserData } from "./util/api-util";
 import { formatDate } from "./util/text-util";
 import { DEVELOPERS } from "./types/names";
 
+let User: UserProfileData;
+let backgroundUrl: string;
+
+function setBg (bg: Element) {
+	const name = document.querySelector(".user-deets > div > div"),
+		bio = document.querySelector(".user-deets > div > span");
+	if (User && backgroundUrl && name && bio) {
+
+		const style =
+				`background-image: url("${backgroundUrl}");` +
+				"background-position: center;" +
+				"background-size: cover;",
+			textStyle = "color: #FFFFFF;";
+
+		if (backgroundUrl && name && bio) {
+			bg.setAttribute("style", style);
+			name.setAttribute("style", textStyle);
+			bio.setAttribute("style", textStyle);
+		}
+	}
+}
+
+function updateBackground () {
+	querySelectorPromise(
+		".user-info.clearfix",
+		10, 500
+	).then(setBg).catch(console.error);
+}
+
 async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 	const userEndpoint = `${window.location.origin}/api/internal/user`;
 
-	const User = await getUserData(uok);
+	User = await getUserData(uok);
 	const Scratchpads = await getJSON(`${userEndpoint}/scratchpads?kaid=${User.kaid}&limit=1000`, {
 		scratchpads: [{
 			url: 1,
@@ -35,21 +64,9 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 		]).then(res => {
 			const [bg, req] = res;
 
-			const name = document.querySelector(".user-deets > div > div"),
-				bio = document.querySelector(".user-deets > div > span");
+			backgroundUrl = (req as OldScratchpad).creatorProfile.backgroundSrc;
 
-			const src = (req as OldScratchpad).creatorProfile.backgroundSrc,
-				style =
-					`background-image: url("${src}");` +
-					"background-position: center;" +
-					"background-size: cover;",
-				textStyle = "color: #FFFFFF;";
-
-			if (src && name && bio) {
-				bg.setAttribute("style", style);
-				name.setAttribute("style", textStyle);
-				bio.setAttribute("style", textStyle);
-			}
+			setBg(bg);
 		}).catch(console.error);
 	}
 
@@ -117,8 +134,10 @@ function duplicateBadges (): void {
 //e.g: Opening khanacademy.com or clicking "Learner Home" to go to your own profile when on someone else's profile
 function addProjectsLink (uok: UsernameOrKaid): void {
 	querySelectorPromise("nav[data-test-id=\"side-nav\"] section:last-child ul").then(sidebarLinks => {
+		const check = document.getElementsByClassName("kae-projects-profile-link");
+
 		//If we're on the projects page already, don't worry about adding it
-		if (window.location.pathname.indexOf("projects") === -1) {
+		if (window.location.pathname.indexOf("projects") === -1 && check.length === 0) {
 			let profileLink = document.querySelector("nav[data-test-id=\"side-nav\"] a[data-test-id=\"side-nav-profile\"]") as HTMLElement;
 			console.log(profileLink.textContent);
 			if (!profileLink || !profileLink.parentElement) {
@@ -159,4 +178,4 @@ function addBadgeInfo (url: Array<string>): void {
 	}
 }
 
-export { addUserInfo, duplicateBadges, addProjectsLink, addBadgeInfo };
+export { addUserInfo, duplicateBadges, addProjectsLink, addBadgeInfo, updateBackground };

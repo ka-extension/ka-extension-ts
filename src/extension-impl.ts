@@ -1,7 +1,7 @@
 import { Extension } from "./extension";
 import { Program, UsernameOrKaid } from "./types/data";
 import { switchToTipsAndThanks, commentsButtonEventListener, updateComments } from "./discussion";
-import { addUserInfo, addProjectsLink, addBadgeInfo } from "./profile";
+import { addUserInfo, addProjectsLink, addBadgeInfo, updateBackground } from "./profile";
 import { addProgramInfo, keyboardShortcuts, addEditorSettingsButton, checkHiddenOrDeleted } from "./project";
 import { loadButtonMods } from "./buttons";
 import { getKAID } from "./util/data-util";
@@ -44,8 +44,11 @@ class ExtensionImpl extends Extension {
 	}
 	handler (m: Message) {
 		if (m.type === MessageTypes.PAGE_UPDATE) {
-			this.init();
+			this.fakeRefresh();
 		}
+	}
+	fakeRefresh () {
+		updateBackground();
 	}
 }
 
