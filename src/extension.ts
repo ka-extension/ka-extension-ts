@@ -2,6 +2,7 @@ import { UsernameOrKaid, Program } from "./types/data";
 import { querySelectorPromise } from "./util/promise-util";
 import { ScratchpadUI } from "./types/data";
 import { getKAID } from "./util/data-util";
+import { Message } from "./types/message-types";
 
 const getScratchpadUI = (): Promise<ScratchpadUI> =>
 	new Promise((resolve, reject) => {
@@ -35,6 +36,15 @@ abstract class Extension {
 	abstract onPage (): void;
 	abstract onProgram404Page (): void;
 	abstract onDiscussionPage (): void;
+	abstract handler (m: Message): void;
+	register () {
+		window.addEventListener("message", e => {
+			const message: Message = e.data;
+			if (e.source === window) {
+				this.handler(message);
+			}
+		});
+	}
 	async init (): Promise<void> {
 		if (window.location.host.includes("khanacademy.org")) {
 			this.onPage();
@@ -45,7 +55,6 @@ abstract class Extension {
 			querySelectorPromise("[data-test-id=\"discussion-tab\"]", 100, 100).then (_ =>
 				this.onDiscussionPage()
 			).catch(console.warn);
-
 
 			getScratchpadUI().then(ScratchpadUI => {
 				const programData = ScratchpadUI.scratchpad.attributes;

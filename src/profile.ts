@@ -27,21 +27,16 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 				".user-info.clearfix",
 				10, 500
 			),
-			querySelectorPromise(
-				"._o77ufew",
-				10, 500
-			),
-			querySelectorPromise(
-				"._19lfck2n",
-				10, 500
-			),
 			getJSON(url, {
 				creatorProfile: {
 					backgroundSrc: 1
 				}
 			})
 		]).then(res => {
-			const [bg, name, bio, req] = res;
+			const [bg, req] = res;
+
+			const name = document.querySelector(".user-deets > div > div"),
+				bio = document.querySelector(".user-deets > div > span");
 
 			const src = (req as OldScratchpad).creatorProfile.backgroundSrc,
 				style =
@@ -50,7 +45,7 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 					"background-size: cover;",
 				textStyle = "color: #FFFFFF;";
 
-			if (src) {
+			if (src && name && bio) {
 				bg.setAttribute("style", style);
 				name.setAttribute("style", textStyle);
 				bio.setAttribute("style", textStyle);

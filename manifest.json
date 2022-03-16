@@ -29,6 +29,7 @@
 	}],
 	"permissions": [
 		"cookies",
+		"webNavigation",
 		"*://*.khanacademy.org/*"
 	],
 	"web_accessible_resources": [

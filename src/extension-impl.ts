@@ -4,8 +4,8 @@ import { switchToTipsAndThanks, commentsButtonEventListener, updateComments } fr
 import { addUserInfo, addProjectsLink, addBadgeInfo } from "./profile";
 import { addProgramInfo, keyboardShortcuts, addEditorSettingsButton, checkHiddenOrDeleted } from "./project";
 import { loadButtonMods } from "./buttons";
-// import { deleteNotifButtons } from "./notif";
 import { getKAID } from "./util/data-util";
+import { Message, MessageTypes } from "./types/message-types";
 
 class ExtensionImpl extends Extension {
 	async onProgramPage (program: Program) {
@@ -41,6 +41,11 @@ class ExtensionImpl extends Extension {
 	}
 	onProgram404Page () {
 		checkHiddenOrDeleted();
+	}
+	handler (m: Message) {
+		if (m.type === MessageTypes.PAGE_UPDATE) {
+			this.init();
+		}
 	}
 }
 

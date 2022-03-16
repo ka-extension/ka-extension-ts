@@ -6,6 +6,7 @@ interface Message {
 const enum MessageTypes {
 	COLOUR_ICON = "colour_icon",
 	GREY_ICON = "grey_icon",
+	PAGE_UPDATE = "page_update",
 }
 
 interface KAID_MESSAGE {
