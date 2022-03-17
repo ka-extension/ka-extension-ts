@@ -22,9 +22,7 @@ class ExtensionImpl extends Extension {
 		}
 	}
 	async onProfilePage (uok: UsernameOrKaid) {
-		if (this.first) {
-			addProjectsLink(uok);
-		}
+		addProjectsLink(uok);
 		addUserInfo(uok);
 	}
 	onHomePage (uok: UsernameOrKaid) {
