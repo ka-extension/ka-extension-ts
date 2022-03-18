@@ -67,7 +67,7 @@ function updateComments (): void {
 
 				//Init syntax highlighting
 				const blocks = document.querySelectorAll<HTMLElement>("pre code.discussion-code-block");
-				for (let el of Array.from(blocks)) {
+				for (const el of Array.from(blocks)) {
 					el.innerHTML = el.innerHTML.replace(/\<br\>/g, "\n");
 					hljs.highlightElement(el);
 				}
