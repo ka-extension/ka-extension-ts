@@ -31,6 +31,10 @@ function addProgramInfo (program: Program, uok: string): void {
 		.then(wrapDiv => wrapDiv.parentNode)
 		.then(wrapDiv => wrapDiv as HTMLDivElement)
 		.then(wrapDiv => {
+			if (document.getElementsByClassName("kae-table").length > 0) {
+				return;
+			}
+
 			const table = document.createElement("table");
 			table.className = "kae-table";
 

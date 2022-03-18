@@ -15,11 +15,9 @@ class ExtensionImpl extends Extension {
 		}
 	}
 	async onProgramAboutPage (program: Program) {
-		if (this.first) {
-			const kaid = getKAID();
-			loadButtonMods(program);
-			addProgramInfo(program, kaid);
-		}
+		const kaid = getKAID();
+		addProgramInfo(program, kaid);
+		loadButtonMods(program);
 	}
 	async onProfilePage (uok: UsernameOrKaid) {
 		addProjectsLink(uok);
