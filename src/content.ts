@@ -1,4 +1,4 @@
-import { MessageTypes, KAID_MESSAGE } from "./types/message-types";
+import { MessageTypes, KAID_MESSAGE, Message } from "./types/message-types";
 
 (() => {
 	console.log("content.js fired");
@@ -25,5 +25,9 @@ import { MessageTypes, KAID_MESSAGE } from "./types/message-types";
 		chrome.runtime.sendMessage({
 			type: MessageTypes.GREY_ICON,
 		});
+	});
+
+	chrome.runtime.onMessage.addListener((arg: Message) => {
+		window.postMessage(arg);
 	});
 })();

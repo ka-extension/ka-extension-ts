@@ -2,6 +2,7 @@ import { UsernameOrKaid, Program } from "./types/data";
 import { querySelectorPromise } from "./util/promise-util";
 import { ScratchpadUI } from "./types/data";
 import { getKAID } from "./util/data-util";
+import { Message } from "./types/message-types";
 
 const getScratchpadUI = (): Promise<ScratchpadUI> =>
 	new Promise((resolve, reject) => {
@@ -22,21 +23,34 @@ const getScratchpadUI = (): Promise<ScratchpadUI> =>
 	});
 
 abstract class Extension {
-	private readonly url: string[];
+	protected url: string[];
+	protected first: boolean;
 	constructor () {
 		this.url = window.location.href.split("/");
+		this.first = true;
 	}
 	abstract onProgramPage (program: Program): void | Promise<void>;
 	abstract onProgramAboutPage (program: Program): void | Promise<void>;
 	abstract onHotlistPage (): void;
 	abstract onProfilePage (uok: UsernameOrKaid): void;
 	abstract onHomePage (uok: UsernameOrKaid): void;
-	abstract onBadgesPage (url: Array<string>): void;
+	abstract onBadgesPage (): void;
 	abstract onPage (): void;
 	abstract onProgram404Page (): void;
 	abstract onDiscussionPage (): void;
+	abstract handler (m: Message): void;
+	register () {
+		window.addEventListener("message", e => {
+			const message: Message = e.data;
+			if (e.source === window) {
+				this.handler(message);
+			}
+		});
+	}
 	async init (): Promise<void> {
 		if (window.location.host.includes("khanacademy.org")) {
+			this.url = window.location.href.split("/");
+
 			this.onPage();
 
 			const kaid = getKAID();
@@ -45,7 +59,6 @@ abstract class Extension {
 			querySelectorPromise("[data-test-id=\"discussion-tab\"]", 100, 100).then (_ =>
 				this.onDiscussionPage()
 			).catch(console.warn);
-
 
 			getScratchpadUI().then(ScratchpadUI => {
 				const programData = ScratchpadUI.scratchpad.attributes;
@@ -83,7 +96,7 @@ abstract class Extension {
 			}
 
 			if ((this.url[3] === "profile" && this.url[5] === "badges") || this.url[3] === "badges") {
-				this.onBadgesPage(this.url);
+				this.onBadgesPage();
 			}
 
 			if (this.url.length <= 4) {
@@ -97,6 +110,8 @@ abstract class Extension {
 					message: { kaid }
 				}, "*");
 			}
+
+			this.first = false;
 		}
 	}
 }

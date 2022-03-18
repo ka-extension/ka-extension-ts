@@ -114,6 +114,14 @@ body .kae-hidden-editor-wrap {
     box-shadow: 0 0 0 1px #ffffff, 0 0 0 3px #1865f2;
 }
 
+.user-card-edit-menu > button:not(:hover) {
+    background: rgba(255, 255, 255, 0.75) !important;
+}
+
+.profile-badge-count-container {
+    background: rgba(255, 255, 255, 0.5);
+}
+
 /** Center program titles **/
 .scratchpad-page h1 {
     width: 100%;

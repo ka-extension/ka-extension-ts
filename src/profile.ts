@@ -1,22 +1,71 @@
-import { UsernameOrKaid, Scratchpads } from "./types/data";
+import { UsernameOrKaid, Scratchpads, OldScratchpad, UserProfileData } from "./types/data";
 import { querySelectorPromise, querySelectorAllPromise } from "./util/promise-util";
 import { getJSON, getUserData } from "./util/api-util";
 import { formatDate } from "./util/text-util";
-import { DEVELOPERS } from "./types/names";
+import { DEVELOPERS, EXTENSION_ITEM_CLASSNAME } from "./types/names";
+
+let cachedUser: UserProfileData | null = null;
 
 async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 	const userEndpoint = `${window.location.origin}/api/internal/user`;
 
-	const User = await getUserData(uok);
+	const User = cachedUser || await getUserData(uok);
+	cachedUser = User;
+
 	const Scratchpads = await getJSON(`${userEndpoint}/scratchpads?kaid=${User.kaid}&limit=1000`, {
 		scratchpads: [{
+			url: 1,
 			sumVotesIncremented: 1,
 			spinoffCount: 1
 		}]
-	}) as Scratchpads;
+	}, true) as Scratchpads;
+
+	const first = Scratchpads.scratchpads[0];
+	if (first) {
+		const url = window.location.origin +
+			"/api/internal/show_scratchpad?scratchpad_id=" +
+			first.url.split("/")[5];
+
+		Promise.all([
+			querySelectorPromise(
+				".user-info.clearfix",
+				10, 500
+			),
+			getJSON(url, {
+				creatorProfile: {
+					backgroundSrc: 1
+				}
+			}, true)
+		]).then(res => {
+			const [bg, req] = res;
+
+			const backgroundUrl = (req as OldScratchpad).creatorProfile.backgroundSrc;
+
+			const name = document.querySelector(".user-deets > div > div"),
+				bio = document.querySelector(".user-deets > div > span");
+
+			if (backgroundUrl && name && bio) {
+				const style =
+						`background-image: url("${backgroundUrl}");` +
+						"background-position: center;" +
+						"background-size: cover;",
+					textStyle = "color: #FFFFFF;";
+
+				if (backgroundUrl && name && bio) {
+					bg.setAttribute("style", style);
+					name.setAttribute("style", textStyle);
+					bio.setAttribute("style", textStyle);
+				}
+			}
+		}).catch(console.error);
+	}
 
 	//TODO: Never fires and we don't get info if the user has thier statistics hidden
 	const table = await querySelectorPromise(".user-statistics-table > tbody") as HTMLElement;
+
+	if (table.classList.contains(EXTENSION_ITEM_CLASSNAME)) {
+		return;
+	}
 
 	const totals = Scratchpads.scratchpads.reduce((current, scratch) => {
 		current.votes += scratch.sumVotesIncremented - 1;
@@ -53,6 +102,8 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 	const videoCountElement = cells[5];
 	videoCountElement!.innerText = (User.countVideosCompleted).toString();
 
+	table.classList.add(EXTENSION_ITEM_CLASSNAME);
+
 	querySelectorAllPromise(".badge-category-count", 10, 500)
 		.then(badges => {
 			cells[17].innerText = (Array.from(badges).reduce((prev, badge): number => {
@@ -79,8 +130,10 @@ function duplicateBadges (): void {
 //e.g: Opening khanacademy.com or clicking "Learner Home" to go to your own profile when on someone else's profile
 function addProjectsLink (uok: UsernameOrKaid): void {
 	querySelectorPromise("nav[data-test-id=\"side-nav\"] section:last-child ul").then(sidebarLinks => {
+		const check = document.getElementsByClassName("kae-projects-profile-link");
+
 		//If we're on the projects page already, don't worry about adding it
-		if (window.location.pathname.indexOf("projects") === -1) {
+		if (window.location.pathname.indexOf("projects") === -1 && check.length === 0) {
 			let profileLink = document.querySelector("nav[data-test-id=\"side-nav\"] a[data-test-id=\"side-nav-profile\"]") as HTMLElement;
 			console.log(profileLink.textContent);
 			if (!profileLink || !profileLink.parentElement) {
@@ -102,10 +155,11 @@ function addProjectsLink (uok: UsernameOrKaid): void {
 }
 
 function addBadgeInfo (url: Array<string>): void {
+	const teslaQuery = "category-DIAMOND";
 	if (url[3] === "profile") {
 		querySelectorAllPromise(".inset-container").then(badgesContainer => {
 			// Set description for Tesla badge
-			const bHBadges = document.querySelector("#category-4");
+			const bHBadges = document.getElementById(teslaQuery);
 			bHBadges!.querySelectorAll(".achievement-desc")[2].textContent = "Earn 10,000,000 energy points";
 		}).catch(console.error);
 	} else if (url[3] === "badges") {

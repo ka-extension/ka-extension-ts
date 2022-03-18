@@ -1,43 +1,38 @@
 import { Extension } from "./extension";
 import { Program, UsernameOrKaid } from "./types/data";
-import { switchToTipsAndThanks, commentsButtonEventListener } from "./discussion";
+import { switchToTipsAndThanks, commentsButtonEventListener, updateComments } from "./discussion";
 import { addUserInfo, addProjectsLink, addBadgeInfo } from "./profile";
 import { addProgramInfo, keyboardShortcuts, addEditorSettingsButton, checkHiddenOrDeleted } from "./project";
 import { loadButtonMods } from "./buttons";
-// import { deleteNotifButtons } from "./notif";
 import { getKAID } from "./util/data-util";
+import { Message, MessageTypes } from "./types/message-types";
 
 class ExtensionImpl extends Extension {
 	async onProgramPage (program: Program) {
-		keyboardShortcuts(program);
-		addEditorSettingsButton();
+		if (this.first) {
+			keyboardShortcuts(program);
+			addEditorSettingsButton();
+		}
 	}
 	async onProgramAboutPage (program: Program) {
-		const kaid = getKAID();
-		loadButtonMods(program);
-		addProgramInfo(program, kaid);
+		if (this.first) {
+			const kaid = getKAID();
+			loadButtonMods(program);
+			addProgramInfo(program, kaid);
+		}
 	}
 	async onProfilePage (uok: UsernameOrKaid) {
-		//TODO: Duplicate badges is currently patched. Fix or report to KA
-		/*if ((uok.asUsername() && uok.asUsername() === window.KA._userProfileData!.username) || (uok.asKaid() && uok.asKaid() === kaid)) {
-			setInterval(duplicateBadges, 100);
-		}*/
-
 		addProjectsLink(uok);
 		addUserInfo(uok);
 	}
 	onHomePage (uok: UsernameOrKaid) {
 
 	}
-	async onBadgesPage (url: Array<string>) {
-		addBadgeInfo(url);
+	async onBadgesPage () {
+		addBadgeInfo(this.url);
 	}
 	onDiscussionPage () {
-		//TODO: fix report button for discussion
-		// setInterval(addReportButtonDiscussionPosts.bind(null, focusId, focusKind), 100);
-
 		switchToTipsAndThanks();
-
 		commentsButtonEventListener();
 		console.info("On discussion page");
 	}
@@ -45,10 +40,16 @@ class ExtensionImpl extends Extension {
 		console.info("On the hotlist");
 	}
 	onPage () {
+		updateComments();
 		// deleteNotifButtons();
 	}
 	onProgram404Page () {
 		checkHiddenOrDeleted();
+	}
+	handler (m: Message) {
+		if (m.type === MessageTypes.PAGE_UPDATE) {
+			this.init();
+		}
 	}
 }
 

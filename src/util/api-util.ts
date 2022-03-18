@@ -5,12 +5,25 @@ import { UsernameOrKaid, UserProfileData } from "../types/data";
 import { buildQuery } from "./text-util";
 import queries from "../graphqlQueries.json";
 
+const requestCache: { [name: string]: object } = {};
 
-async function getJSON (url: URL | string, projection?: object): Promise<object> {
-	url = new URL(url.toString());
+async function getJSON (urlVal: URL | string, projection?: object, cache: boolean = false): Promise<object> {
+	const url = new URL(urlVal.toString());
+
 	if (projection) {
 		url.searchParams.append("projection", JSON.stringify(projection));
 	}
+
+	// Storing requests is useful in the case of KA's SPA refreshes
+	// Yield stored value if it exists
+	if (cache) {
+		const str = url.toString();
+		const cachedValue = requestCache[str];
+		if (cachedValue) {
+			return Promise.resolve(cachedValue);
+		}
+	}
+
 	const response: Response | undefined = await fetch(url.toString(), {
 		method: "GET",
 		headers: {
@@ -26,7 +39,14 @@ async function getJSON (url: URL | string, projection?: object): Promise<object>
 		throw new Error(`Error fetching ${url}`);
 	}
 
-	const body: object | undefined = response.json().catch(e => void console.error(e));
+	const body: object | undefined = response.json()
+		.then(val => {
+			if (cache) {
+				requestCache[url.toString()] = val;
+			}
+			return val;
+		})
+		.catch(e => void console.error(e));
 	if (body === undefined) {
 		throw new Error(`Error parsing body for ${url}`);
 	}

@@ -54,3 +54,8 @@ setInterval((): void => {
 		});
 	}).catch(console.error);
 }, 750);
+
+chrome.webNavigation.onHistoryStateUpdated.addListener(e => {
+	console.log("URL CHANGE", e);
+	chrome.tabs.sendMessage(e.tabId, { type: MessageTypes.PAGE_UPDATE });
+});

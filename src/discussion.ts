@@ -10,14 +10,10 @@ import hljs from "highlight.js";
 function updateComments (): void {
 	//TODO: Add a listener to the post button so new comments are found
 	//TODO: Add a listener to the sort sector (voted or recent)
-
-	//TODO: Report button on comments and replies
-
 	//TODO: Flag information on replies (no good way to get the ID's, IIRC)
-
 	//TODO: Bug: Opening a direct link to comment causes the replies to be automatically unfolded, and they aren't found
 	//TODO: I've had this take up to 5-6 seconds. Won't fix until querySelectorAllPromise is refactored
-	querySelectorAllPromise(`div[data-test-id='discussion-post']:not(.${EXTENSION_COMMENT_CLASSNAME})`, 100 /*ms*/, 40 /*attempts*/)
+	querySelectorAllPromise(`div[data-test-id='discussion-post']:not(.${EXTENSION_COMMENT_CLASSNAME})`, 100, 40)
 		.then((unalteredComments: NodeList) => {
 			//Find the load more comments button, and attach an event listener to it.
 			const moreCommentsButton = Array.from((unalteredComments[0].parentNode!.parentNode!.parentNode!.parentNode as HTMLElement).children).slice(-1)[0];
@@ -41,7 +37,7 @@ function updateComments (): void {
 						if (flagButton && data && data.flags) {
 							const flagText = flagButton.querySelector("div");
 							//TODO: Bug: when not logged in there is more to textContent
-							flagText!.textContent += ` (${data.flags.length})`;
+							flagText!.textContent = `Flag (${data.flags.length})`;
 							flagButton.setAttribute("title", data.flags.join("\n"));
 						}
 					}).catch(console.error);
@@ -71,8 +67,12 @@ function updateComments (): void {
 
 				//Init syntax highlighting
 				const blocks = document.querySelectorAll<HTMLElement>("pre code.discussion-code-block");
-				Array.from(blocks).forEach(el => hljs.highlightBlock(el));
+				for (let el of Array.from(blocks)) {
+					el.innerHTML = el.innerHTML.replace(/\<br\>/g, "\n");
+					hljs.highlightElement(el);
+				}
 			}
+
 		}).catch(e => {
 			if (e.toString().indexOf("Error: Could not find") === 0) {
 				//There are known cases where updateComments is called at the possiblity of new comments
@@ -84,6 +84,12 @@ function updateComments (): void {
 }
 
 function commentsButtonEventListener (): void {
+	// updateComments doesn't work on qa expanded pages
+	if (qaExpanded()) {
+		setInterval(updateComments, 500);
+		return;
+	}
+
 	//Select tab buttons. The check for being on a discussion page saw that these were loaded
 	const discussionTabs = document.querySelectorAll("[data-test-id=\"discussion-tab\"]");
 
@@ -103,10 +109,14 @@ function commentsButtonEventListener (): void {
 	);
 }
 
+function qaExpanded () {
+	return parseQuery(window.location.search.substr(1)).hasOwnProperty("qa_expand_key");
+}
+
 function switchToTipsAndThanks () {
 	querySelectorPromise("#ka-uid-discussiontabbedpanel-0--tabbedpanel-tab-1").then(tabButton => tabButton as HTMLButtonElement).then(tabButton => {
 		//Don't switch to T&T if you have followed a direct link to question
-		if (parseQuery(window.location.search.substr(1)).hasOwnProperty("qa_expand_key")) {
+		if (qaExpanded()) {
 			return;
 		}
 
@@ -121,4 +131,4 @@ function switchToTipsAndThanks () {
 	}).catch(console.error);
 }
 
-export { commentsButtonEventListener, switchToTipsAndThanks };
+export { commentsButtonEventListener, switchToTipsAndThanks, updateComments };
