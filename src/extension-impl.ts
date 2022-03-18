@@ -9,17 +9,13 @@ import { Message, MessageTypes } from "./types/message-types";
 
 class ExtensionImpl extends Extension {
 	async onProgramPage (program: Program) {
-		if (this.first) {
-			keyboardShortcuts(program);
-			addEditorSettingsButton();
-		}
+		keyboardShortcuts(program);
+		addEditorSettingsButton();
 	}
 	async onProgramAboutPage (program: Program) {
-		if (this.first) {
-			const kaid = getKAID();
-			loadButtonMods(program);
-			addProgramInfo(program, kaid);
-		}
+		const kaid = getKAID();
+		addProgramInfo(program, kaid);
+		loadButtonMods(program);
 	}
 	async onProfilePage (uok: UsernameOrKaid) {
 		addProjectsLink(uok);

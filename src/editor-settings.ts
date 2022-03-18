@@ -167,6 +167,10 @@ function loadOptions (): EditorOptions {
 /* This whole function should probably be refactored at some point,
 	there are more than a few implicit `any`s */
 function addEditorSettings (toggleButton: HTMLElement, editor: HTMLElement) {
+	if (document.getElementById("kae-toggle-editor-settings")) {
+		return;
+	}
+
 	const editorSettingsId = editorSettingsCount++;
 
 	const aceEditor = window.ace.edit(editor);

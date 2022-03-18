@@ -7,7 +7,6 @@ import { getKAID } from "./util/data-util";
 function replaceVoteButton (buttons: HTMLDivElement, program: Program): void {
 	buttons.id = "buttons-wrap";
 	querySelectorPromise("#buttons-wrap .discussion-meta-controls > button:first-child").then(wrap => {
-
 		//TODO: Handle non-English
 		if (!(wrap instanceof HTMLElement) || !wrap.innerText.includes("Vote")) {
 			console.log("Voting failed to load.", buttons, wrap, wrap && wrap.firstChild);
@@ -66,6 +65,10 @@ function replaceVoteButton (buttons: HTMLDivElement, program: Program): void {
 
 //Add a "Copy Link" button
 function addLinkButton (buttons: HTMLDivElement, program: Program): void {
+	if (document.getElementById("kae-link-button")) {
+		return;
+	}
+
 	const copyLinkButton: HTMLButtonElement = document.createElement("button");
 	copyLinkButton.id = "kae-link-button";
 
