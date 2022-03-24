@@ -9,10 +9,8 @@ import { Message, MessageTypes } from "./types/message-types";
 
 class ExtensionImpl extends Extension {
 	async onProgramPage (program: Program) {
-		if (this.first) {
-			keyboardShortcuts(program);
-			addEditorSettingsButton();
-		}
+		keyboardShortcuts(program);
+		addEditorSettingsButton();
 	}
 	async onProgramAboutPage (program: Program) {
 		const kaid = getKAID();
