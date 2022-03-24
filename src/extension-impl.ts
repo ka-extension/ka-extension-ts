@@ -9,10 +9,8 @@ import { Message, MessageTypes } from "./types/message-types";
 
 class ExtensionImpl extends Extension {
 	async onProgramPage (program: Program) {
-		if (this.first) {
-			keyboardShortcuts(program);
-			addEditorSettingsButton();
-		}
+		this.callOnce(addEditorSettingsButton);
+		this.callOnce(keyboardShortcuts, program);
 	}
 	async onProgramAboutPage (program: Program) {
 		const kaid = getKAID();
@@ -23,9 +21,7 @@ class ExtensionImpl extends Extension {
 		addProjectsLink(uok);
 		addUserInfo(uok);
 	}
-	onHomePage (uok: UsernameOrKaid) {
-
-	}
+	onHomePage (uok: UsernameOrKaid) {}
 	async onBadgesPage () {
 		addBadgeInfo(this.url);
 	}
