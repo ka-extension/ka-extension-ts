@@ -2,6 +2,7 @@ import { Program } from "./types/data";
 import { formatDate } from "./util/text-util";
 import { querySelectorPromise } from "./util/promise-util";
 import { addEditorSettings } from "./editor-settings";
+import { EXTENSION_EDITOR_BUTTON } from "./types/names";
 
 function tableRow (key: string, val: string, title?: string): HTMLTableRowElement {
 	const tr = document.createElement("tr");
@@ -128,12 +129,12 @@ async function addEditorSettingsButton () {
 
 	if (!ace.require("ace/ext/language_tools")) {
 		throw new Error("KA removed ace language tools.");
-	}else {
+	} else {
 		window.ScratchpadAutosuggest.enableLiveCompletion = function () {};
 	}
 
 	const innerButtonLink: HTMLButtonElement = document.createElement("button");
-	innerButtonLink.id = "kae-toggle-editor-settings";
+	innerButtonLink.id = EXTENSION_EDITOR_BUTTON;
 	innerButtonLink.innerHTML = "Toggle Editor Settings";
 
 	const session = ace.edit(editor).getSession();

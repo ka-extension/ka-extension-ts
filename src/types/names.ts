@@ -1,10 +1,11 @@
 const CSRF_NAME: string = "fkey";
 const CSRF_HEADER: string = `X-KA-${CSRF_NAME}`;
 const COOKIE: string = "cookie";
-const EXTENSION_COMMENT_CLASSNAME: string = "ka-extension-modified-comment";
-const EXTENSION_ITEM_CLASSNAME: string = "ka-extension-modified-item";
-const EXTENSION_MODIFIED_NOTIF: string = "ka-extension-notif-delete";
 const PREFIX: string = "ka-extension-";
+const EXTENSION_COMMENT_CLASSNAME: string = PREFIX + "modified-comment";
+const EXTENSION_ITEM_CLASSNAME: string = PREFIX + "modified-item";
+const EXTENSION_MODIFIED_NOTIF: string = PREFIX + "-notif-delete";
+const EXTENSION_EDITOR_BUTTON: string = "kae-toggle-editor-settings";
 const SVG_NAMESPACE: string = "http://www.w3.org/2000/svg";
 const DELETE_BUTTON: string = "kae-notif-delete";
 const API_ORIGIN: string = "https://www.khanacademy.org/api/internal";
@@ -33,5 +34,5 @@ export {
 	EXTENSION_COMMENT_CLASSNAME,
 	PREFIX, EXTENSION_ITEM_CLASSNAME, EXTENSION_MODIFIED_NOTIF,
 	SVG_NAMESPACE, DELETE_BUTTON, API_ORIGIN, DEVELOPERS,
-	DATE_FORMATTER, TIME_PERIODS
+	DATE_FORMATTER, TIME_PERIODS, EXTENSION_EDITOR_BUTTON
 };

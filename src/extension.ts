@@ -22,12 +22,19 @@ const getScratchpadUI = (): Promise<ScratchpadUI> =>
 		check();
 	});
 
+// tslint:disable-next-line
+type anyFunc = (...args: any[]) => any; 
+
 abstract class Extension {
 	protected url: string[];
-	protected first: boolean;
+	private runCount: number = 0;
+	private readonly functionCalls: Set<anyFunc>;
 	constructor () {
-		this.url = window.location.href.split("/");
-		this.first = true;
+		this.url = [];
+		this.functionCalls = new Set();
+	}
+	protected get first (): boolean {
+		return this.runCount === 1;
 	}
 	abstract onProgramPage (program: Program): void | Promise<void>;
 	abstract onProgramAboutPage (program: Program): void | Promise<void>;
@@ -47,9 +54,18 @@ abstract class Extension {
 			}
 		});
 	}
+	// this.first is true when init has been called only once
+	// this method ensures the extension only calls a function once
+	callOnce (fnc: anyFunc, ...args: object[]) {
+		if (!this.functionCalls.has(fnc)) {
+			this.functionCalls.add(fnc);
+			fnc(...args);
+		}
+	}
 	async init (): Promise<void> {
 		if (window.location.host.includes("khanacademy.org")) {
 			this.url = window.location.href.split("/");
+			this.runCount++;
 
 			this.onPage();
 
@@ -110,8 +126,6 @@ abstract class Extension {
 					message: { kaid }
 				}, "*");
 			}
-
-			this.first = false;
 		}
 	}
 }
