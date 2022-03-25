@@ -1,5 +1,14 @@
 [
 	{
+		"version": "4.7.10",
+		"new": [
+			"None"
+		],
+		"fixes": [
+			"Fix a bug introduced in 4.7.9 that broke Editor Settings."
+		]
+	},
+	{
 		"version": "4.7.9",
 		"new": [
 			"Reinstate user profile backgrounds"
