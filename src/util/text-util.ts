@@ -85,61 +85,7 @@ function escapeHTML (str: string): string {
 	return str.replace(/[&"'<>]/g, (char: string) => specialChars[char] || "");
 }
 
-function guessLanguage(code: string): string {
-    let language = "";
-
-    if (code.trim().charAt(0) === "<") {
-        language = "html";
-    } else {
-        // split code at open curly bracket
-        const braceSplit = code.split("{");
-        let isCSS: boolean;
-
-        // if there is an open curly bracket then continue
-        if (braceSplit.length > 1) {
-            // if the code before the open curly bracket has quotes
-            if (braceSplit[0].includes('"') || braceSplit[0].includes("'")) {
-                // then it's not CSS
-                isCSS = false;
-            }
-            // otherwise
-            else {
-                // split the code after open curly bracket at colon
-                const colonSplit = braceSplit[1].split(":");
-                // if the code after the colon exists then continue
-                if (colonSplit.length > 1) {
-                    // get the code between the colon and the semicolon
-                    const afterColon = colonSplit[1].split(";")[0];
-                    // if the number of quatation marks in the slice of code is even
-                    if (afterColon.split('"').length - 1 % 2 === 0 && afterColon.split("'").length - 1 % 2 === 0) {
-                        // then it is CSS
-                        isCSS = true;
-                    } else {
-                        // otherwise it's not CSS
-                        isCSS = false;
-                    }
-                }
-                // otherwise it's not CSS
-                else {
-                    isCSS = false;
-                }
-            }
-        }
-        // otherwise it's not CSS
-        else {
-            isCSS = false;
-        }
-
-        if (isCSS) {
-            language = "css";
-        } else {
-            language = "javascript";
-        }
-    }
-    return language;
-}
-
 export {
 	HTMLtoKAMarkdown, KAMarkdowntoHTML, buildQuery, parseQuery,
-	formatDate, relativeDate, escapeHTML, urlUnencode, guessLanguage
+	formatDate, relativeDate, escapeHTML, urlUnencode
 };
