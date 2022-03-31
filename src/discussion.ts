@@ -8,7 +8,7 @@ import {
 import hljs from "highlight.js";
 
 hljs.configure({
-	languages: ["html", "javascript", "css"]
+	languages: ["html", "javascript", "css", "sql"]
 });
 
 function updateComments (): void {
