@@ -29,7 +29,7 @@
 		"typescript": "^4.5.5"
 	},
 	"dependencies": {
-		"highlight.js": "^11.5.0",
+		"prismjs": "^1.27.0",
 		"whatwg-fetch": "^3.6.2"
 	}
 }

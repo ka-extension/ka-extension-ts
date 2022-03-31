@@ -1,11 +1,11 @@
 import { querySelectorPromise, querySelectorAllPromise } from "./util/promise-util";
 import { getComment } from "./util/api-util";
-import { parseQuery } from "./util/text-util";
+import { parseQuery, guessLanguage } from "./util/text-util";
 import {
 	EXTENSION_COMMENT_CLASSNAME,
 } from "./types/names";
 
-import hljs from "highlight.js";
+import prismjs from "prismjs";
 
 function updateComments (): void {
 	//TODO: Add a listener to the post button so new comments are found
@@ -68,8 +68,10 @@ function updateComments (): void {
 				//Init syntax highlighting
 				const blocks = document.querySelectorAll<HTMLElement>("pre code.discussion-code-block");
 				for (const el of Array.from(blocks)) {
+
 					el.innerHTML = el.innerHTML.replace(/\<br\>/g, "\n");
-					hljs.highlightElement(el);
+					el.classList.add(`lang-${guessLanguage(el.textContent)}`);
+					prismjs.highlightElement(el);
 				}
 			}
 
