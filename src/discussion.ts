@@ -7,6 +7,10 @@ import {
 
 import hljs from "highlight.js";
 
+hljs.configure({
+	languages: ["html", "javascript", "css"]
+});
+
 function updateComments (): void {
 	//TODO: Add a listener to the post button so new comments are found
 	//TODO: Add a listener to the sort sector (voted or recent)
