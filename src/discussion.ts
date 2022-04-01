@@ -1,8 +1,9 @@
 import { querySelectorPromise, querySelectorAllPromise } from "./util/promise-util";
 import { getComment } from "./util/api-util";
 import { parseQuery } from "./util/text-util";
+import { checkSettingsDark } from "./editor-settings";
 import {
-	EXTENSION_COMMENT_CLASSNAME,
+	EXTENSION_COMMENT_CLASSNAME, EXTENSION_COMMENT_DARK
 } from "./types/names";
 
 import hljs from "highlight.js";
@@ -73,6 +74,9 @@ function updateComments (): void {
 				const blocks = document.querySelectorAll<HTMLElement>("pre code.discussion-code-block");
 				for (const el of Array.from(blocks)) {
 					el.innerHTML = el.innerHTML.replace(/\<br\>/g, "\n");
+					if (checkSettingsDark()) {
+						el.classList.add(EXTENSION_COMMENT_DARK);
+					}
 					hljs.highlightElement(el);
 				}
 			}
