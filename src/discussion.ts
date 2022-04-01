@@ -9,7 +9,7 @@ import {
 import hljs from "highlight.js";
 
 hljs.configure({
-	languages: ["html", "javascript", "css", "sql"]
+	languages: ["html", "javascript", "css", "sql"],
 });
 
 function updateComments (): void {
@@ -53,7 +53,7 @@ function updateComments (): void {
 						//{ once: true } so that the listener is automatically removed after firing once
 						//Replies, once loaded once, are kept in the DOM tree, just hidden
 						showCommentsButton.addEventListener("click", updateComments, { once: true });
-					}else {
+					} else {
 						console.error("Replies button expected under top-level comment.");
 					}
 
@@ -63,7 +63,7 @@ function updateComments (): void {
 						const answersWrap = answerForm.parentNode!;
 						const showMoreAnswersButton = Array.from((answersWrap as HTMLDivElement).children).slice(-1);
 						showMoreAnswersButton[0].addEventListener("click", updateComments);
-					}else {
+					} else {
 						//Not a question; not an issue
 					}
 				}
@@ -71,12 +71,19 @@ function updateComments (): void {
 				comment.classList.add(EXTENSION_COMMENT_CLASSNAME);
 
 				//Init syntax highlighting
-				const blocks = document.querySelectorAll<HTMLElement>("pre code.discussion-code-block");
+				const blocks = comment.querySelectorAll<HTMLElement>("pre code.discussion-code-block");
 				for (const el of Array.from(blocks)) {
-					el.innerHTML = el.innerHTML.replace(/\<br\>/g, "\n");
+					el.innerHTML = el.innerHTML
+						.replace(/\<br\>/g, "\n")
+						// Sometimes ka's bolding causes unescaped
+						// html warnings because they are rendered
+						// as raw <strong> tags
+						.replace(/<\/?strong>/g, "*");
+
 					if (checkSettingsDark()) {
 						el.classList.add(EXTENSION_COMMENT_DARK);
 					}
+
 					hljs.highlightElement(el);
 				}
 			}
