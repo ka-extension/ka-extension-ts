@@ -47,6 +47,18 @@ function updateComments (): void {
 						}
 					}).catch(console.error);
 
+					// Update comments after a new comment is made on this thread/post
+					const area = comment.querySelector(
+						"[id^=\"uid-discussion-input-\"]" +
+						"[id$=\"-content-input\"]");
+					if (area) {
+						area?.addEventListener("focus", () => {
+							const commentButton = comment.querySelector("[aria-label=\"Comment\"]");
+							if (!commentButton) { return; }
+							commentButton.addEventListener("click", updateComments);
+						});
+					}
+
 					//Look for replies button and add an event listener to it
 					const showCommentsButton = comment.querySelector("[aria-controls*=-replies-container]");
 					if (showCommentsButton) {
@@ -124,7 +136,7 @@ function commentsButtonEventListener (): void {
 		})
 	);
 
-	// Highlight new comments after they are made
+	// Highlight new posts after they are made
 	querySelectorPromise("#uid-discussion-input-1-content-input").then(userTextarea => {
 		userTextarea.addEventListener("focus", () => {
 			for (const label of commentButtonNames) {
