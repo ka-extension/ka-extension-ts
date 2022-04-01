@@ -98,6 +98,7 @@ function updateComments (): void {
 		});
 }
 
+const commentButtonNames = ["Post tip or thanks", "Ask question", "Request help"];
 function commentsButtonEventListener (): void {
 	// updateComments doesn't work on qa expanded pages
 	if (qaExpanded()) {
@@ -122,6 +123,17 @@ function commentsButtonEventListener (): void {
 			}
 		})
 	);
+
+	// Highlight new comments after they are made
+	querySelectorPromise("#uid-discussion-input-1-content-input").then(userTextarea => {
+		userTextarea.addEventListener("focus", () => {
+			for (const label of commentButtonNames) {
+				const button = document.querySelector(`[aria-label="${label}"]`);
+				if (!button) { continue; }
+				button.addEventListener("click", updateComments);
+			}
+		});
+	});
 }
 
 function qaExpanded () {
