@@ -53,7 +53,7 @@ setInterval((): void => {
 			text: count > 0 ? count.toString() : ""
 		});
 	}).catch(console.error);
-}, 750);
+}, 60*1000);
 
 chrome.webNavigation.onHistoryStateUpdated.addListener(e => {
 	console.log("URL CHANGE", e);
