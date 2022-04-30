@@ -1,5 +1,14 @@
 [
 	{
+		"version": "4.7.11",
+		"new": [
+			"Expirements with a new method for syntax highlighting comments."
+		],
+		"fixes": [
+			"Fixes a major bug causing KA to ratelimit extension users. (Which resulted in a popup showing \"Something went wrong.\")"
+		]
+	},
+	{
 		"version": "4.7.10",
 		"new": [
 			"None"
