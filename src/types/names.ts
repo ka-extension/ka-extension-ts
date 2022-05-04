@@ -6,6 +6,7 @@ const EXTENSION_COMMENT_CLASSNAME: string = PREFIX + "modified-comment";
 const EXTENSION_ITEM_CLASSNAME: string = PREFIX + "modified-item";
 const EXTENSION_MODIFIED_NOTIF: string = PREFIX + "-notif-delete";
 const EXTENSION_EDITOR_BUTTON: string = "kae-toggle-editor-settings";
+const EXTENSION_COMMENT_DARK = "kae-dark-theme";
 const SVG_NAMESPACE: string = "http://www.w3.org/2000/svg";
 const DELETE_BUTTON: string = "kae-notif-delete";
 const API_ORIGIN: string = "https://www.khanacademy.org/api/internal";
@@ -31,7 +32,7 @@ const TIME_PERIODS = {
 
 export {
 	CSRF_NAME, CSRF_HEADER, COOKIE,
-	EXTENSION_COMMENT_CLASSNAME,
+	EXTENSION_COMMENT_CLASSNAME, EXTENSION_COMMENT_DARK,
 	PREFIX, EXTENSION_ITEM_CLASSNAME, EXTENSION_MODIFIED_NOTIF,
 	SVG_NAMESPACE, DELETE_BUTTON, API_ORIGIN, DEVELOPERS,
 	DATE_FORMATTER, TIME_PERIODS, EXTENSION_EDITOR_BUTTON

@@ -1,11 +1,16 @@
 import { querySelectorPromise, querySelectorAllPromise } from "./util/promise-util";
 import { getComment } from "./util/api-util";
-import { parseQuery, guessLanguage } from "./util/text-util";
+import { parseQuery } from "./util/text-util";
+import { checkSettingsDark } from "./editor-settings";
 import {
-	EXTENSION_COMMENT_CLASSNAME,
+	EXTENSION_COMMENT_CLASSNAME, EXTENSION_COMMENT_DARK
 } from "./types/names";
 
-import prismjs from "prismjs";
+import hljs from "highlight.js";
+
+hljs.configure({
+	languages: ["html", "javascript", "css", "sql"],
+});
 
 function updateComments (): void {
 	//TODO: Add a listener to the post button so new comments are found
@@ -42,13 +47,25 @@ function updateComments (): void {
 						}
 					}).catch(console.error);
 
+					// Update comments after a new comment is made on this thread/post
+					const area = comment.querySelector(
+						"[id^=\"uid-discussion-input-\"]" +
+						"[id$=\"-content-input\"]");
+					if (area) {
+						area?.addEventListener("focus", () => {
+							const commentButton = comment.querySelector("[aria-label=\"Comment\"]");
+							if (!commentButton) { return; }
+							commentButton.addEventListener("click", updateComments);
+						});
+					}
+
 					//Look for replies button and add an event listener to it
 					const showCommentsButton = comment.querySelector("[aria-controls*=-replies-container]");
 					if (showCommentsButton) {
 						//{ once: true } so that the listener is automatically removed after firing once
 						//Replies, once loaded once, are kept in the DOM tree, just hidden
 						showCommentsButton.addEventListener("click", updateComments, { once: true });
-					}else {
+					} else {
 						console.error("Replies button expected under top-level comment.");
 					}
 
@@ -58,7 +75,7 @@ function updateComments (): void {
 						const answersWrap = answerForm.parentNode!;
 						const showMoreAnswersButton = Array.from((answersWrap as HTMLDivElement).children).slice(-1);
 						showMoreAnswersButton[0].addEventListener("click", updateComments);
-					}else {
+					} else {
 						//Not a question; not an issue
 					}
 				}
@@ -66,12 +83,20 @@ function updateComments (): void {
 				comment.classList.add(EXTENSION_COMMENT_CLASSNAME);
 
 				//Init syntax highlighting
-				const blocks = document.querySelectorAll<HTMLElement>("pre code.discussion-code-block");
+				const blocks = comment.querySelectorAll<HTMLElement>("pre code.discussion-code-block");
 				for (const el of Array.from(blocks)) {
+					el.innerHTML = el.innerHTML
+						.replace(/\<br\>/g, "\n")
+						// Sometimes ka's bolding causes unescaped
+						// html warnings because they are rendered
+						// as raw <strong> tags
+						.replace(/<\/?strong>/g, "*");
 
-					el.innerHTML = el.innerHTML.replace(/\<br\>/g, "\n");
-					el.classList.add(`lang-${guessLanguage(el.textContent)}`);
-					prismjs.highlightElement(el);
+					if (checkSettingsDark()) {
+						el.classList.add(EXTENSION_COMMENT_DARK);
+					}
+
+					hljs.highlightElement(el);
 				}
 			}
 
@@ -85,6 +110,7 @@ function updateComments (): void {
 		});
 }
 
+const commentButtonNames = ["Post tip or thanks", "Ask question", "Request help"];
 function commentsButtonEventListener (): void {
 	// updateComments doesn't work on qa expanded pages
 	if (qaExpanded()) {
@@ -109,6 +135,17 @@ function commentsButtonEventListener (): void {
 			}
 		})
 	);
+
+	// Highlight new posts after they are made
+	querySelectorPromise("#uid-discussion-input-1-content-input").then(userTextarea => {
+		userTextarea.addEventListener("focus", () => {
+			for (const label of commentButtonNames) {
+				const button = document.querySelector(`[aria-label="${label}"]`);
+				if (!button) { continue; }
+				button.addEventListener("click", updateComments);
+			}
+		});
+	});
 }
 
 function qaExpanded () {

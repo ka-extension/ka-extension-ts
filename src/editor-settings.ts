@@ -164,6 +164,12 @@ function loadOptions (): EditorOptions {
 	}
 }
 
+const darkThemes = ["tomorrow_night", "monokai", "ambiance", "pastel_on_dark", "idle_fingers"];
+function checkSettingsDark (): boolean {
+	const theme = loadOptions().theme.split("/").pop();
+	return theme !== undefined && darkThemes.includes(theme);
+}
+
 /* This whole function should probably be refactored at some point,
 	there are more than a few implicit `any`s */
 function addEditorSettings (toggleButton: HTMLElement, editor: HTMLElement) {
@@ -350,4 +356,4 @@ function addEditorSettings (toggleButton: HTMLElement, editor: HTMLElement) {
 	return container;
 }
 
-export { addEditorSettings };
+export { addEditorSettings, checkSettingsDark };
