@@ -2,6 +2,7 @@ import { Program } from "./types/data";
 import { querySelectorPromise } from "./util/promise-util";
 import { getCSRF } from "./util/cookie-util";
 import { getKAID } from "./util/data-util";
+import queries from "./graphqlQueries.json";
 
 //Replace KA's vote button with one that updates after you vote and allows undoing votes
 function replaceVoteButton (buttons: HTMLDivElement, program: Program): void {
@@ -13,7 +14,7 @@ function replaceVoteButton (buttons: HTMLDivElement, program: Program): void {
 			return;
 		}
 
-		const VOTE_URL = "/api/internal/discussions/voteentity";
+		const VOTE_URL = "/api/internal/graphql/VoteEntityMutation";
 
 		let voted = wrap.innerText.includes("Voted Up");
 
@@ -36,10 +37,18 @@ function replaceVoteButton (buttons: HTMLDivElement, program: Program): void {
 			voted = !voted;
 			updateVoteDisplay();
 
-			fetch(`${VOTE_URL}?entity_key=${program.key}&vote_type=${voted ? 1 : 0}`, {
+			fetch(VOTE_URL, {
 				method: "POST",
 				headers: { "X-KA-FKey": getCSRF() },
-				credentials: "same-origin"
+				credentials: "same-origin",
+				body: JSON.stringify({
+					operationName: "VoteEntityMutation",
+					variables: {
+						postKey: program.key,
+						voteType: voted ? 1 : 0
+					},
+					query: queries.vote
+				}),
 			}).then((response: Response): void => {
 				//If there's an error, undo the vote
 				if (response.status !== 200) {
