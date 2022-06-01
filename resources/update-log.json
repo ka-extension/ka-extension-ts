@@ -1,8 +1,17 @@
 [
 	{
+		"version": "4.7.12",
+		"new": [
+			"New method of syntax highlighting code in comments."
+		],
+		"fixes": [
+			"Fixes voting after KA updated the API."
+		]
+	},
+	{
 		"version": "4.7.11",
 		"new": [
-			"Expirements with a new method for syntax highlighting comments."
+			"Experiments with a new method for syntax highlighting comments."
 		],
 		"fixes": [
 			"Fixes a major bug causing KA to ratelimit extension users. (Which resulted in a popup showing \"Something went wrong.\")"
