@@ -160,19 +160,19 @@ const ARTEMIS_DESCRIPTION = `Achieve mastery in ${(7500).toLocaleString()} uniqu
 const TESLA_DESCRIPTION = `Earn ${(10_000_000).toLocaleString()} energy points`;
 
 function setBadgeDescription (badges: Element[], badge: string, description: string): void {
-	const badgeDescription = badges.find(element => element.children[0].textContent === badge)!.querySelector(".achievement-desc")!
+	const badgeDescription = badges.find(element => element.children[0].textContent === badge)!.querySelector(".achievement-desc")!;
 	badgeDescription.textContent = description;
 	badgeDescription.parentElement!.parentElement!.parentElement!.title = description;
 }
 function setBadgeDescriptions (): void {
-	const badges = Array.from(document.querySelectorAll('#category-DIAMOND>.user-owned-container>div>div>.badge-link>.achievement-badge>#outline-box>.achievement-text'))
+	const badges = Array.from(document.querySelectorAll("#category-DIAMOND>.user-owned-container>div>div>.badge-link>.achievement-badge>#outline-box>.achievement-text"));
 	setBadgeDescription(badges, "Atlas", ATLAS_DESCRIPTION);
 	setBadgeDescription(badges, "Artemis", ARTEMIS_DESCRIPTION);
 	setBadgeDescription(badges, "Tesla", TESLA_DESCRIPTION);
 }
 function setSpotlightBadgeDescription (description: string): void {
-	const element = document.querySelector("div[data-test-id=badge-spotlight]>div>div:nth-child(2)>span")
-	element!.textContent = description
+	const element = document.querySelector("div[data-test-id=badge-spotlight]>div>div:nth-child(2)>span");
+	element!.textContent = description;
 }
 function addBadgeInfo (url: Array<string>): void {
 	if (url[3] === "profile") {
