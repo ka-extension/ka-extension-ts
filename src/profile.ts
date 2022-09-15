@@ -154,22 +154,45 @@ function addProjectsLink (uok: UsernameOrKaid): void {
 	}).catch(console.error);
 }
 
+
+const ATLAS_DESCRIPTION = `Achieve mastery in ${(5000).toLocaleString()} unique skills`;
+const ARTEMIS_DESCRIPTION = `Achieve mastery in ${(7500).toLocaleString()} unique skills`;
+const TESLA_DESCRIPTION = `Earn ${(10_000_000).toLocaleString()} energy points`;
+
+function setBadgeDescription (badges: Element[], badge: string, description: string): void {
+	const badgeDescription = badges.find(element => element.children[0].textContent === badge)!.querySelector(".achievement-desc")!
+	badgeDescription.textContent = description;
+	badgeDescription.parentElement!.parentElement!.parentElement!.title = description;
+}
+function setBadgeDescriptions (): void {
+	const badges = Array.from(document.querySelectorAll('#category-DIAMOND>.user-owned-container>div>div>.badge-link>.achievement-badge>#outline-box>.achievement-text'))
+	setBadgeDescription(badges, "Atlas", ATLAS_DESCRIPTION);
+	setBadgeDescription(badges, "Artemis", ARTEMIS_DESCRIPTION);
+	setBadgeDescription(badges, "Tesla", TESLA_DESCRIPTION);
+}
+function setSpotlightBadgeDescription (description: string): void {
+	const element = document.querySelector("div[data-test-id=badge-spotlight]>div>div:nth-child(2)>span")
+	element!.textContent = description
+}
 function addBadgeInfo (url: Array<string>): void {
-	const teslaQuery = "category-DIAMOND";
 	if (url[3] === "profile") {
-		querySelectorAllPromise(".inset-container").then(badgesContainer => {
-			// Set description for Tesla badge
-			const bHBadges = document.getElementById(teslaQuery);
-			bHBadges!.querySelectorAll(".achievement-desc")[2].textContent = "Earn 10,000,000 energy points";
+		querySelectorAllPromise(".inset-container").then(_badgesContainer => {
+			setBadgeDescriptions();
 		}).catch(console.error);
 	} else if (url[3] === "badges") {
-		querySelectorAllPromise(".badge-spotlight").then(badgesContainer => {
-			// Set description for Tesla badge
-			if (url[4] === "tesla") {
-				const teslaDesc = document.querySelector(".badge-spotlight");
-				teslaDesc!.querySelectorAll(".description")[0].textContent = "Earn 10,000,000 energy points";
-				const bHBadges = document.querySelectorAll(".category-4")[2];
-				bHBadges!.querySelectorAll(".achievement-desc")[0].textContent = "Earn 10,000,000 energy points";
+		querySelectorAllPromise(".inset-container, div[data-test-id=badge-spotlight]").then(_badgesContainer => {
+			setBadgeDescriptions();
+
+			switch (url[4]) {
+				case "atlas":
+					setSpotlightBadgeDescription(ATLAS_DESCRIPTION);
+					break;
+				case "artemis":
+					setSpotlightBadgeDescription(ARTEMIS_DESCRIPTION);
+					break;
+				case "tesla":
+					setSpotlightBadgeDescription(TESLA_DESCRIPTION);
+					break;
 			}
 		}).catch(console.error);
 	}
