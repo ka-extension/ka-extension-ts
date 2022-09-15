@@ -1,5 +1,14 @@
 [
     {
+        "version": "4.7.14",
+        "new": [
+            "None"
+        ],
+        "fixes": [
+            "Fixes description of black-hole badges."
+        ]
+    },
+    {
         "version": "4.7.13",
         "new": [
             "None"
