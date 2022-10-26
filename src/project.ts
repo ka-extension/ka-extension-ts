@@ -181,7 +181,11 @@ function saveNewScratchpadToLocalStorage () {
 				}
 			}
 			
-			const programType = window.location.href.split("/")[5]; // get the type of the program either "pjs" or "webpage"
+			const programType = window.location.href.split("/")[5]; // get the type of the program
+			if (!["pjs", "webpage", "sql"].includes(programType)) {
+				clearInterval(checkIfEditorIsReadyInterval); // we can stop checking if the editor is ready
+				return;
+			}
 			const localStorageKey = "ka:4:cs-scratchpad-new" + userKaid + "-" + programType;
 			
 			let scratchpadObject;
