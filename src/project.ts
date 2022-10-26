@@ -167,4 +167,75 @@ async function addEditorSettingsButton () {
 	}
 }
 
-export { addProgramInfo, keyboardShortcuts, addEditorSettingsButton, checkHiddenOrDeleted };
+function saveNewScratchpadToLocalStorage () {
+	let aceEditor;
+
+	let checkIfEditorIsReadyInterval = setInterval(function () {
+		aceEditor = document.getElementsByClassName("scratchpad-ace-editor")[0]?.env?.editor;
+
+		if (aceEditor !== undefined) {
+			let userKaid;
+			for (const key in window.__APOLLO_CLIENT__.cache.data.data) {
+				if (key.startsWith("User:kaid_")) {
+					userKaid = key.slice("User:".length, key.indexOf("."));
+				}
+			}
+			
+			const programType = window.location.href.split("/")[5]; // get the type of the program either "pjs" or "webpage"
+			const localStorageKey = "ka:4:cs-scratchpad-new" + userKaid + "-" + programType;
+			
+			let scratchpadObject;
+
+			// get previous code and write it to the ace editor
+			scratchpadObject = localStorage.getItem(localStorageKey);
+			if (typeof scratchpadObject === "string" && scratchpadObject.length > 0) {
+				try {
+					aceEditor.setValue(JSON.parse(scratchpadObject).scratchpad.revision.code);
+				} catch (e) {
+					console.log("Failed to load scratchpad from local storage");
+				}
+			}
+			
+			// save user code to local storage
+			function saveEditorCode () {
+				scratchpadObject = {
+					"cursor": {
+						"row": 0,
+						"column": 0
+					},
+					"scratchpad": {
+						"title": "New " + (programType === "pjs" ? "program" : "webpage"),
+						"translatedTitle": "New " + (programType === "pjs" ? "program" : "webpage"),
+						"category": null,
+						"difficulty": null,
+						"userAuthoredContentType": programType,
+						"revision": {
+							"code": aceEditor.getValue(),
+							"created": new Date().toISOString()
+						},
+						"trustedRevision": {
+							"created": new Date().toISOString()
+						}
+					}
+				};
+				localStorage.setItem(localStorageKey, JSON.stringify(scratchpadObject));
+			}
+			window.addEventListener("beforeunload", saveEditorCode); // save code when the user exits the page
+			// save code every minute (in case the browser fails to save code when the page is unloaded, this will ensure that all is not lost)
+			setInterval(saveEditorCode, 1000 * 60);
+
+
+			// delete the saved code from localStorage when it gets saved to KA
+			document.body.addEventListener("mouseup", function (e) {
+				if (e.toElement.className === "_4w4gmuz") {
+					localStorage.removeItem(localStorageKey);
+				}
+			});
+
+
+			clearInterval(checkIfEditorIsReadyInterval); // we can stop checking if the editor is ready
+		}
+	}, 100);
+}
+
+export { addProgramInfo, keyboardShortcuts, addEditorSettingsButton, checkHiddenOrDeleted, saveNewScratchpadToLocalStorage };
