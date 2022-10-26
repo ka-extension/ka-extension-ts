@@ -168,12 +168,21 @@ async function addEditorSettingsButton () {
 }
 
 function saveNewScratchpadToLocalStorage () {
-	let aceEditor;
-
-	let checkIfEditorIsReadyInterval = setInterval(function () {
-		aceEditor = document.getElementsByClassName("scratchpad-ace-editor")[0]?.env?.editor;
-
-		if (aceEditor !== undefined) {
+	querySelectorPromise(".scratchpad-ace-editor")
+		.then(elements => elements[0]?.env?.editor)
+		.then(aceEditor => {
+			if (!aceEditor) {
+				console.log("Failed to access Ace editor");
+				return;
+			}
+		
+			// get the program type
+			const programType = window.location.href.split("/")[5];
+			if (!["pjs", "webpage", "sql"].includes(programType)) {
+				return; // exit function if this isn't a new scratchpad
+			}
+		
+			// get user kaid
 			let userKaid;
 			for (const key in window.__APOLLO_CLIENT__.cache.data.data) {
 				if (key.startsWith("User:kaid_")) {
@@ -181,11 +190,6 @@ function saveNewScratchpadToLocalStorage () {
 				}
 			}
 			
-			const programType = window.location.href.split("/")[5]; // get the type of the program
-			if (!["pjs", "webpage", "sql"].includes(programType)) {
-				clearInterval(checkIfEditorIsReadyInterval); // we can stop checking if the editor is ready
-				return;
-			}
 			const localStorageKey = "ka:4:cs-scratchpad-new" + userKaid + "-" + programType;
 			
 			let scratchpadObject;
@@ -224,10 +228,11 @@ function saveNewScratchpadToLocalStorage () {
 				};
 				localStorage.setItem(localStorageKey, JSON.stringify(scratchpadObject));
 			}
-			window.addEventListener("beforeunload", saveEditorCode); // save code when the user exits the page
+		
+			// save code when the user exits the page
+			window.addEventListener("beforeunload", saveEditorCode);
 			// save code every minute (in case the browser fails to save code when the page is unloaded, this will ensure that all is not lost)
 			setInterval(saveEditorCode, 1000 * 60);
-
 
 			// delete the saved code from localStorage when it gets saved to KA
 			document.body.addEventListener("mouseup", function (e) {
@@ -235,11 +240,7 @@ function saveNewScratchpadToLocalStorage () {
 					localStorage.removeItem(localStorageKey);
 				}
 			});
-
-
-			clearInterval(checkIfEditorIsReadyInterval); // we can stop checking if the editor is ready
-		}
-	}, 100);
+		})
 }
 
 export { addProgramInfo, keyboardShortcuts, addEditorSettingsButton, checkHiddenOrDeleted, saveNewScratchpadToLocalStorage };
