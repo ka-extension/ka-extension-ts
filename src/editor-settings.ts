@@ -174,10 +174,11 @@ function getParams(route: string):Params {
   const names = (route.match(/\/:\w+/ig) || []).map(n => n.slice(2))
   const urlRegex = route.replace(/:\w+/g, '([\\w\\-]+)')
   const regex = new RegExp(`^${urlRegex}$`)
-  if(!regex.test(pathname)) {
+  let values = pathname.match(regex)
+  if(!values) {
     return {}
   }
-  const values = pathname.match(regex).slice(1, names.length + 1)
+  values = values.slice(1, names.length + 1)
   let obj:Params = {}
   for(var i = 0; i < names.length; i++) {
     obj[names[i]] = values[i]
@@ -214,16 +215,11 @@ function addEditorSettings (toggleButton: HTMLElement, editor: HTMLElement) {
       indent_char: String.fromCharCode(9) // tab
     }
 
-    const html_settings = {
-      ...settings,
-      indent_scripts: 'keep'
-    }
-
     const updatedCode = (
       type === 'pjs' ?
       beautify.js(currentCode, settings) :
       type === 'webpage' ?
-      beautify.html(currentCode, html_settings) :
+      beautify.html(currentCode, settings) :
       currentCode
     )
 
@@ -379,7 +375,7 @@ function addEditorSettings (toggleButton: HTMLElement, editor: HTMLElement) {
 
 
     const SUPPORTED_TYPES = ['pjs','webpage']
-    let programType;
+    let programType:any;
     const formatCodeButton = document.createElement('button')
     formatCodeButton.textContent = "Format Code"
     formatCodeButton.addEventListener('click', () => {
