@@ -1,5 +1,5 @@
 import { ACE_OPTION, EditorOptions } from "./types/data";
-import beautify from 'js-beautify'
+import beautify from "js-beautify";
 
 const DEFAULT_SETTINGS = {
 	fontFamily: "'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace",
@@ -166,24 +166,24 @@ function loadOptions (): EditorOptions {
 }
 
 interface Params {
-  [type: string]: string
+	[type: string]: string;
 }
 
-function getParams(route: string):Params {
-  const { pathname } = window.location
-  const names = (route.match(/\/:\w+/ig) || []).map(n => n.slice(2))
-  const urlRegex = route.replace(/:\w+/g, '([\\w\\-]+)')
-  const regex = new RegExp(`^${urlRegex}$`)
-  let values = pathname.match(regex)
-  if(!values) {
-    return {}
-  }
-  values = values.slice(1, names.length + 1)
-  let obj:Params = {}
-  for(var i = 0; i < names.length; i++) {
-    obj[names[i]] = values[i]
-  }
-  return obj
+function getParams (route: string):Params {
+	const { pathname } = window.location;
+	const names = (route.match(/\/:\w+/ig) || []).map(n => n.slice(2));
+	const urlRegex = route.replace(/:\w+/g, "([\\w\\-]+)");
+	const regex = new RegExp(`^${urlRegex}$`);
+	let values = pathname.match(regex);
+	if(!values) {
+		return {};
+	}
+	values = values.slice(1, names.length + 1);
+	const obj:Params = {};
+	for(let i = 0; i < names.length; i++) {
+		obj[names[i]] = values[i];
+	}
+	return obj;
 }
 
 const darkThemes = ["tomorrow_night", "monokai", "ambiance", "pastel_on_dark", "idle_fingers"];
@@ -207,24 +207,24 @@ function addEditorSettings (toggleButton: HTMLElement, editor: HTMLElement) {
 	let toggledOn = false;
 	const container = createContainer();
 
-  function formatCode(type: 'pjs' | 'webpage'):void {
-    const currentCode = aceEditor.session.getValue()
+	function formatCode (type: "pjs" | "webpage"):void {
+		const currentCode = aceEditor.session.getValue();
 
-    const settings = {
-      indent_size: currentOptions.tabSize,
-      indent_char: String.fromCharCode(9) // tab
-    }
+		const settings = {
+			indent_size: currentOptions.tabSize,
+			indent_char: String.fromCharCode(9) // tab
+		};
 
-    const updatedCode = (
-      type === 'pjs' ?
-      beautify.js(currentCode, settings) :
-      type === 'webpage' ?
-      beautify.html(currentCode, settings) :
-      currentCode
-    )
+		const updatedCode = (
+			type === "pjs" ?
+			beautify.js(currentCode, settings) :
+			type === "webpage" ?
+			beautify.html(currentCode, settings) :
+			currentCode
+		);
 
-    aceEditor.session.setValue(updatedCode)
-  }
+		aceEditor.session.setValue(updatedCode);
+	}
 
 	function updateEditorSettings (this: HTMLInputElement) {
 		const row = this.parentNode!.parentNode as HTMLElement;
@@ -373,38 +373,39 @@ function addEditorSettings (toggleButton: HTMLElement, editor: HTMLElement) {
 		hideEditorWrap.appendChild(hideEditorToggle);
 		table.appendChild(hideEditorWrap);
 
+		const SUPPORTED_TYPES = ["pjs", "webpage"];
+		let programType:any; // tslint:disable-line
+		const formatCodeButton = document.createElement("button");
+		formatCodeButton.textContent = "Format Code";
+		formatCodeButton.addEventListener("click", () => {
+			if(SUPPORTED_TYPES.includes(programType)) {
+				formatCode(programType);
+			}
+		});
+		table.appendChild(formatCodeButton);
 
-    const SUPPORTED_TYPES = ['pjs','webpage']
-    let programType:any;
-    const formatCodeButton = document.createElement('button')
-    formatCodeButton.textContent = "Format Code"
-    formatCodeButton.addEventListener('click', () => {
-      if(SUPPORTED_TYPES.includes(programType)) {
-        formatCode(programType)
-      }
-    })
-    table.appendChild(formatCodeButton)
+		const { type } = getParams("/computer-programming/new/:type");
+		if(type && SUPPORTED_TYPES.includes(type)) {
+			programType = type;
+		}else {
+			const { programId } = getParams("/computer-programming/:name/:programId");
+			// hide button until program data is loaded
+			formatCodeButton.style.display = "none";
 
-    const { type } = getParams('/computer-programming/new/:type')
-    if(type && SUPPORTED_TYPES.includes(type)) {
-      programType = type
-    }else {
-      const { programId } = getParams('/computer-programming/:name/:programId')
-      // hide button until program data is loaded
-      formatCodeButton.style.display = 'none'
-
-      programId && fetch(`https://www.khanacademy.org/api/internal/scratchpads/${programId}`)
-        .then(res => {
-          return res.status === 200 ? res.json() : null
-        })
-        .then(program => {
-          if(!program) return
-          programType = program.userAuthoredContentType
-          if(SUPPORTED_TYPES.includes(programType)) {
-            formatCodeButton.style.display = 'block'
-          }
-        })
-    }
+			programId && fetch(`https://www.khanacademy.org/api/internal/scratchpads/${programId}`)
+				.then(res => {
+					return res.status === 200 ? res.json() : null;
+				})
+				.then(program => {
+					if(!program) {
+						return;
+					}
+					programType = program.userAuthoredContentType;
+					if(SUPPORTED_TYPES.includes(programType)) {
+						formatCodeButton.style.display = "block";
+					}
+				});
+		}
 
 
 		container.appendChild(table);
