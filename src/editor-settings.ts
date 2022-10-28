@@ -1,4 +1,5 @@
-import { ACE_OPTION, EditorOptions } from "./types/data";
+import { ACE_OPTION, EditorOptions, Program } from "./types/data";
+import beautify from "js-beautify";
 
 const DEFAULT_SETTINGS = {
 	fontFamily: "'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace",
@@ -9,7 +10,7 @@ const DEFAULT_SETTINGS = {
 	wrap: true,
 	useWorker: false,
 	behavioursEnabled: true,
-	wrapBehavioursEnabled: false,
+	wrapBehavioursEnabled: false
 } as EditorOptions;
 
 interface Option {
@@ -164,6 +165,7 @@ function loadOptions (): EditorOptions {
 	}
 }
 
+
 const darkThemes = ["tomorrow_night", "monokai", "ambiance", "pastel_on_dark", "idle_fingers"];
 function checkSettingsDark (): boolean {
 	const theme = loadOptions().theme.split("/").pop();
@@ -172,7 +174,7 @@ function checkSettingsDark (): boolean {
 
 /* This whole function should probably be refactored at some point,
 	there are more than a few implicit `any`s */
-function addEditorSettings (toggleButton: HTMLElement, editor: HTMLElement) {
+function addEditorSettings (toggleButton: HTMLElement, editor: HTMLElement, program: Program) {
 	if (document.getElementById("kae-toggle-editor-settings")) {
 		return;
 	}
@@ -184,6 +186,25 @@ function addEditorSettings (toggleButton: HTMLElement, editor: HTMLElement) {
 
 	let toggledOn = false;
 	const container = createContainer();
+
+	function formatCode (type: string):void {
+		const currentCode = aceEditor.session.getValue();
+
+		const settings = {
+			indent_size: currentOptions.tabSize,
+			indent_char: String.fromCharCode(9) // tab
+		};
+
+		const updatedCode = (
+			type === "pjs" ?
+			beautify.js(currentCode, settings) :
+			type === "webpage" ?
+			beautify.html(currentCode, settings) :
+			currentCode
+		);
+
+		aceEditor.session.setValue(updatedCode);
+	}
 
 	function updateEditorSettings (this: HTMLInputElement) {
 		const row = this.parentNode!.parentNode as HTMLElement;
@@ -331,6 +352,16 @@ function addEditorSettings (toggleButton: HTMLElement, editor: HTMLElement) {
 		hideEditorWrap.appendChild(hideEditorLabel);
 		hideEditorWrap.appendChild(hideEditorToggle);
 		table.appendChild(hideEditorWrap);
+
+		const SUPPORTED_TYPES = ["pjs", "webpage"];
+		if(SUPPORTED_TYPES.includes(program.userAuthoredContentType)) {
+			const formatCodeButton = document.createElement("button");
+			formatCodeButton.textContent = "Format Code";
+			formatCodeButton.addEventListener("click", () => {
+				formatCode(program.userAuthoredContentType);
+			});
+			table.appendChild(formatCodeButton);
+		}
 
 		container.appendChild(table);
 

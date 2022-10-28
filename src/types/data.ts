@@ -213,6 +213,10 @@ interface ACE {
 			};
 			setMode: (mode: any) => void; /* tslint:disable-line:no-any */
 		};
+		session: {
+			getValue: () => string;
+			setValue: (data: string) => void;
+		};
 	};
 	config: {
 		set: (o: string, val: string) => void;

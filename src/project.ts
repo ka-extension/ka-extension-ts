@@ -118,7 +118,7 @@ function checkHiddenOrDeleted () {
 }
 
 /*** Add a button to toggle the Editor Settings popup for programs ***/
-async function addEditorSettingsButton () {
+async function addEditorSettingsButton (program: Program) {
 	const editor = await querySelectorPromise(".scratchpad-ace-editor") as HTMLElement;
 
 	const ace = window.ace;
@@ -140,7 +140,7 @@ async function addEditorSettingsButton () {
 	const session = ace.edit(editor).getSession();
 	session.setMode(new (ace.require(session.getMode().$id).Mode)());
 
-	const editorSettings = addEditorSettings(innerButtonLink, editor);
+	const editorSettings = addEditorSettings(innerButtonLink, editor, program);
 
 	function repos () {
 		const pos = innerButtonLink.getBoundingClientRect();

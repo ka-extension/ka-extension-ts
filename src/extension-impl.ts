@@ -9,7 +9,7 @@ import { Message, MessageTypes } from "./types/message-types";
 
 class ExtensionImpl extends Extension {
 	async onProgramPage (program: Program) {
-		this.callOnce(addEditorSettingsButton);
+		this.callOnce(addEditorSettingsButton, program);
 		this.callOnce(keyboardShortcuts, program);
 	}
 	async onProgramAboutPage (program: Program) {
