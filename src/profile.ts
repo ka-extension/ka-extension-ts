@@ -1,63 +1,34 @@
-import { UsernameOrKaid, Scratchpads, OldScratchpad, UserProfileData } from "./types/data";
+import { UsernameOrKaid, UserProfileData } from "./types/data";
 import { querySelectorPromise, querySelectorAllPromise } from "./util/promise-util";
-import { getJSON, getUserData } from "./util/api-util";
+import { getOldScratchpad } from "./util/api-util";
+import { getUserData, getUserScratchpads } from "./util/graphql-util";
 import { formatDate } from "./util/text-util";
 import { DEVELOPERS, EXTENSION_ITEM_CLASSNAME } from "./types/names";
 
 let cachedUser: UserProfileData | null = null;
 
 async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
-	const userEndpoint = `${window.location.origin}/api/internal/user`;
-
 	const User = cachedUser || await getUserData(uok);
 	cachedUser = User;
 
-	const Scratchpads = await getJSON(`${userEndpoint}/scratchpads?kaid=${User.kaid}&limit=1000`, {
-		scratchpads: [{
-			url: 1,
-			sumVotesIncremented: 1,
-			spinoffCount: 1
-		}]
-	}, true) as Scratchpads;
-
-	const first = Scratchpads.scratchpads[0];
-	if (first) {
-		const url = window.location.origin +
-			"/api/internal/show_scratchpad?scratchpad_id=" +
-			first.url.split("/")[5];
-
-		Promise.all([
-			querySelectorPromise(
-				".user-info.clearfix",
-				10, 500
-			),
-			getJSON(url, {
-				creatorProfile: {
-					backgroundSrc: 1
-				}
-			}, true)
-		]).then(res => {
-			const [bg, req] = res;
-
-			const backgroundUrl = (req as OldScratchpad).creatorProfile.backgroundSrc;
-
-			const name = document.querySelector(".user-deets > div > div"),
-				bio = document.querySelector(".user-deets > div > span");
-
-			if (backgroundUrl && name && bio) {
-				const style =
-						`background-image: url("${backgroundUrl}");` +
-						"background-position: center;" +
-						"background-size: cover;",
-					textStyle = "color: #FFFFFF;";
-
-				if (backgroundUrl && name && bio) {
-					bg.setAttribute("style", style);
-					name.setAttribute("style", textStyle);
-					bio.setAttribute("style", textStyle);
-				}
+	const scratchpads = getUserScratchpads({
+		uok, pages: 5, limit: 100, 
+	});
+	
+	let first = true;
+	let programCount = 0, inspirations = 0, votes = 0, spinoffs = 0;
+	for await (const page of scratchpads) {
+		for (const s of page) {
+			if (first) {
+				addLegacyBackground(s.id);
+				first = false;
 			}
-		}).catch(console.error);
+	
+			programCount++;
+			spinoffs += s.displayableSpinoffCount;
+			inspirations += s.displayableSpinoffCount > 0 ? 1 : 0;
+			votes += s.sumVotesIncremented;
+		}
 	}
 
 	//TODO: Never fires and we don't get info if the user has thier statistics hidden
@@ -67,31 +38,34 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 		return;
 	}
 
-	const totals = Scratchpads.scratchpads.reduce((current, scratch) => {
-		current.votes += scratch.sumVotesIncremented - 1;
-		current.spinoffs += scratch.spinoffCount;
-		current.inspiration += scratch.spinoffCount > 0 ? 1 : 0;
-		return current;
-	}, { programs: Scratchpads.scratchpads.length, votes: 0, spinoffs: 0, inspiration: 0 });
-
-	const averageSpinoffs = Math.round(totals.spinoffs / totals.programs || 0);
-	const averageVotes = Math.round(totals.votes / totals.programs || 0);
+	const averageSpinoffs = Math.round(spinoffs / programCount || 0);
+	const averageVotes = Math.round(votes / programCount || 0);
 
 	const entries = {
-		"Programs": totals.programs,
-		"Total votes received": totals.votes,
-		"Total spinoffs received": totals.spinoffs,
+		"Programs": programCount,
+		"Total votes received": votes,
+		"Total spinoffs received": spinoffs,
 		"Average votes received": averageVotes,
 		"Average spinoffs received": averageSpinoffs,
 		"Total badges": "Undisclosed",
-		"Forked programs": totals.inspiration,
+		"Forked programs": inspirations,
 	} as { [key: string]: string | number; };
+	const elements: HTMLTableCellElement[] = [];
 
-	for (const entry in entries) {
-		table.innerHTML += `<tr>
-				<td class="user-statistics-label">${entry}</td>
-				<td>${entries[entry]}</td>
-			</tr>`;
+	for (const [key, val] of Object.entries(entries)) {
+		const row = document.createElement("tr"),
+			label = document.createElement("td"),
+			value = document.createElement("td");
+
+		label.className = "user-statistics-label";
+		label.textContent = key;
+		value.textContent = val.toString();
+
+		row.appendChild(label);
+		row.appendChild(value);
+
+		table.appendChild(row);
+		elements.push(value);
 	}
 
 	const cells = table.getElementsByTagName("td");
@@ -104,16 +78,49 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 
 	table.classList.add(EXTENSION_ITEM_CLASSNAME);
 
-	querySelectorAllPromise(".badge-category-count", 10, 500)
-		.then(badges => {
-			cells[17].innerText = (Array.from(badges).reduce((prev, badge): number => {
-				return prev + (parseInt(badge.textContent || "") || 0);
-			}, 0) || 0).toString();
-		}).catch(console.error);
-
 	if (DEVELOPERS.includes(User.kaid)) {
 		table.innerHTML += `<div class="kae-green user-statistics-label">KA Extension Developer</div>`;
 	}
+
+	querySelectorAllPromise(".badge-category-count", 10, 500)
+		.then(badges => {
+			elements[5].innerText = (Array.from(badges).reduce((prev, badge): number => {
+				return prev + (parseInt(badge.textContent || "") || 0);
+			}, 0) || 0).toString();
+		}).catch(console.error);
+}
+
+function addLegacyBackground(id: string) {
+	Promise.all([
+		querySelectorPromise(
+			".user-info.clearfix",
+			10, 500
+		),
+		getOldScratchpad(id, {
+			creatorProfile: {
+				backgroundSrc: 1
+			}
+		}, true)
+	]).then(([bgEl, profile]) => {
+		const backgroundUrl = profile.creatorProfile.backgroundSrc;
+
+		const name = document.querySelector(".user-deets > div > h1"),
+			bio = document.querySelector(".user-deets > div > span");
+
+		if (backgroundUrl && name && bio) {
+			const style =
+				`background-image: url("${backgroundUrl}");` +
+				"background-position: center;" +
+				"background-size: cover;",
+			textStyle = "color: #FFFFFF;";
+
+			if (backgroundUrl && name && bio) {
+				bgEl.setAttribute("style", style);
+				name.setAttribute("style", textStyle);
+				bio.setAttribute("style", textStyle);
+			}
+		}
+	}).catch(console.error);
 }
 
 //TODO: Fix or report to KA, currently disabled
@@ -153,7 +160,6 @@ function addProjectsLink (uok: UsernameOrKaid): void {
 		}
 	}).catch(console.error);
 }
-
 
 const ATLAS_DESCRIPTION = `Achieve mastery in ${(5000).toLocaleString()} unique skills`;
 const ARTEMIS_DESCRIPTION = `Achieve mastery in ${(7500).toLocaleString()} unique skills`;

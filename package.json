@@ -4,8 +4,8 @@
 	"description": "A chrome extension for the Khan Academy Computer Programming section",
 	"private": true,
 	"scripts": {
-		"build": "esbuild ./src/index.ts ./src/background.ts ./src/content.ts ./src/popup.ts --bundle --outdir=dist --target=es6",
-		"build-prod": "esbuild ./src/index.ts ./src/background.ts ./src/content.ts ./src/popup.ts --bundle --minify --outdir=dist --target=es6",
+		"build": "esbuild ./src/index.ts ./src/background.ts ./src/content.ts ./src/popup.ts --bundle --outdir=dist --target=es2018",
+		"build-prod": "esbuild ./src/index.ts ./src/background.ts ./src/content.ts ./src/popup.ts --bundle --minify --outdir=dist --target=es2018",
 		"clean": "rm ./dist/*",
 		"lint": "tslint --project tsconfig.json -c tslint.json \"src/**/*.ts\"",
 		"fix": "tslint --project tsconfig.json -c tslint.json \"src/**/*.ts\" --fix",

@@ -1,11 +1,10 @@
 import { Program } from "./types/data";
 import { querySelectorPromise } from "./util/promise-util";
-import { getCSRF } from "./util/cookie-util";
 import { getKAID } from "./util/data-util";
-import queries from "./graphqlQueries.json";
+import { setVote } from "./util/graphql-util";
 
 //Replace KA's vote button with one that updates after you vote and allows undoing votes
-function replaceVoteButton (buttons: HTMLDivElement, program: Program): void {
+function replaceVoteButton (buttons: HTMLDivElement, program: Program) : void {
 	buttons.id = "buttons-wrap";
 	querySelectorPromise("#buttons-wrap .discussion-meta-controls > button:first-child").then(wrap => {
 		//TODO: Handle non-English
@@ -14,55 +13,35 @@ function replaceVoteButton (buttons: HTMLDivElement, program: Program): void {
 			return;
 		}
 
-		const VOTE_URL = "/api/internal/graphql/VoteEntityMutation";
-
 		let voted = wrap.innerText.includes("Voted Up");
-
 		const orgVotes = program.sumVotesIncremented - (voted ? 1 : 0);
 
-		const newWrap = document.createElement("span");
-		const voteButton = document.createElement("button");
-		const voteText = document.createElement("span");
+		const newWrap = document.createElement("span"),
+			voteText = document.createElement("span"),
+			voteButton = document.createElement("button");
+
 		voteButton.setAttribute("role", "button");
 		voteButton.classList.add("kae-program-button");
 		voteButton.appendChild(voteText);
+
 		newWrap.appendChild(voteButton);
 
-		function updateVoteDisplay () {
-			voteText.innerText = (voted ? "Voted Up!" : "Vote Up") + " • " + (orgVotes + (voted ? 1 : 0));
+		function updateVoteDisplay (toggle = false) {
+			if (toggle) {
+				voted = !voted;
+			}
+			voteText.innerText = (voted ? "Voted Up!" : "Vote Up") + 
+				" • " + (orgVotes + (voted ? 1 : 0));
 		}
 		updateVoteDisplay();
 
-		newWrap.addEventListener("click", function () {
-			voted = !voted;
-			updateVoteDisplay();
-
-			fetch(VOTE_URL, {
-				method: "POST",
-				headers: { "X-KA-FKey": getCSRF() },
-				credentials: "same-origin",
-				body: JSON.stringify({
-					operationName: "VoteEntityMutation",
-					variables: {
-						postKey: program.key,
-						voteType: voted ? 1 : 0
-					},
-					query: queries.vote
-				}),
-			}).then((response: Response): void => {
-				//If there's an error, undo the vote
-				if (response.status !== 200) {
-					response.json().then((res: { error?: string }): void => {
-						if (res.error) {
-							alert("Failed with error:\n\n" + res.error);
-						}
-					}).catch(() => {
-						alert(`Voting failed with status ${response.status}`);
-					});
-					voted = !voted;
-					updateVoteDisplay();
-				}
-			}).catch(console.error);
+		newWrap.addEventListener("click", () => {
+			updateVoteDisplay(true);
+			setVote(program.key, !voted)
+				.catch(e => {
+					updateVoteDisplay(true);
+					console.error(e);
+				});
 		});
 
 		if (wrap.parentNode) {

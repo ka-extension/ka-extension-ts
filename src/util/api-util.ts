@@ -1,9 +1,8 @@
 import "whatwg-fetch";
 import { CSRF_HEADER } from "../types/names";
 import { getCSRF } from "./cookie-util";
-import { UsernameOrKaid, UserProfileData } from "../types/data";
+import { OldScratchpad, UsernameOrKaid, UserProfileData } from "../types/data";
 import { buildQuery } from "./text-util";
-import queries from "../graphqlQueries.json";
 
 const requestCache: { [name: string]: object } = {};
 
@@ -223,44 +222,15 @@ function getComment (key: string): Promise<CommentData> {
 		}).then(data => data as CommentResponse).then(data => data.feedback[0]);
 }
 
-function getUserData (uok?: UsernameOrKaid) : Promise<UserProfileData> {
-	const body = {
-		operationName: "getFullUserProfile",
-		query: queries.user,
-		variables: {},
-	};
-
-	if (uok) {
-		const variables: {
-			kaid?: string
-			username?: string
-		} = {};
-
-		if (uok.asKaid()) {
-			variables.kaid = uok.asKaid()!;
-		} else if (uok.asUsername()) {
-			variables.username = uok.asUsername()!;
-		}
-
-		body.variables = variables;
-	}
-
-	return fetch(window.location.origin + "/api/internal/graphql/getFullUserProfile", {
-		method: "POST",
-		headers: {
-			[CSRF_HEADER]: getCSRF(),
-			"content-type": "application/json"
-		},
-		body: JSON.stringify(body),
-		credentials: "same-origin"
-	})
-		.then(e => e.json())
-		.then(e => e.data.user);
+function getOldScratchpad(id: string, proj?: object, cached = false) : Promise<OldScratchpad> {
+	const url = window.location.origin + "/api/internal/show_scratchpad?scratchpad_id=";
+	return getJSON(url + id, proj, cached)
+		.then(e => e as OldScratchpad);
 }
 
 export {
 	getJSON, getComment, FocusData, CommentData,
 	getConvo, FinalReply, FinalConvo,
 	DiscussionTypes, deleteNotif, putPostJSON,
-	getUserData
+	getOldScratchpad
 };
