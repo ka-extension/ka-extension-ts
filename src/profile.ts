@@ -15,8 +15,8 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 		uok, pages: 5, limit: 100, 
 	});
 	
-	let first = true;
-	let programCount = 0, inspirations = 0, votes = 0, spinoffs = 0;
+	let programCount = 0, inspirations = 0, 
+		votes = 0, spinoffs = 0, first = true;
 	for await (const page of scratchpads) {
 		for (const s of page) {
 			if (first) {

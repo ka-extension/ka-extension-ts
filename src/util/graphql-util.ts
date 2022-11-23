@@ -65,15 +65,18 @@ function getUserData (uok?: UsernameOrKaid, fkey?: string) : Promise<UserProfile
 }
 
 interface VoteEntity {
-	error?: string;
+	voteEntity: {
+		error?: string;
+	}
 }
 
 function setVote(key: string, value: boolean) : Promise<boolean> {
 	return graphql<VoteEntity>(GraphqlQuery.VOTE, {
 		voteType: value ? 1 : 0,
-		programKey: key,
+		postKey: key,
 	})
-		.then(e => e.error ? Promise.reject("Server returned error: " + e.error) : value);
+		.then(e => e.voteEntity.error ? Promise.reject("Server returned error: " 
+			+ JSON.stringify(e.voteEntity.error)) : value);
 }
 
 // Base interface for cursor objects

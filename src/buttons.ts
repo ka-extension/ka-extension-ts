@@ -6,7 +6,7 @@ import { setVote } from "./util/graphql-util";
 //Replace KA's vote button with one that updates after you vote and allows undoing votes
 function replaceVoteButton (buttons: HTMLDivElement, program: Program) : void {
 	buttons.id = "buttons-wrap";
-	querySelectorPromise("#buttons-wrap .discussion-meta-controls > button:first-child").then(wrap => {
+	querySelectorPromise("#buttons-wrap > button:first-child").then(wrap => {
 		//TODO: Handle non-English
 		if (!(wrap instanceof HTMLElement) || !wrap.innerText.includes("Vote")) {
 			console.log("Voting failed to load.", buttons, wrap, wrap && wrap.firstChild);
@@ -35,13 +35,18 @@ function replaceVoteButton (buttons: HTMLDivElement, program: Program) : void {
 		}
 		updateVoteDisplay();
 
-		newWrap.addEventListener("click", () => {
+		let enabled = true;
+		newWrap.addEventListener("click", () => {			
+			if (!enabled) { return; }
+			enabled = false;
+
 			updateVoteDisplay(true);
-			setVote(program.key, !voted)
+			setVote(program.key, voted)
 				.catch(e => {
 					updateVoteDisplay(true);
 					console.error(e);
-				});
+				})
+				.then(_ => enabled = true);
 		});
 
 		if (wrap.parentNode) {
