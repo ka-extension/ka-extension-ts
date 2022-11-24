@@ -7,10 +7,11 @@ import { EXTENSION_EDITOR_BUTTON } from "./types/names";
 function tableRow (key: string, val: string, title?: string): HTMLTableRowElement {
 	const tr = document.createElement("tr");
 
-	const keyElm: HTMLTableDataCellElement = <HTMLTableDataCellElement>document.createElement("td");
-	keyElm.className = "kae-td";
+	const keyElm = document.createElement("td"),
+		valElm = document.createElement("td");
 
-	const valElm: HTMLTableDataCellElement = <HTMLTableCellElement>keyElm.cloneNode();
+	valElm.className = keyElm.className = "kae-td";
+
 	keyElm.textContent = key;
 	valElm.textContent = val;
 
@@ -144,8 +145,12 @@ async function addEditorSettingsButton (program: Program) {
 
 	function repos () {
 		const pos = innerButtonLink.getBoundingClientRect();
-		editorSettings.style.left = pos.left + pageXOffset + "px";
-		editorSettings.style.top = pos.top + pageYOffset - 10 + "px";
+		if (editorSettings) {
+			editorSettings.style.left = pos.left + scrollX + "px";
+			editorSettings.style.top = pos.top + scrollY - 10 + "px";
+		} else {
+			console.error("Could not load editorSettings");
+		}
 	}
 	innerButtonLink.addEventListener("click", repos);
 	window.addEventListener("resize", repos);
@@ -157,8 +162,10 @@ async function addEditorSettingsButton (program: Program) {
 	}
 	errorBuddyWrap.parentNode!.insertBefore(innerButtonLink, errorBuddyWrap);
 
-	document.body.appendChild(editorSettings);
-
+	if (editorSettings) {
+		document.body.appendChild(editorSettings);
+	}
+	
 	const editorWrap = document.querySelector(".scratchpad-editor-wrap");
 	if (editorWrap && editorWrap.parentElement) {
 		editorWrap.parentElement.classList.toggle("kae-hidden-editor-wrap", localStorage.kaeEditorHidden === "true" ? true : false);

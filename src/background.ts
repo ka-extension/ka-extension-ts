@@ -1,7 +1,6 @@
 import { MessageTypes, Message } from "./types/message-types";
-import { CSRF_HEADER } from "./types/names";
-import { getChromeFkey, getChromeCookies } from "./util/cookie-util";
-import queries from "./graphqlQueries.json";
+import { getChromeFkey } from "./util/cookie-util";
+import { getUserData } from "./util/graphql-util";
 
 chrome.runtime.onMessage.addListener((arg: Message) => {
 	console.log("Internal Message", arg);
@@ -30,29 +29,13 @@ chrome.browserAction.setBadgeBackgroundColor({
 });
 
 setInterval((): void => {
-	getChromeFkey().then(fkey => {
-		return fetch("https://www.khanacademy.org/api/internal/graphql/getFullUserProfile", {
-			method: "POST",
-			headers: {
-				[CSRF_HEADER]: fkey,
-				"content-type": "application/json"
-			},
-			body: JSON.stringify({
-				operationName: "getFullUserProfile",
-				query: queries.user,
-				variables: {},
-			}),
-			credentials: "same-origin"
-		}).then(e => {
-			return e.json();
-		});
-	}).then(data => {
-		const count = data.data.user.newNotificationCount;
-
-		chrome.browserAction.setBadgeText({
-			text: count > 0 ? count.toString() : ""
-		});
-	}).catch(console.error);
+	getChromeFkey().then(fkey => getUserData(undefined, fkey))
+		.then(user => {
+			const count = user.newNotificationCount;
+			chrome.browserAction.setBadgeText({
+				text: count && count > 0 ? count.toString() : ""
+			});
+		}).catch(console.error);
 }, 60*1000);
 
 chrome.webNavigation.onHistoryStateUpdated.addListener(e => {
