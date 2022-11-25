@@ -26,11 +26,12 @@ const getScratchpadUI = (): Promise<ScratchpadUI> =>
 type anyFunc = (...args: any[]) => any; 
 
 abstract class Extension {
-	protected url: string[];
+	protected path: string[];
 	private runCount: number = 0;
 	private readonly functionCalls: Set<anyFunc>;
+
 	constructor () {
-		this.url = [];
+		this.path = [];
 		this.functionCalls = new Set();
 	}
 	protected get first (): boolean {
@@ -64,11 +65,10 @@ abstract class Extension {
 	}
 	async init (): Promise<void> {
 		if (window.location.host.includes("khanacademy.org")) {
-			this.url = window.location.href.split("/");
+			this.path = location.pathname.slice(1).split("/");
 			this.runCount++;
 
 			this.onPage();
-
 			const kaid = getKAID();
 
 			//Check for discussion page, 10 seconds max. (Element isn't used, just used to check for discussion page)
@@ -89,7 +89,7 @@ abstract class Extension {
 				});
 			}).catch(console.warn);
 
-			if (/^\d{10,16}/.test(this.url[5])) {
+			if (/^\d{10,16}/.test(this.path[2])) {
 				querySelectorPromise("#page-container-inner", 100)
 					.then(pageContent => pageContent as HTMLDivElement)
 					.then(pageContent => {
@@ -101,21 +101,21 @@ abstract class Extension {
 					}).catch(console.error);
 			}
 
-			if (this.url[5] === "browse") {
+			if (this.path[1] === "browse") {
 				this.onHotlistPage();
 			}
 
-			if (this.url[3] === "profile" && !this.url[6]) {
-				const identifier: UsernameOrKaid = new UsernameOrKaid(this.url[4]);
+			if (this.path[0] === "profile" && !this.path[3]) {
+				const identifier: UsernameOrKaid = new UsernameOrKaid(this.path[1]);
 				this.onProfilePage(identifier);
 				this.onHomePage(identifier);
 			}
 
-			if ((this.url[3] === "profile" && this.url[5] === "badges") || this.url[3] === "badges") {
+			if ((this.path[0] === "profile" && this.path[2] === "badges") || this.path[0] === "badges") {
 				this.onBadgesPage();
 			}
 
-			if (this.url.length <= 4) {
+			if (this.path.length <= 1) {
 				const identifier: UsernameOrKaid = new UsernameOrKaid(kaid as string);
 				this.onHomePage(identifier);
 			}

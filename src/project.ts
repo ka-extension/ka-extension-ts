@@ -165,7 +165,7 @@ async function addEditorSettingsButton (program: Program) {
 	if (editorSettings) {
 		document.body.appendChild(editorSettings);
 	}
-	
+
 	const editorWrap = document.querySelector(".scratchpad-editor-wrap");
 	if (editorWrap && editorWrap.parentElement) {
 		editorWrap.parentElement.classList.toggle("kae-hidden-editor-wrap", localStorage.kaeEditorHidden === "true" ? true : false);

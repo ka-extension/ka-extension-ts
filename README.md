@@ -27,3 +27,5 @@ PRs are welcomed!
 * [Literally Void](https://github.com/LiterallyVoid)
 * [cursorweb](https://github.com/cursorweb)
 * [An0n3m0us](https://github.com/An0n3m0us)
+* [Bhavjit Chauhan](https://github.com/bhavjitChauhan)
+* [jjroley](https://github.com/jjroley)

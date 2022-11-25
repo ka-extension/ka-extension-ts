@@ -222,7 +222,7 @@ function getComment (key: string): Promise<CommentData> {
 		}).then(data => data as CommentResponse).then(data => data.feedback[0]);
 }
 
-function getOldScratchpad(id: string, proj?: object, cached = false) : Promise<OldScratchpad> {
+function getOldScratchpad (id: string, proj?: object, cached = false) : Promise<OldScratchpad> {
 	const url = window.location.origin + "/api/internal/show_scratchpad?scratchpad_id=";
 	return getJSON(url + id, proj, cached)
 		.then(e => e as OldScratchpad);
