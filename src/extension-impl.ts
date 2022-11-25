@@ -23,7 +23,7 @@ class ExtensionImpl extends Extension {
 	}
 	onHomePage (uok: UsernameOrKaid) {}
 	async onBadgesPage () {
-		addBadgeInfo(this.url);
+		addBadgeInfo(this.path);
 	}
 	onDiscussionPage () {
 		switchToTipsAndThanks();

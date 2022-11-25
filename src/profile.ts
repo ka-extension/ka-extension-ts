@@ -12,10 +12,10 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 	cachedUser = User;
 
 	const scratchpads = getUserScratchpads({
-		uok, pages: 5, limit: 100, 
+		kaid: cachedUser.kaid, pages: 5, limit: 100,
 	});
-	
-	let programCount = 0, inspirations = 0, 
+
+	let programCount = 0, inspirations = 0,
 		votes = 0, spinoffs = 0, first = true;
 	for await (const page of scratchpads) {
 		for (const s of page) {
@@ -23,7 +23,7 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 				addLegacyBackground(s.id);
 				first = false;
 			}
-	
+
 			programCount++;
 			spinoffs += s.displayableSpinoffCount;
 			inspirations += s.displayableSpinoffCount > 0 ? 1 : 0;
@@ -50,7 +50,6 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 		"Total badges": "Undisclosed",
 		"Forked programs": inspirations,
 	} as { [key: string]: string | number; };
-	const elements: HTMLTableCellElement[] = [];
 
 	for (const [key, val] of Object.entries(entries)) {
 		const row = document.createElement("tr"),
@@ -65,7 +64,6 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 		row.appendChild(value);
 
 		table.appendChild(row);
-		elements.push(value);
 	}
 
 	const cells = table.getElementsByTagName("td");
@@ -84,13 +82,15 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 
 	querySelectorAllPromise(".badge-category-count", 10, 500)
 		.then(badges => {
-			elements[5].innerText = (Array.from(badges).reduce((prev, badge): number => {
-				return prev + (parseInt(badge.textContent || "") || 0);
-			}, 0) || 0).toString();
+			const badgeCount = Array.from(badges)
+				.reduce((prev, badge): number => {
+					return prev + (parseInt(badge.textContent || "") || 0);
+				}, 0);
+			cells[17].textContent = badgeCount.toString();
 		}).catch(console.error);
 }
 
-function addLegacyBackground(id: string) {
+function addLegacyBackground (id: string) {
 	Promise.all([
 		querySelectorPromise(
 			".user-info.clearfix",
@@ -181,14 +181,13 @@ function setSpotlightBadgeDescription (description: string): void {
 	element!.textContent = description;
 }
 function addBadgeInfo (url: Array<string>): void {
-	if (url[3] === "profile") {
+	if (url[0] === "profile") {
 		querySelectorAllPromise(".inset-container").then(_badgesContainer => {
 			setBadgeDescriptions();
 		}).catch(console.error);
-	} else if (url[3] === "badges") {
+	} else if (url[0] === "badges") {
 		querySelectorAllPromise(".inset-container, div[data-test-id=badge-spotlight]").then(_badgesContainer => {
 			setBadgeDescriptions();
-
 			switch (url[4]) {
 				case "atlas":
 					setSpotlightBadgeDescription(ATLAS_DESCRIPTION);

@@ -30,13 +30,13 @@ function replaceVoteButton (buttons: HTMLDivElement, program: Program) : void {
 			if (toggle) {
 				voted = !voted;
 			}
-			voteText.innerText = (voted ? "Voted Up!" : "Vote Up") + 
+			voteText.innerText = (voted ? "Voted Up!" : "Vote Up") +
 				" • " + (orgVotes + (voted ? 1 : 0));
 		}
 		updateVoteDisplay();
 
 		let enabled = true;
-		newWrap.addEventListener("click", () => {			
+		newWrap.addEventListener("click", () => {
 			if (!enabled) { return; }
 			enabled = false;
 

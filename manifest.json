@@ -1,18 +1,18 @@
 {
-	"manifest_version": 2,
+	"manifest_version": 3,
 	"name": "The Khan Academy Extension",
 	"short_name": "KA Extension",
 	"author": "Khan Academy Extension Developers",
 	"homepage_url": "https://github.com/ka-extension",
 	"version": "4.7.14",
 	"description": "A Browser Extension for Khan Academy that adds more features to the site",
-	"minimum_chrome_version": "51.0.2704",
+	"minimum_chrome_version": "65.0.3299",
 	"icons": {
 		"16": "images/colour/icon16.png",
 		"48": "images/colour/icon48.png",
 		"128": "images/colour/icon128.png"
 	},
-	"browser_action": {
+	"action": {
 		"default_title": "Khan Academy Extension",
 		"default_icon": {
 			"16": "images/grey/icon16.png",
@@ -30,14 +30,20 @@
 	"permissions": [
 		"cookies",
 		"webNavigation",
+		"alarms"
+	],
+	"host_permissions": [
 		"*://*.khanacademy.org/*"
 	],
-	"web_accessible_resources": [
-		"dist/index.js",
-		"dist/popup.js",
-		"styles/*"
-	],
+	"web_accessible_resources": [{
+		"resources": [
+			"dist/index.js",
+			"dist/popup.js",
+			"styles/*"
+		],
+		"matches": ["*://*.khanacademy.org/*"]
+	}],
 	"background": {
-		"scripts": ["dist/background.js"]
+		"service_worker": "dist/background.js"
 	}
 }
