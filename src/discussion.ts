@@ -1,5 +1,4 @@
 import { querySelectorPromise, querySelectorAllPromise } from "./util/promise-util";
-import { getComment } from "./util/api-util";
 import { parseQuery } from "./util/text-util";
 import { checkSettingsDark } from "./editor-settings";
 import {
@@ -37,15 +36,6 @@ function updateComments (): void {
 				if (timestampLink) {
 					//Extract the comment id from the link to the comment
 					const commentId = (timestampLink as HTMLAnchorElement)!.href.match(/qa_expand_key=(.*?)(?:&|$)/)![1];
-
-					getComment(commentId).then((data) => {
-						if (flagButton && data && data.flags) {
-							const flagText = flagButton.querySelector("div");
-							//TODO: Bug: when not logged in there is more to textContent
-							flagText!.textContent = `Flag (${data.flags.length})`;
-							flagButton.setAttribute("title", data.flags.join("\n"));
-						}
-					}).catch(console.error);
 
 					// Update comments after a new comment is made on this thread/post
 					const area = comment.querySelector(

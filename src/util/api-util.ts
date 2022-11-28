@@ -91,24 +91,6 @@ function deleteNotif (key: string): Promise<Response> {
 	}).then(e => e.status >= 200 && e.status < 300 ? Promise.resolve(e) : Promise.reject(e));
 }
 
-interface FocusData {
-	id: string;
-	kind: string;
-}
-
-interface CommentData {
-	expandKey: string;
-	key: string;
-	authorKaid: string;
-	focus: FocusData;
-	focusUrl: string;
-	flags: string[];
-}
-
-interface CommentResponse {
-	feedback: CommentData[];
-}
-
 enum DiscussionTypes {
 	QUESTION = "question",
 	COMMENT = "comment"
@@ -201,27 +183,6 @@ function getConvo (key: string, focusKind: string, focusId: string, discussionTy
 	});
 }
 
-function getComment (key: string): Promise<CommentData> {
-	return getJSON(`${window.location.origin}/api/internal/discussions/scratchpad/5444013900333056/comments?${buildQuery({
-		casing: "camel",
-		qa_expand_key: key,
-		sort: "1",
-		subject: "all",
-		limit: "1",
-		page: "0",
-		lang: "en",
-		_: Date.now() + ""
-	})}`, {
-			feedback: [
-				{
-					normal: {
-						flags: 1
-					}
-				}
-			]
-		}).then(data => data as CommentResponse).then(data => data.feedback[0]);
-}
-
 function getOldScratchpad (id: string, proj?: object, cached = false) : Promise<OldScratchpad> {
 	const url = window.location.origin + "/api/internal/show_scratchpad?scratchpad_id=";
 	return getJSON(url + id, proj, cached)
@@ -229,7 +190,7 @@ function getOldScratchpad (id: string, proj?: object, cached = false) : Promise<
 }
 
 export {
-	getJSON, getComment, FocusData, CommentData,
+	getJSON,
 	getConvo, FinalReply, FinalConvo,
 	DiscussionTypes, deleteNotif, putPostJSON,
 	getOldScratchpad

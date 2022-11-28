@@ -2,7 +2,7 @@ import updateLog from "../resources/update-log.json";
 import { getChromeCookies, getChromeFkey } from "./util/cookie-util";
 import { formatDate, escapeHTML, KAMarkdowntoHTML, relativeDate } from "./util/text-util";
 import { CSRF_HEADER, COOKIE, API_ORIGIN } from "./types/names";
-import { Notification, NotifObj, Feedback, NotifElm } from "./types/data";
+import { Notification, NotifObj, NotifElm } from "./types/data";
 
 interface LogEntry {
 	version: string;
@@ -171,11 +171,16 @@ function addReplyListeners (): void {
 				feedbackKey = replyDiv.getAttribute("feedback");
 
 			(replyDiv.lastElementChild as HTMLTextAreaElement).classList.toggle("hide");
-			if (buttonState !== "Send") { return replyButton.textContent = "Send"; }
-			if (content.length < 1) { return replyButton.textContent = "Reply"; }
+			if (buttonState !== "Send") {
+				return replyButton.textContent = "Send";
+			}
+			if (content.length < 1) {
+				return replyButton.textContent = "Reply";
+			}
 			replyButton.textContent = "Sending...";
 
-			fetch(`${API_ORIGIN}/discussions/scratchpad/${notifProgram}/comment?qa_expand_key=${feedbackKey}`)
+			// TODO: This endpoint no longer exists
+			/* fetch(`${API_ORIGIN}/discussions/scratchpad/${notifProgram}/comment?qa_expand_key=${feedbackKey}`)
 				.then(resp => resp.json())
 				.then(resp => resp as Feedback)
 				.then(resp => {
@@ -206,7 +211,7 @@ function addReplyListeners (): void {
 
 						}).catch(console.error);
 					}).catch(console.error);
-				}).catch(console.error);
+				}).catch(console.error);*/
 		});
 	});
 }
