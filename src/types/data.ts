@@ -91,7 +91,7 @@ interface Scratchpad {
 }
 
 // Since there are different kinds of notifs, add in other props that are optional.
-interface Notification {
+/*interface Notification {
 	notes?: Notification[];
 	iconSrc?: string;
 	extendedDescription?: string;
@@ -133,7 +133,7 @@ interface Notification {
 	translatedDisplayName?: string;
 	translatedRequirements?: string[];
 	thumbnailSrc?: string;
-}
+}*/
 
 interface Scratchpads {
 	cursor?: string;
@@ -154,11 +154,146 @@ interface User {
 	discussion_banned?: boolean;
 }
 
-interface NotifObj {
+interface Notification {
+	"__typename": string,
+	brandNew: boolean,
+	date: string, // "2022-08-19T16:24:00.66185Z",
+	kaid: string,
+	read: boolean,
+	url: string,
+	urlsafeKey: string,
+	class_: string[], /*[
+						"BaseNotification",
+						"ReadableNotification",
+						"BaseFeedbackNotification",
+						"ScratchpadFeedbackNotification"
+						],*/
+
+	// AssignmentCreatedNotificationType
+	numAssignments?: number,
+	contentTitle?: string,
+	coachAvatarURL?: string,
+	coachName?: string,
+	curationNodeIconURL?: string,
+	className?: string,
+
+	// AssignmentDueDateNotificationType
+	//numAssignments?: number,
+	dueDate?: string,
+	//contentTitle?: string,
+	//curationNodeIconURL?: string,
+
+	// AvatarNotificationDeprecatedType
+	translatedCategoryTitle?: string,
+	pointsRequired?: number,
+
+	// AvatarNotificationType
+	name?: string,
+	thumbnailSrc?: string,
+
+	
+	// BadgeNotificationType
+	badgeName?: string,
+	badge?: {
+		description: string,
+		fullDescription: string,
+		name: string,
+		relativeUrl: string,
+		icons: {
+			compactUrl: string,
+		}
+	}
+
+	// CoachRequestAcceptedNotificationType
+	isMultipleClassrooms?: boolean,
+	student?: {
+		id: string,
+		email: string,
+		nickname: string
+	},
+	classroom?: {
+		cacheId: string,
+		id: string,
+		name: string,
+		topics: {
+			id: string,
+			slug: string,
+			iconUrl: string, 
+			key: string,
+			translatedStandaloneTitle: string,
+		}
+	}
+
+	// CoachRequestNotificationType
+	coachIsParent?: boolean,
+	coach?: {
+		id: string,
+		kaid: string,
+		nickname: string,
+	}
+
+	// CourseMasteryGoalCreatedNotificationType
+	// curationNodeIconURL?: string,
+	curationNodeTranslatedTitle?: string,
+	masteryPercentage?: "I don't know",
+
+	// GroupedBadgeNotificationType
+	badgeNotifications?: {
+		badge: {
+			badgeCategory: "?",
+			description: string,
+			fullDescription: string,
+			name: string,
+			icons: {
+				compactUrl: string,
+			}
+		}
+	}
+
+	// InfoNotificationType
+	notificationType?: "I don't know"
+
+	// ModeratorNotificationType
+	text?: string,
+
+	// ProgramFeedbackNotificationType
+	authorAvatarSrc?: string,
+	authorNickname?: string,
+	feedbackType?: "QUESTION" | "REPLY" | "COMMENT",
+	translatedScratchpadTitle?: string,
+	content?: string,
+
+	// ResponseFeedbackNotificationType
+	authorAvatarUrl?: string,
+	// authorNickname?: string,
+	// feedbackType?: "QUESTION" | "REPLY" | "COMMENT",
+	focusTranslatedTitle?: string,
+	// content?: string,
+	sumVotesIncremented?: number,
+}
+
+interface NotificationResponse {
+	user: {
+		"__typename": "User",
+		id: string,
+		kaid: string,
+		notifications: {
+			"__typename": "NotificationsPage",
+			pageInfo: {
+				"__typename": "PageInfo",
+				// This is cursed since it should have properties for `cursor` and `complete`, and instead it just has a `nextCursor` value, which is null if there is no next cursor.
+				nextCursor: null
+			}
+			notifications: Notification[]
+		}
+	}
+}
+
+/*interface NotifObj {
 	cursor: string;
 	notifications: Notification[];
 	has_more: boolean;
-}
+}*/
 
 interface FeedbackFocus {
 	"__typename": "FeedbackFocus",
@@ -215,7 +350,7 @@ interface NotifElm {
 	content: string;
 	date: string;
 	authorNote: string;
-	isComment: boolean;
+	// isComment: boolean;
 	programID: string;
 	feedback: string;
 }
@@ -285,7 +420,7 @@ export {
 	CommentSortType, Program, Notification,
 	Scratchpads, UserProfileData,
 	CommentResponse, CommentData,
-	NotifObj, NotifElm, ScratchpadUI,
+	NotificationResponse, NotifElm, ScratchpadUI,
 	EditorOptions, ACE, ACE_OPTION,
 	User, OldScratchpad
 };

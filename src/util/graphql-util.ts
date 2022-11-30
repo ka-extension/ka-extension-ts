@@ -1,6 +1,6 @@
 import queries from "./graphqlQueries.json";
 import { CSRF_HEADER } from "../types/names";
-import { UsernameOrKaid, UserProfileData, CommentResponse, CommentData } from "../types/data";
+import { UsernameOrKaid, UserProfileData, CommentResponse, CommentData, NotificationResponse, Notification } from "../types/data";
 
 import { getCSRF } from "./cookie-util";
 
@@ -10,6 +10,7 @@ enum GraphqlQuery {
 	VOTE = "VoteEntityMutation",
 	PROFILE_PROJECTS = "projectsAuthoredByUser",
 	FEEDBACK_QUERY = "feedbackQuery",
+	NOTIFICATIONS_QUERY = "getNotificationsForUser"
 }
 
 // Data to be overriden if context is outside of content script
@@ -18,9 +19,19 @@ interface OverrideData {
 	origin?: string;
 }
 
+function getOrigin(overrideOrigin: string|undefined) {
+	if (overrideOrigin) {
+		return overrideOrigin;
+	}
+	if (window.location.origin.includes("chrome-extension")) {
+		return "https://www.khanacademy.org"
+	}
+	return window.location.origin;
+}
+
 // Generic authenticated graphql request
 function graphql<T> (query: GraphqlQuery, variables: object, over: OverrideData = {}) : Promise<T> {
-	const origin = over.origin ? over.origin : window.location.origin;
+	const origin = getOrigin(over.origin);
 	const url = origin + "/api/internal/graphql/" + query;
 	return fetch(url, {
 		method: "POST",
@@ -97,30 +108,41 @@ interface Cursor {
 // Generic function for async loading items from KA's cursor based API endpoints
 // Should only be used inside here because of the amount of metaprogramming required
 // to get the types to check out
-async function* cursorList<T, Params, RawResponse, CursorBody extends Cursor> (
-	query: GraphqlQuery,
-	vars: Params,
-	findCursor: (o: RawResponse) => CursorBody,
-	findList: (o: CursorBody) => T[],
-	setCursor: (p: Params, c: string) => void,
+// This function is generic on 4 types.
+//  T is the type of the data that we're going to return a list of
+//  Params is the type/shape of the graphQL variables
+//  RawResponse is the type of the json data that we get back from the endpoint, after accessing .data
+//  CursorBody is the type of the data after
+// We return an async generator of lists (pages) of T
+
+async function* cursorList<T, Vars extends Object, RawResponse> (
+	query: GraphqlQuery, // Which query we're making
+	// vars: Params, // The variables that the request needs
+	getVars: (c: string) => Vars,
+	
+	findCursor: (o: RawResponse) => Cursor, // Right now this returns the object that has a .cursor and a .complete property. That doesn't exist for us on the notification page, so we need to refactor this to return a tuple or a created object with these two properties.
+	findList: (o: RawResponse) => T[], // This should just take the RawResponse as well.
+
+	// setCursor: (p: Params, c: string) => void, // this is really "update the cursor value stored in params". It's really getParams, just not-pure
+
 	pageCap?: number,
 ) : AsyncGenerator<T[], number, void> {
 	let i = 0, complete = false, cursor = "";
 	for (; !complete && (pageCap === undefined || i < pageCap); i++) {
-		setCursor(vars, cursor);
-		const results = await graphql<RawResponse>(query, vars as object);
+		const vars = getVars(cursor);
+		const results = await graphql<RawResponse>(query, vars);
 
-		const cursorBody = findCursor(results);
-		if (cursorBody === null) {
-			return i;
-		}
+		// if (cursorBody === null) {
+		// 	return i;
+		// }
 
-		({ complete, cursor } = cursorBody);
-		yield findList(cursorBody);
+		({ complete, cursor } = findCursor(results));
+		yield findList(results);
 	}
 
 	return i;
 }
+
 
 // Base param interface for hotlist and user programs page
 interface ScratchpadListParams<Sort> extends ProfileParams {
@@ -167,24 +189,46 @@ interface GetUserScratchpadsOptions {
 
 // Fetch the scratchpads
 function getUserScratchpads (options: GetUserScratchpadsOptions = {}) : AsyncGenerator<ScratchpadSnapshot[], number, void> {
-	const params: ProfileProgramParams = {
+	const getVars = (cursor: string): ProfileProgramParams => ({
+		kaid: options.kaid || undefined,
 		sort: options.sort || ProfileSort.TOP,
 		pageInfo: {
-			cursor: "",
+			cursor: cursor,
 			itemsPerPage: options.limit || 40,
 		},
-	};
+	});
 
-	if (options.kaid) {
-		params.kaid = options.kaid;
-	}
+	return cursorList<ScratchpadSnapshot, ProfileProgramParams, RawProfileProgramResponse>(
+		GraphqlQuery.PROFILE_PROJECTS, // query
+		getVars, // var
+		data => data.user.programs, // find cursor
+		data => data.user.programs.programs, // find list
+		options.pages,
+	);
+}
 
-	return cursorList<ScratchpadSnapshot, ProfileProgramParams,
-		RawProfileProgramResponse, ProfileProgramsCursor>(
-			GraphqlQuery.PROFILE_PROJECTS, params,
-			raw => raw.user.programs, cursor => cursor.programs,
-			(params, c) => params.pageInfo.cursor = c, options.pages,
-		);
+interface NotificationVars {
+	after: string, // The cursor offset
+}
+
+export function getUserNotifications () {
+	const getVars = (cursor:string) => ({
+		after: cursor
+	});
+	
+	return cursorList<Notification, NotificationVars, NotificationResponse>(
+		GraphqlQuery.NOTIFICATIONS_QUERY,
+		getVars,
+		// get cursor info
+		data => {
+			const pageInfo = data.user.notifications.pageInfo;
+			return ({
+				complete: !pageInfo.nextCursor,
+				cursor: pageInfo.nextCursor || ""
+			})
+		},
+		data => data.user.notifications.notifications
+	);
 }
 
 // Gets a single comment
@@ -203,7 +247,6 @@ async function getComment(key: string): Promise<CommentData> {
 		feedbackType: "QUESTION", // What the type is doesn't matter, but has to be valid
 		focusKind: "scratchpad",
 		qaExpandKey: key
-
 	}).then(data => data.feedback.feedback[0]);
 }
 
