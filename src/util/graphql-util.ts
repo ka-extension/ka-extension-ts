@@ -1,6 +1,7 @@
 import queries from "./graphqlQueries.json";
 import { CSRF_HEADER } from "../types/names";
-import { UsernameOrKaid, UserProfileData } from "../types/data";
+import { UsernameOrKaid, UserProfileData, CommentResponse, CommentData } from "../types/data";
+
 import { getCSRF } from "./cookie-util";
 
 // Typed names for queries in graphqlQueries.json
@@ -8,6 +9,7 @@ enum GraphqlQuery {
 	PROFILE = "getFullUserProfile",
 	VOTE = "VoteEntityMutation",
 	PROFILE_PROJECTS = "projectsAuthoredByUser",
+	FEEDBACK_QUERY = "feedbackQuery",
 }
 
 // Data to be overriden if context is outside of content script
@@ -92,7 +94,7 @@ interface Cursor {
 	cursor: string;
 }
 
-// Generic function for async loading items from KA's cursor  based API endpoints
+// Generic function for async loading items from KA's cursor based API endpoints
 // Should only be used inside here because of the amount of metaprogramming required
 // to get the types to check out
 async function* cursorList<T, Params, RawResponse, CursorBody extends Cursor> (
@@ -185,8 +187,28 @@ function getUserScratchpads (options: GetUserScratchpadsOptions = {}) : AsyncGen
 		);
 }
 
+// Gets a single comment
+// Uses a trick:
+//  It requests all the comments under the program listed, which
+//  is a special program with no comments. It then specifies
+//  the requested comment as the focused comment under the program.
+//  This adds the requested comment to the response, even though
+//  the requested comment was originally posted on this program.
+// This method doesn't work for getting replies, only T&T and questions,
+// So this function will error if given a key to a reply.
+async function getComment(key: string): Promise<CommentData> {
+	return graphql<CommentResponse>(GraphqlQuery.FEEDBACK_QUERY, {
+		topicId: "5444013900333056",
+		currentSort: 1,
+		feedbackType: "QUESTION", // What the type is doesn't matter, but has to be valid
+		focusKind: "scratchpad",
+		qaExpandKey: key
+
+	}).then(data => data.feedback.feedback[0]);
+}
+
 export {
-	getUserData, setVote, OverrideData,
+	getUserData, getComment, setVote, OverrideData,
 	GetUserScratchpadsOptions, ScratchpadSnapshot, ProfileSort,
 	getUserScratchpads,
 };

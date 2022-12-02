@@ -160,17 +160,53 @@ interface NotifObj {
 	has_more: boolean;
 }
 
-interface FeedbackReply {
-	key: string;
-}
-
 interface FeedbackFocus {
-	topicUrl: string;
+	"__typename": "FeedbackFocus",
+	id: string;
+	kind: string;
+	relativeUrl: string;
+	translatedTitle: string
 }
 
-interface Feedback {
-	feedback: FeedbackReply[];
+interface CommentData {
+	"__typename": "BasicFeedback",
+	expandKey: string;
+	key: string;
+	author: {
+		"__typename": "User",
+		kaid: string;
+		nickname: string;
+		"avatar": {
+			"__typename": "Avatar";
+			imageSrc: string;
+			name: string;
+		}
+	};
+	content: string;
+	
 	focus: FeedbackFocus;
+	focusUrl: string;
+	flags?: string[];
+	flaggedBy: null;
+	flaggedByUser: boolean;
+	appearsAsDeleted: boolean;
+	definitelyNotSpam: boolean;
+	lowQualityScore: number;
+	replyCount: number;
+	replyExpandKeys: string[];
+	showLowQualityNotice: boolean;
+	sumVotesIncremented: number;
+	upVoted: boolean;
+}
+
+interface CommentResponse {
+	feedback: {
+		"__typename": "FeedbackForFocus";
+		cursor: string | null;
+		feedback: CommentData[];
+		isComplete: true;
+		sortedByDate: false;
+	}
 }
 
 interface NotifElm {
@@ -226,11 +262,30 @@ interface ACE {
 
 type ACE_OPTION = boolean | number | string;
 
+declare global {
+	interface Window {
+		ace: ACE;
+		ScratchpadUI?: ScratchpadUI;
+		ScratchpadAutosuggest: { enableLiveCompletion: () => void; };
+		$LAB: { queueWait: (f: () => void) => void; };
+		__APOLLO_CLIENT__: {
+			cache: {
+				data: {
+					data: {
+						[index: string]: string;
+					}
+				}
+			}
+		}
+	}
+}
+
 export {
 	InvalidUsernameOrKaid, IdType, UsernameOrKaid,
 	CommentSortType, Program, Notification,
 	Scratchpads, UserProfileData,
-	NotifObj, Feedback, NotifElm, ScratchpadUI,
+	CommentResponse, CommentData,
+	NotifObj, NotifElm, ScratchpadUI,
 	EditorOptions, ACE, ACE_OPTION,
 	User, OldScratchpad
 };
