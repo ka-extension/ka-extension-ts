@@ -2,7 +2,7 @@ import updateLog from "../resources/update-log.json";
 import { getChromeCookies, getChromeFkey } from "./util/cookie-util";
 import { formatDate, escapeHTML, KAMarkdowntoHTML, relativeDate } from "./util/text-util";
 import { CSRF_HEADER, COOKIE, API_ORIGIN } from "./types/names";
-import { Notification, NotifElm } from "./types/data";
+import { Notification, NotifElm, BadgeNotif } from "./types/data";
 import { getUserNotifications } from "./util/graphql-util";
 
 interface LogEntry {
@@ -76,21 +76,38 @@ function isModMessage (notif: Notification): boolean {
 }
 
 function getImageSrc (notif: Notification): string {
+	if (notif.badgeNotifications && notif.badgeNotifications.length > 0) {
+		return notif.badgeNotifications[notif.badgeNotifications.length - 1].badge.icons.compactUrl;
+	}
+	if (notif.badge) {
+		return notif.badge.icons.compactUrl;
+	}
 	if (isModMessage(notif)) {
 		return "../images/guardian.png";
 	}
-	return notif.authorAvatarSrc || notif.authorAvatarUrl || notif.coachAvatarURL || notif.badgeNotifications?.badge?.icons?.compactUrl || notif.classroom?.topics?.iconUrl || notif.curationNodeIconURL || notif.thumbnailSrc || "../images/hand.png";
+	return notif.authorAvatarSrc || notif.authorAvatarUrl || notif.coachAvatarURL || notif.classroom?.topics?.iconUrl || notif.curationNodeIconURL || notif.thumbnailSrc || "../images/hand.png";
 } 
+
+function formatBadgeBatch(badges: { badge: BadgeNotif }[]): string {
+	const descriptions = badges.map(badge => `<strong>${escapeHTML(badge.badge.description)}</strong>`);
+
+	const count = descriptions.length;
+	if (count > 1) {
+		descriptions[count - 1] = "and " + descriptions[count - 1];
+	}
+
+	return descriptions.join(", ");
+}
 
 function getContent (notif: Notification): string {
 	if (notif.content) {
 		return KAMarkdowntoHTML(escapeHTML(notif.content));
 	} else if (notif.text) {
 		return escapeHTML(notif.text);
-	} else if (notif.badgeNotifications?.badge?.fullDescription) {
-		return escapeHTML(notif.badgeNotifications.badge.fullDescription);
 	} else if (notif.badge?.fullDescription) {
 		return escapeHTML(notif.badge?.fullDescription);
+	} else if (notif.badgeNotifications && notif.badgeNotifications.length > 0) {
+		return formatBadgeBatch(notif.badgeNotifications);
 	} else {
 		console.error(`Possible Unhandled notif type: ${JSON.stringify(notif, null, 4)}`);
 		return "";
@@ -113,6 +130,8 @@ function getAuthorNote (notif: Notification): string {
 	} else if (notif.translatedDisplayName && notif.class_.includes("RewardNotification")) {
 		/* New Reward (?) */
 		return `New Reward: <b>${escapeHTML(notif.translatedDisplayName)}</b>`;
+	} else if (notif.badgeNotifications) {
+		return `You earned ${notif.badgeNotifications.length} new badges:`;
 	} else if (notif.badge) {
 		/* New Badge */
 		return `New Badge: <b>${escapeHTML(notif.badge.description)}</b>`;
@@ -133,13 +152,13 @@ function genNotif (notif: NotifElm): string {
 				</div>
 			</a>
 			${(() => {
-			if (!notif.isComment) { return ""; }
-			return `
-				<div class="reply" programID="${notif.programID}" feedback="${notif.feedback}">
-					<a class="reply-button">Reply</a>
-					<textarea class="reply-text hide"></textarea>
-				</div>`;
-		})()}
+				if (!notif.isComment) { return ""; }
+				return `
+					<div class="reply" programID="${notif.programID}" feedback="${notif.feedback}">
+						<a class="reply-button">Reply</a>
+						<textarea class="reply-text hide"></textarea>
+					</div>`;
+			})()}
 		<div>`;
 }
 
@@ -148,9 +167,8 @@ function newNotif (notif: Notification): string {
 		href: (() => {
 			if (notif.class_.includes("AvatarPartNotification")) {
 				return `https://www.khanacademy.org/profile/${notif.kaid}?show_avatar_customizer=1&selected_avatar_part=${notif.name}`;
-			} else {
-				return `https://www.khanacademy.org/notifications/read?keys=${notif.urlsafeKey}&redirect_url=${notif.url || "/"}`;
 			}
+			return "https://www.khanacademy.org" + notif.url;
 		})(),
 		imgSrc: getImageSrc(notif),
 		content: getContent(notif),

@@ -194,15 +194,7 @@ interface Notification {
 	
 	// BadgeNotificationType
 	badgeName?: string,
-	badge?: {
-		description: string,
-		fullDescription: string,
-		name: string,
-		relativeUrl: string,
-		icons: {
-			compactUrl: string,
-		}
-	}
+	badge?: BadgeNotif,
 
 	// CoachRequestAcceptedNotificationType
 	isMultipleClassrooms?: boolean,
@@ -238,17 +230,7 @@ interface Notification {
 	masteryPercentage?: "I don't know",
 
 	// GroupedBadgeNotificationType
-	badgeNotifications?: {
-		badge: {
-			badgeCategory: "?",
-			description: string,
-			fullDescription: string,
-			name: string,
-			icons: {
-				compactUrl: string,
-			}
-		}
-	}
+	badgeNotifications?: { badge: BadgeNotif }[],
 
 	// InfoNotificationType
 	notificationType?: "I don't know"
@@ -270,6 +252,16 @@ interface Notification {
 	focusTranslatedTitle?: string,
 	// content?: string,
 	sumVotesIncremented?: number,
+}
+
+interface BadgeNotif {
+	badgeCategory: number,
+	description: string,
+	fullDescription: string,
+	name: string,
+	icons: {
+		compactUrl: string,
+	}
 }
 
 interface NotificationResponse {
@@ -422,5 +414,5 @@ export {
 	CommentResponse, CommentData,
 	NotificationResponse, NotifElm, ScratchpadUI,
 	EditorOptions, ACE, ACE_OPTION,
-	User, OldScratchpad
+	User, OldScratchpad, BadgeNotif
 };
