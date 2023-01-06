@@ -19,12 +19,12 @@ interface OverrideData {
 	origin?: string;
 }
 
-function getOrigin(overrideOrigin: string|undefined) {
+function getOrigin (overrideOrigin: string|undefined) {
 	if (overrideOrigin) {
 		return overrideOrigin;
 	}
 	if (window.location.origin.includes("chrome-extension")) {
-		return "https://www.khanacademy.org"
+		return "https://www.khanacademy.org";
 	}
 	return window.location.origin;
 }
@@ -119,7 +119,7 @@ async function* cursorList<T, Vars extends Object, RawResponse> (
 	query: GraphqlQuery, // Which query we're making
 	// vars: Params, // The variables that the request needs
 	getVars: (c: string) => Vars,
-	
+
 	findCursor: (o: RawResponse) => Cursor, // Right now this returns the object that has a .cursor and a .complete property. That doesn't exist for us on the notification page, so we need to refactor this to return a tuple or a created object with these two properties.
 	findList: (o: RawResponse) => T[], // This should just take the RawResponse as well.
 
@@ -208,14 +208,14 @@ function getUserScratchpads (options: GetUserScratchpadsOptions = {}) : AsyncGen
 }
 
 interface NotificationVars {
-	after: string, // The cursor offset
+	after: string; // The cursor offset
 }
 
 export function getUserNotifications () {
 	const getVars = (cursor:string) => ({
 		after: cursor
 	});
-	
+
 	return cursorList<Notification, NotificationVars, NotificationResponse>(
 		GraphqlQuery.NOTIFICATIONS_QUERY,
 		getVars,
@@ -225,7 +225,7 @@ export function getUserNotifications () {
 			return ({
 				complete: !pageInfo.nextCursor,
 				cursor: pageInfo.nextCursor || ""
-			})
+			});
 		},
 		data => data.user.notifications.notifications
 	);
@@ -240,7 +240,7 @@ export function getUserNotifications () {
 //  the requested comment was originally posted on this program.
 // This method doesn't work for getting replies, only T&T and questions,
 // So this function will error if given a key to a reply.
-async function getComment(key: string): Promise<CommentData> {
+async function getComment (key: string): Promise<CommentData> {
 	return graphql<CommentResponse>(GraphqlQuery.FEEDBACK_QUERY, {
 		topicId: "5444013900333056",
 		currentSort: 1,

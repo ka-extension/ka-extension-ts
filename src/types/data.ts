@@ -155,14 +155,14 @@ interface User {
 }
 
 interface Notification {
-	"__typename": string,
-	brandNew: boolean,
-	date: string, // "2022-08-19T16:24:00.66185Z",
-	kaid: string,
-	read: boolean,
-	url: string,
-	urlsafeKey: string,
-	class_: string[], /*[
+	"__typename": string;
+	brandNew: boolean;
+	date: string; // "2022-08-19T16:24:00.66185Z",
+	kaid: string;
+	read: boolean;
+	url: string;
+	urlsafeKey: string;
+	class_: string[]; /*[
 						"BaseNotification",
 						"ReadableNotification",
 						"BaseFeedbackNotification",
@@ -170,39 +170,39 @@ interface Notification {
 						],*/
 
 	// AssignmentCreatedNotificationType
-	numAssignments?: number,
-	contentTitle?: string,
-	coachAvatarURL?: string,
-	coachName?: string,
-	curationNodeIconURL?: string,
-	className?: string,
+	numAssignments?: number;
+	contentTitle?: string;
+	coachAvatarURL?: string;
+	coachName?: string;
+	curationNodeIconURL?: string;
+	className?: string;
 
 	// AssignmentDueDateNotificationType
 	//numAssignments?: number,
-	dueDate?: string,
+	dueDate?: string;
 	//contentTitle?: string,
 	//curationNodeIconURL?: string,
 
 	// AvatarNotificationDeprecatedType
-	translatedCategoryTitle?: string,
-	pointsRequired?: number,
+	translatedCategoryTitle?: string;
+	pointsRequired?: number;
 
 	// AvatarNotificationType
-	name?: string,
-	thumbnailSrc?: string,
+	name?: string;
+	thumbnailSrc?: string;
 
-	
+
 	// BadgeNotificationType
-	badgeName?: string,
-	badge?: BadgeNotif,
+	badgeName?: string;
+	badge?: BadgeNotif;
 
 	// CoachRequestAcceptedNotificationType
-	isMultipleClassrooms?: boolean,
+	isMultipleClassrooms?: boolean;
 	student?: {
 		id: string,
 		email: string,
 		nickname: string
-	},
+	};
 	classroom?: {
 		cacheId: string,
 		id: string,
@@ -210,58 +210,58 @@ interface Notification {
 		topics: {
 			id: string,
 			slug: string,
-			iconUrl: string, 
+			iconUrl: string,
 			key: string,
 			translatedStandaloneTitle: string,
 		}
-	}
+	};
 
 	// CoachRequestNotificationType
-	coachIsParent?: boolean,
+	coachIsParent?: boolean;
 	coach?: {
 		id: string,
 		kaid: string,
 		nickname: string,
-	}
+	};
 
 	// CourseMasteryGoalCreatedNotificationType
 	// curationNodeIconURL?: string,
-	curationNodeTranslatedTitle?: string,
-	masteryPercentage?: "I don't know",
+	curationNodeTranslatedTitle?: string;
+	masteryPercentage?: "I don't know";
 
 	// GroupedBadgeNotificationType
-	badgeNotifications?: { badge: BadgeNotif }[],
+	badgeNotifications?: { badge: BadgeNotif }[];
 
 	// InfoNotificationType
-	notificationType?: "I don't know"
+	notificationType?: "I don't know";
 
 	// ModeratorNotificationType
-	text?: string,
+	text?: string;
 
 	// ProgramFeedbackNotificationType
-	authorAvatarSrc?: string,
-	authorNickname?: string,
-	feedbackType?: "QUESTION" | "REPLY" | "COMMENT",
-	translatedScratchpadTitle?: string,
-	content?: string,
+	authorAvatarSrc?: string;
+	authorNickname?: string;
+	feedbackType?: "QUESTION" | "REPLY" | "COMMENT";
+	translatedScratchpadTitle?: string;
+	content?: string;
 
 	// ResponseFeedbackNotificationType
-	authorAvatarUrl?: string,
+	authorAvatarUrl?: string;
 	// authorNickname?: string,
 	// feedbackType?: "QUESTION" | "REPLY" | "COMMENT",
-	focusTranslatedTitle?: string,
+	focusTranslatedTitle?: string;
 	// content?: string,
-	sumVotesIncremented?: number,
+	sumVotesIncremented?: number;
 }
 
 interface BadgeNotif {
-	badgeCategory: number,
-	description: string,
-	fullDescription: string,
-	name: string,
+	badgeCategory: number;
+	description: string;
+	fullDescription: string;
+	name: string;
 	icons: {
 		compactUrl: string,
-	}
+	};
 }
 
 interface NotificationResponse {
@@ -278,7 +278,7 @@ interface NotificationResponse {
 			}
 			notifications: Notification[]
 		}
-	}
+	};
 }
 
 /*interface NotifObj {
@@ -288,15 +288,15 @@ interface NotificationResponse {
 }*/
 
 interface FeedbackFocus {
-	"__typename": "FeedbackFocus",
+	"__typename": "FeedbackFocus";
 	id: string;
 	kind: string;
 	relativeUrl: string;
-	translatedTitle: string
+	translatedTitle: string;
 }
 
 interface CommentData {
-	"__typename": "BasicFeedback",
+	"__typename": "BasicFeedback";
 	expandKey: string;
 	key: string;
 	author: {
@@ -310,7 +310,7 @@ interface CommentData {
 		}
 	};
 	content: string;
-	
+
 	focus: FeedbackFocus;
 	focusUrl: string;
 	flags?: string[];
@@ -333,7 +333,7 @@ interface CommentResponse {
 		feedback: CommentData[];
 		isComplete: true;
 		sortedByDate: false;
-	}
+	};
 }
 
 interface NotifElm {
@@ -403,7 +403,7 @@ declare global {
 					}
 				}
 			}
-		}
+		};
 	}
 }
 

@@ -17,7 +17,6 @@ enum Page {
 }
 
 let currentPage: Page = Page.Notif;
-let currentCursor: string = "";
 
 const log: LogEntry[] = <LogEntry[]>Object.assign([], updateLog);
 
@@ -57,7 +56,7 @@ function versionPage (i: number): void {
 	log[i].fixes.map(e => elementWithHTML("li", e)).forEach(e => fixes!.appendChild(e));
 }
 
-function goToPage(page: Page): void {
+function goToPage (page: Page): void {
 	const pageIndex = page as number;
 	for (const p of pages) {
 		p.style.display = "none";
@@ -76,20 +75,26 @@ function isModMessage (notif: Notification): boolean {
 }
 
 function getImageSrc (notif: Notification): string {
+	// Badge notification group
 	if (notif.badgeNotifications && notif.badgeNotifications.length > 0) {
 		return notif.badgeNotifications[notif.badgeNotifications.length - 1].badge.icons.compactUrl;
 	}
+
+	// Single badge
 	if (notif.badge) {
 		return notif.badge.icons.compactUrl;
 	}
+
+	// Guardian message
 	if (isModMessage(notif)) {
 		return "../images/guardian.png";
 	}
-	return notif.authorAvatarSrc || notif.authorAvatarUrl || notif.coachAvatarURL || notif.classroom?.topics?.iconUrl || notif.curationNodeIconURL || notif.thumbnailSrc || "../images/hand.png";
-} 
 
-function formatBadgeBatch(badges: { badge: BadgeNotif }[]): string {
-	const descriptions = badges.map(badge => `<strong>${escapeHTML(badge.badge.description)}</strong>`);
+	return notif.authorAvatarSrc || notif.authorAvatarUrl || notif.coachAvatarURL || notif.classroom?.topics?.iconUrl || notif.curationNodeIconURL || notif.thumbnailSrc || "../images/hand.png";
+}
+
+function formatBadgeBatch (badges: { badge: BadgeNotif }[]): string {
+	const descriptions = badges.map(badge => `<b>${escapeHTML(badge.badge.description)}</b>`);
 
 	const count = descriptions.length;
 	if (count > 1) {
@@ -100,7 +105,9 @@ function formatBadgeBatch(badges: { badge: BadgeNotif }[]): string {
 }
 
 function getContent (notif: Notification): string {
-	if (notif.content) {
+	if (isModMessage(notif)) {
+		return KAMarkdowntoHTML(escapeHTML(notif.text || ""));
+	} else if (notif.content) {
 		return KAMarkdowntoHTML(escapeHTML(notif.content));
 	} else if (notif.text) {
 		return escapeHTML(notif.text);
@@ -115,9 +122,9 @@ function getContent (notif: Notification): string {
 }
 
 function getAuthorNote (notif: Notification): string {
-	if (notif.modNickname) {
+	if (isModMessage(notif)) {
 		/* Moderator Message */
-		return `<b>${escapeHTML(notif.modNickname)}</b> sent you a guardian message:`;
+		return `<b>You recieved a guardian message</b>:`;
 	} else if (notif.authorNickname) {
 		/* New Comment or Reply */
 		return `<b>${escapeHTML(notif.authorNickname)}</b> added a comment on <b>${escapeHTML(notif.focusTranslatedTitle || notif.translatedScratchpadTitle || "")}</b>`;
@@ -165,6 +172,9 @@ function genNotif (notif: NotifElm): string {
 function newNotif (notif: Notification): string {
 	const notifToReturn: NotifElm = {
 		href: (() => {
+			if (isModMessage(notif)) {
+				return "javascript:void(0)";
+			}
 			if (notif.class_.includes("AvatarPartNotification")) {
 				return `https://www.khanacademy.org/profile/${notif.kaid}?show_avatar_customizer=1&selected_avatar_part=${notif.name}`;
 			}
@@ -250,7 +260,7 @@ function fkeyNotFound () {
 }
 
 function displayNotifs (notifications: Notification[]) {
-	debugger; 
+	debugger;
 	if (!notifications) { console.error("Didn't receieve notifications."); }
 	// currentCursor = notifJson.cursor;
 	// Add unread count here, with KA object.
@@ -287,9 +297,8 @@ function getNotifs () {
 	getChromeFkey().then(fkey => {
 		debugger;
 		// This endpoint is broken, and KA has moved to a graphQL version, so I don't think they'll fix it.
-		
 
-		
+
 		fetch(`https://www.khanacademy.org/api/internal/user/notifications/readable?cursor=${currentCursor}&casing=camel`, {
 			method: "GET",
 			headers: {
@@ -309,7 +318,6 @@ function getNotifs () {
 }*/
 
 
-
 function markNotifsRead () {
 	// TODO: Did this move to graphQL?
 	// Why is it returning a NotifObj?
@@ -321,7 +329,7 @@ function markNotifsRead () {
 				[COOKIE]: getChromeCookies()
 			},
 			credentials: "same-origin"
-		}).then((res: Response): (Promise<any>) => {
+		}).then(res => {
 			return res.json();
 		}).catch(console.error);
 	}).catch(fkeyNotFound);
@@ -342,7 +350,7 @@ notifsNav!.addEventListener("click", e => {
 
 if (notifsPage) {
 	notifsPage.addEventListener("scroll", () => {
-		if (currentPage === Page.Notif && notifsPage.scrollTop === (notifsPage.scrollHeight - notifsPage.offsetHeight)) {
+		if (currentPage === Page.Notif && Math.abs(notifsPage.scrollHeight - notifsPage.offsetHeight - notifsPage.scrollTop) < 1) {
 			getNotifs();
 		}
 	});
