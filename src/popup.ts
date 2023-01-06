@@ -109,6 +109,8 @@ function getContent (notif: Notification): string {
 		return KAMarkdowntoHTML(escapeHTML(notif.text || ""));
 	} else if (notif.content) {
 		return KAMarkdowntoHTML(escapeHTML(notif.content));
+	} else if (notif.coachName && notif.contentTitle) {
+		return `<b>${escapeHTML(notif.contentTitle)}</b>`;
 	} else if (notif.text) {
 		return escapeHTML(notif.text);
 	} else if (notif.badge?.fullDescription) {
@@ -130,7 +132,7 @@ function getAuthorNote (notif: Notification): string {
 		return `<b>${escapeHTML(notif.authorNickname)}</b> added a comment on <b>${escapeHTML(notif.focusTranslatedTitle || notif.translatedScratchpadTitle || "")}</b>`;
 	} else if (notif.coachName && notif.contentTitle) {
 		/* Coach Assignment */
-		return `<b>${escapeHTML(notif.coachName)}</b> assigned you <b>${escapeHTML(notif.contentTitle)}</b>`;
+		return `<b>${escapeHTML(notif.coachName)}</b> gave you an assignment:`;
 	} else if (notif.missionName && notif.class_.includes("ClassMissionNotification")) {
 		/* New Mission */
 		return `New Mission: <b>${escapeHTML(notif.missionName)}</b>`;
