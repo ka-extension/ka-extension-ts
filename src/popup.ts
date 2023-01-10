@@ -2,7 +2,8 @@ import updateLog from "../resources/update-log.json";
 import { getChromeCookies, getChromeFkey } from "./util/cookie-util";
 import { formatDate, escapeHTML, KAMarkdowntoHTML, relativeDate } from "./util/text-util";
 import { CSRF_HEADER, COOKIE, API_ORIGIN } from "./types/names";
-import { Notification, NotifObj, NotifElm } from "./types/data";
+import { Notification, NotifElm, BadgeNotif } from "./types/data";
+import { getUserNotifications } from "./util/graphql-util";
 
 interface LogEntry {
 	version: string;
@@ -10,17 +11,21 @@ interface LogEntry {
 	fixes: string[];
 }
 
-let currentPage: number = 1;
-let currentCursor: string = "";
+enum Page {
+	UpdateLog = 0,
+	Notif = 1,
+}
+
+let currentPage: Page = Page.Notif;
 
 const log: LogEntry[] = <LogEntry[]>Object.assign([], updateLog);
 
-const version: HTMLElement | null = document.getElementById("version");
-const newFeatures: HTMLElement | null = document.getElementById("new");
-const fixes: HTMLElement | null = document.getElementById("fixes");
+const version: HTMLElement = document.getElementById("version")!;
+const newFeatures: HTMLElement = document.getElementById("new")!;
+const fixes: HTMLElement = document.getElementById("fixes")!;
 
-const navButtons: NodeListOf<HTMLElement> | null = document.querySelectorAll(".nav.button");
-const pages: NodeListOf<HTMLElement> | null = document.querySelectorAll(".page");
+const navButtons: NodeListOf<HTMLElement> = document.querySelectorAll(".nav.button")!;
+const pages: NodeListOf<HTMLElement> = document.querySelectorAll(".page")!;
 
 const generalNav: HTMLElement | null = document.getElementById("general");
 const notifsNav: HTMLElement | null = document.getElementById("notifs");
@@ -51,15 +56,18 @@ function versionPage (i: number): void {
 	log[i].fixes.map(e => elementWithHTML("li", e)).forEach(e => fixes!.appendChild(e));
 }
 
-function page (i: number): void {
-	for (let p = 0; p < pages!.length; p++) {
-		pages![p].setAttribute("style", "display: none");
+function goToPage (page: Page): void {
+	const pageIndex = page as number;
+	for (const p of pages) {
+		p.style.display = "none";
 	}
-	pages![i % 2].setAttribute("style", "display: block");
-	for (let b = 0; b < navButtons!.length; b++) {
-		navButtons![b].setAttribute("style", "border-bottom: 1px solid rgb(206, 211, 215); background: rgb(250, 250, 250);");
+	pages[pageIndex].style.display = "block";
+	for (const b of navButtons) {
+		b.style.borderBottom = "1px solid rgb(206, 211, 215)";
+		b.style.background = "rgb(250, 250, 250)";
 	}
-	navButtons![i % 2].setAttribute("style", "border-bottom: none; background: none;");
+	navButtons[pageIndex].style.borderBottom = "none";
+	navButtons[pageIndex].style.background = "none";
 }
 
 function isModMessage (notif: Notification): boolean {
@@ -67,21 +75,48 @@ function isModMessage (notif: Notification): boolean {
 }
 
 function getImageSrc (notif: Notification): string {
+	// Badge notification group
+	if (notif.badgeNotifications && notif.badgeNotifications.length > 0) {
+		return notif.badgeNotifications[notif.badgeNotifications.length - 1].badge.icons.compactUrl;
+	}
+
+	// Single badge
+	if (notif.badge) {
+		return notif.badge.icons.compactUrl;
+	}
+
+	// Guardian message
 	if (isModMessage(notif)) {
 		return "../images/guardian.png";
 	}
-	return notif.iconSrc || notif.authorAvatarSrc || notif.topicIconUrl || notif.imageSource || notif.thumbnailSrc || "../images/hand.png";
+
+	return notif.authorAvatarSrc || notif.authorAvatarUrl || notif.coachAvatarURL || notif.classroom?.topics?.iconUrl || notif.curationNodeIconURL || notif.thumbnailSrc || "../images/hand.png";
+}
+
+function formatBadgeBatch (badges: { badge: BadgeNotif }[]): string {
+	const descriptions = badges.map(badge => `<b>${escapeHTML(badge.badge.description)}</b>`);
+
+	const count = descriptions.length;
+	if (count > 1) {
+		descriptions[count - 1] = "and " + descriptions[count - 1];
+	}
+
+	return descriptions.join(", ");
 }
 
 function getContent (notif: Notification): string {
-	if (notif.content) {
+	if (isModMessage(notif)) {
+		return KAMarkdowntoHTML(escapeHTML(notif.text || ""));
+	} else if (notif.content) {
 		return KAMarkdowntoHTML(escapeHTML(notif.content));
+	} else if (notif.coachName && notif.contentTitle) {
+		return `<b>${escapeHTML(notif.contentTitle)}</b>`;
 	} else if (notif.text) {
 		return escapeHTML(notif.text);
-	} else if (notif.extendedDescription) {
-		return escapeHTML(notif.extendedDescription);
-	} else if (notif.translatedRequirements) {
-		return escapeHTML(notif.translatedRequirements[0]);
+	} else if (notif.badge?.fullDescription) {
+		return escapeHTML(notif.badge?.fullDescription);
+	} else if (notif.badgeNotifications && notif.badgeNotifications.length > 0) {
+		return formatBadgeBatch(notif.badgeNotifications);
 	} else {
 		console.error(`Possible Unhandled notif type: ${JSON.stringify(notif, null, 4)}`);
 		return "";
@@ -89,24 +124,26 @@ function getContent (notif: Notification): string {
 }
 
 function getAuthorNote (notif: Notification): string {
-	if (notif.modNickname) {
+	if (isModMessage(notif)) {
 		/* Moderator Message */
-		return `<b>${escapeHTML(notif.modNickname)}</b> sent you a guardian message:`;
+		return `<b>You recieved a guardian message</b>:`;
 	} else if (notif.authorNickname) {
 		/* New Comment or Reply */
-		return `<b>${escapeHTML(notif.authorNickname)}</b> added a comment on <b>${escapeHTML(notif.translatedFocusTitle || notif.translatedScratchpadTitle || "")}</b>`;
+		return `<b>${escapeHTML(notif.authorNickname)}</b> added a comment on <b>${escapeHTML(notif.focusTranslatedTitle || notif.translatedScratchpadTitle || "")}</b>`;
 	} else if (notif.coachName && notif.contentTitle) {
 		/* Coach Assignment */
-		return `<b>${escapeHTML(notif.coachName)}</b> assigned you <b>${escapeHTML(notif.contentTitle)}</b>`;
+		return `<b>${escapeHTML(notif.coachName)}</b> gave you an assignment:`;
 	} else if (notif.missionName && notif.class_.includes("ClassMissionNotification")) {
 		/* New Mission */
 		return `New Mission: <b>${escapeHTML(notif.missionName)}</b>`;
 	} else if (notif.translatedDisplayName && notif.class_.includes("RewardNotification")) {
 		/* New Reward (?) */
 		return `New Reward: <b>${escapeHTML(notif.translatedDisplayName)}</b>`;
-	} else if (notif.iconSrc && notif.extendedDescription && notif.description) {
+	} else if (notif.badgeNotifications) {
+		return `You earned ${notif.badgeNotifications.length} new badges:`;
+	} else if (notif.badge) {
 		/* New Badge */
-		return `New Badge: <b>${escapeHTML(notif.description)}</b>`;
+		return `New Badge: <b>${escapeHTML(notif.badge.description)}</b>`;
 	}
 
 	return "";
@@ -124,30 +161,32 @@ function genNotif (notif: NotifElm): string {
 				</div>
 			</a>
 			${(() => {
-			if (!notif.isComment) { return ""; }
-			return `
-				<div class="reply" programID="${notif.programID}" feedback="${notif.feedback}">
-					<a class="reply-button">Reply</a>
-					<textarea class="reply-text hide"></textarea>
-				</div>`;
-		})()}
+				if (!notif.isComment) { return ""; }
+				return `
+					<div class="reply" programID="${notif.programID}" feedback="${notif.feedback}">
+						<a class="reply-button">Reply</a>
+						<textarea class="reply-text hide"></textarea>
+					</div>`;
+			})()}
 		<div>`;
 }
 
 function newNotif (notif: Notification): string {
 	const notifToReturn: NotifElm = {
 		href: (() => {
+			if (isModMessage(notif)) {
+				return "javascript:void(0)";
+			}
 			if (notif.class_.includes("AvatarPartNotification")) {
 				return `https://www.khanacademy.org/profile/${notif.kaid}?show_avatar_customizer=1&selected_avatar_part=${notif.name}`;
-			} else {
-				return `https://www.khanacademy.org/notifications/read?keys=${notif.urlsafeKey}&redirect_url=${notif.url || "/"}`;
 			}
+			return "https://www.khanacademy.org" + notif.url;
 		})(),
 		imgSrc: getImageSrc(notif),
 		content: getContent(notif),
 		date: formatDate(notif.date),
 		authorNote: getAuthorNote(notif),
-		isComment: notif.feedbackIsComment || notif.feedbackIsReply || false,
+		// isComment: notif.feedbackIsComment || notif.feedbackIsReply || false,
 		programID: (() => {
 			if (!notif.url) { return ""; }
 			const matches = notif.url.match(/(\d{10,16})/);
@@ -160,6 +199,7 @@ function newNotif (notif: Notification): string {
 
 function addReplyListeners (): void {
 	const comments = document.getElementsByClassName("reply") as HTMLCollectionOf<HTMLDivElement>;
+	debugger;
 	Array.from(comments).forEach(replyDiv => {
 		const replyButton = replyDiv.firstElementChild as HTMLAnchorElement;
 
@@ -221,26 +261,46 @@ function fkeyNotFound () {
 		"<h2 class=\"please-sign-in\">Please visit KA and make sure you're signed in</h2>";
 }
 
-function displayNotifs (notifJson: NotifObj) {
-	if (!notifJson) { console.log("Didn't receieve notifications."); }
-	currentCursor = notifJson.cursor;
+function displayNotifs (notifications: Notification[]) {
+	debugger;
+	if (!notifications) { console.error("Didn't receieve notifications."); }
+	// currentCursor = notifJson.cursor;
 	// Add unread count here, with KA object.
-	unreadNumber!.textContent = "";
+	// unreadNumber!.textContent = "";
 
 	loadingSpinner!.style.display = "none";
-	notifJson.notifications.forEach((notif: Notification) => {
-		if (notif.notes) {
+	for (const notif of notifications) {
+		notifsContainer!.innerHTML += newNotif(notif);
+		/*if (notif.notes) {
 			notif.notes.forEach((note: Notification) => {
 				notifsContainer!.innerHTML += newNotif(note);
 			});
 		} else {
 			notifsContainer!.innerHTML += newNotif(notif);
+		}*/
+	}
+}
+
+let notificationGenerator: AsyncGenerator<Notification[], number, void>;
+// Get the next page of notifs, and then call displayNotifs with them
+function getNotifs () {
+	if (!notificationGenerator) {
+		notificationGenerator = getUserNotifications();
+	}
+	notificationGenerator.next().then(function ({ value: data, done }) {
+		if (typeof data === "object") {
+			displayNotifs(data);
+			addReplyListeners();
 		}
 	});
 }
 
-function getNotifs () {
+/*function getNotifs () {
 	getChromeFkey().then(fkey => {
+		debugger;
+		// This endpoint is broken, and KA has moved to a graphQL version, so I don't think they'll fix it.
+
+
 		fetch(`https://www.khanacademy.org/api/internal/user/notifications/readable?cursor=${currentCursor}&casing=camel`, {
 			method: "GET",
 			headers: {
@@ -248,7 +308,7 @@ function getNotifs () {
 				[COOKIE]: getChromeCookies()
 			},
 			credentials: "same-origin"
-		}).then((res: Response): (Promise<NotifObj> | NotifObj) => {
+		}).then((res: Response): Promise<NotifObj> => {
 			return res.json();
 		}).then((data: NotifObj): void => {
 			displayNotifs(data);
@@ -257,9 +317,12 @@ function getNotifs () {
 			console.error(e);
 		});
 	}).catch(fkeyNotFound);
-}
+}*/
+
 
 function markNotifsRead () {
+	// TODO: Did this move to graphQL?
+	// Why is it returning a NotifObj?
 	getChromeFkey().then(fkey => {
 		fetch(`https://www.khanacademy.org/api/internal/user/notifications/clear_brand_new`, {
 			method: "POST",
@@ -268,16 +331,20 @@ function markNotifsRead () {
 				[COOKIE]: getChromeCookies()
 			},
 			credentials: "same-origin"
-		}).then((res: Response): (Promise<NotifObj> | NotifObj) => {
+		}).then(res => {
 			return res.json();
 		}).catch(console.error);
 	}).catch(fkeyNotFound);
 }
 
-generalNav!.addEventListener("click", e => currentPage > 0 && page(--currentPage));
+generalNav!.addEventListener("click", e => {
+	currentPage = Page.UpdateLog;
+	goToPage(currentPage);
+});
+
 notifsNav!.addEventListener("click", e => {
-	if (currentPage > log.length - 1) { return; }
-	page(++currentPage);
+	currentPage = Page.Notif;
+	goToPage(currentPage);
 	if (document.getElementsByClassName("new-notif").length < 1) {
 		getNotifs();
 	}
@@ -285,7 +352,7 @@ notifsNav!.addEventListener("click", e => {
 
 if (notifsPage) {
 	notifsPage.addEventListener("scroll", () => {
-		if (currentPage > 0 && notifsPage.scrollTop === (notifsPage.scrollHeight - notifsPage.offsetHeight)) {
+		if (currentPage === Page.Notif && Math.abs(notifsPage.scrollHeight - notifsPage.offsetHeight - notifsPage.scrollTop) < 1) {
 			getNotifs();
 		}
 	});
@@ -301,5 +368,5 @@ version!.onchange = function (e): void {
 };
 
 versionPage(0);
-page(1);
+goToPage(Page.Notif);
 getNotifs();
