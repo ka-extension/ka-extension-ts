@@ -1,5 +1,17 @@
 [
     {
+        "version": "4.8.0",
+        "new": [
+            "Format Code button in Editor Settings."
+        ],
+        "fixes": [
+            "Fixes notifications in Extension popup.",
+            "Fixes (or removes) several discussion features.",
+            "Fixes program count on user profile",
+            "Fixes extension program vote button."
+        ]
+    },
+    {
         "version": "4.7.14",
         "new": [
             "None"
