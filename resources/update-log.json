@@ -1,5 +1,14 @@
 [
     {
+        "version": "4.8.1",
+        "new": [
+            "None"
+        ],
+        "fixes": [
+            "Fixes notifications in Extension popup (again)."
+        ]
+    },
+    {
         "version": "4.8.0",
         "new": [
             "Format Code button in Editor Settings."
