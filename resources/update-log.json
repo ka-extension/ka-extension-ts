@@ -1,5 +1,14 @@
 [
     {
+        "version": "4.8.2",
+        "new": [
+            "None"
+        ],
+        "fixes": [
+            "Fixes user profile fetching after a KA API change."
+        ]
+    },
+    {
         "version": "4.8.1",
         "new": [
             "None"
