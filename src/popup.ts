@@ -90,7 +90,7 @@ function getImageSrc (notif: Notification): string {
 		return "../images/guardian.png";
 	}
 
-	return notif.authorAvatarSrc || notif.authorAvatarUrl || notif.coachAvatarURL || notif.classroom?.topics?.iconUrl || notif.curationNodeIconURL || notif.thumbnailSrc || "../images/hand.png";
+	return notif.authorAvatarSrc || notif.authorAvatarUrl || notif.classroom?.topics?.iconUrl || notif.curationNodeIconURL || notif.thumbnailSrc || "../images/hand.png";
 }
 
 function formatBadgeBatch (badges: { badge: BadgeNotif }[]): string {
@@ -109,7 +109,7 @@ function getContent (notif: Notification): string {
 		return KAMarkdowntoHTML(escapeHTML(notif.text || ""));
 	} else if (notif.content) {
 		return KAMarkdowntoHTML(escapeHTML(notif.content));
-	} else if (notif.coachName && notif.contentTitle) {
+	} else if (notif.className && notif.contentTitle) {
 		return `<b>${escapeHTML(notif.contentTitle)}</b>`;
 	} else if (notif.text) {
 		return escapeHTML(notif.text);
@@ -130,15 +130,9 @@ function getAuthorNote (notif: Notification): string {
 	} else if (notif.authorNickname) {
 		/* New Comment or Reply */
 		return `<b>${escapeHTML(notif.authorNickname)}</b> added a comment on <b>${escapeHTML(notif.focusTranslatedTitle || notif.translatedScratchpadTitle || "")}</b>`;
-	} else if (notif.coachName && notif.contentTitle) {
+	} else if (notif.className && notif.contentTitle) {
 		/* Coach Assignment */
-		return `<b>${escapeHTML(notif.coachName)}</b> gave you an assignment:`;
-	} else if (notif.missionName && notif.class_.includes("ClassMissionNotification")) {
-		/* New Mission */
-		return `New Mission: <b>${escapeHTML(notif.missionName)}</b>`;
-	} else if (notif.translatedDisplayName && notif.class_.includes("RewardNotification")) {
-		/* New Reward (?) */
-		return `New Reward: <b>${escapeHTML(notif.translatedDisplayName)}</b>`;
+		return `New Assignment:`;
 	} else if (notif.badgeNotifications) {
 		return `You earned ${notif.badgeNotifications.length} new badges:`;
 	} else if (notif.badge) {
@@ -161,7 +155,7 @@ function genNotif (notif: NotifElm): string {
 				</div>
 			</a>
 			${(() => {
-				if (!notif.isComment) { return ""; }
+				// if (!notif.isComment) { return ""; }
 				return `
 					<div class="reply" programID="${notif.programID}" feedback="${notif.feedback}">
 						<a class="reply-button">Reply</a>
@@ -192,7 +186,7 @@ function newNotif (notif: Notification): string {
 			const matches = notif.url.match(/(\d{10,16})/);
 			return matches ? matches[0] : "";
 		})(),
-		feedback: notif.feedback || ""
+		feedback: ""
 	};
 	return genNotif(notifToReturn);
 }
