@@ -29,3 +29,4 @@ PRs are welcomed!
 * [An0n3m0us](https://github.com/An0n3m0us)
 * [Bhavjit Chauhan](https://github.com/bhavjitChauhan)
 * [jjroley](https://github.com/jjroley)
+* [vExcess](https://github.com/vExcess)
