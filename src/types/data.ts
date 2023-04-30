@@ -172,8 +172,6 @@ interface Notification {
 	// AssignmentCreatedNotificationType
 	numAssignments?: number;
 	contentTitle?: string;
-	coachAvatarURL?: string;
-	coachName?: string;
 	curationNodeIconURL?: string;
 	className?: string;
 
