@@ -1,7 +1,8 @@
-/* tslint:disable */
+import { anyFunc } from "../types/data";
+
 // TS Promise-based utility functions for finding JS generated elements on a page
 function querySelectorAllPromise (selectorString: string, interval: number = 250, maxTrials?: number): Promise<NodeListOf<Element>> {
-	return new Promise((resolve: (nodes: NodeListOf<Element>) => void, reject: (...args: any[]) => void): void => {
+	return new Promise((resolve: (nodes: NodeListOf<Element>) => void, reject: anyFunc): void => {
 		let i: number = 0;
 		(function find (): void {
 			const elements = document.querySelectorAll(selectorString);
@@ -19,7 +20,7 @@ function querySelectorAllPromise (selectorString: string, interval: number = 250
 }
 
 function querySelectorPromise (elementString: string, interval: number = 250, maxTrials?: number): Promise<Element> {
-	return new Promise((resolve: (node: Element) => void, reject: (...args: any[]) => void): void => {
+	return new Promise((resolve: (node: Element) => void, reject: anyFunc): void => {
 		let i = 0;
 		(function find (): void {
 			const element = document.querySelector(elementString);
@@ -36,7 +37,7 @@ function querySelectorPromise (elementString: string, interval: number = 250, ma
 }
 
 function objectNotEmptyTimer (obj: object, interval: number = 100): Promise<object> {
-	return new Promise((resolve: (obj: object) => void, reject: (...args: any[]) => void) => {
+	return new Promise((resolve: (obj: object) => void, reject: anyFunc) => {
 		(function check (): void {
 			if (typeof obj !== "object") { reject(new TypeError(`${obj} is not an object`)); }
 			else if (Object.keys(obj).length === 0) { setTimeout(check, interval); }
@@ -45,4 +46,6 @@ function objectNotEmptyTimer (obj: object, interval: number = 100): Promise<obje
 	});
 }
 
-export { querySelectorAllPromise, querySelectorPromise, objectNotEmptyTimer };
+const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+export { querySelectorAllPromise, querySelectorPromise, objectNotEmptyTimer, wait };

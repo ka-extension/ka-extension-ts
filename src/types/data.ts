@@ -41,6 +41,8 @@ class UsernameOrKaid {
 
 enum CommentSortType { TOP = 1, RECENT = 2 }
 
+type programContentType = "sql" | "pjs" | "webpage";
+
 interface Program {
 	contentKindCode: string;
 	newUrlPath: string;
@@ -66,7 +68,7 @@ interface Program {
 	kaid: string;
 	imageUrl: string;
 	width: number;
-	userAuthoredContentType: string;
+	userAuthoredContentType: programContentType;
 }
 
 interface OldScratchpad {
@@ -88,6 +90,27 @@ interface Scratchpad {
 	authorNickname: string;
 	spinoffCount: number;
 	translatedTitle: string;
+}
+
+interface CachedRevision {
+	cursor: {
+		row: number;
+		column: number;
+	};
+	scratchpad: {
+		title: string;
+		translatedTitle: string;
+		category: string | null;
+		difficulty: string | null;
+		userAuthoredContentType: programContentType;
+		revision: {
+			code: string;
+			created: string;
+		};
+		trustedRevision: {
+			created: string;
+		}
+	};
 }
 
 // Since there are different kinds of notifs, add in other props that are optional.
@@ -368,6 +391,7 @@ interface ACE {
 	edit: (e: HTMLElement) => {
 		setOptions: (o: EditorOptions) => void;
 		setOption: (o: string, val: ACE_OPTION) => void;
+		setValue: (s: string) => void;
 		getSession: () => {
 			getMode: () => {
 				$id: string;
@@ -386,6 +410,9 @@ interface ACE {
 }
 
 type ACE_OPTION = boolean | number | string;
+
+// tslint:disable-next-line
+type anyFunc = (...args: any[]) => any; 
 
 declare global {
 	interface Window {
@@ -412,5 +439,6 @@ export {
 	CommentResponse, CommentData,
 	NotificationResponse, NotifElm, ScratchpadUI,
 	EditorOptions, ACE, ACE_OPTION,
-	User, OldScratchpad, BadgeNotif
+	User, OldScratchpad, BadgeNotif, anyFunc,
+	CachedRevision
 };
