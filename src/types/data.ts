@@ -392,6 +392,7 @@ interface ACE {
 		setOptions: (o: EditorOptions) => void;
 		setOption: (o: string, val: ACE_OPTION) => void;
 		setValue: (s: string) => void;
+		getValue: () => string;
 		getSession: () => {
 			getMode: () => {
 				$id: string;

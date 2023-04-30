@@ -1,4 +1,5 @@
 import { Program, CachedRevision } from "./types/data";
+import { TIME_PERIODS } from "./types/names";
 import { formatDate } from "./util/text-util";
 import { querySelectorPromise, wait } from "./util/promise-util";
 import { addEditorSettings } from "./editor-settings";
@@ -251,11 +252,11 @@ async function fixSavingScratchpadToLocalStorage (program: Program) {
 	window.addEventListener("beforeunload", saveEditorCode);
 
 	// save code every minute (if browser fails to save the code when the page is unloaded, this will ensure that all is not lost)
-	setInterval(saveEditorCode, 1000 * 60);
+	setInterval(saveEditorCode, TIME_PERIODS.minute);
 
 	// delete the saved code from localStorage when it gets saved to KA
 	document.body.addEventListener("mouseup", e => {
-		if (e.target && e.target.textContent === "Save") {
+		if (e.target && (e.target as HTMLElement).textContent === "Save") {
 			localStorage.removeItem(localStorageKey);
 		}
 	});
