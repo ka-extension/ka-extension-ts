@@ -16,14 +16,9 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 	});
 
 	let programCount = 0, inspirations = 0,
-		votes = 0, spinoffs = 0, first = true;
+		votes = 0, spinoffs = 0;
 	for await (const page of scratchpads) {
 		for (const s of page) {
-			if (first) {
-				addLegacyBackground(s.id);
-				first = false;
-			}
-
 			programCount++;
 			spinoffs += s.displayableSpinoffCount;
 			inspirations += s.displayableSpinoffCount > 0 ? 1 : 0;
@@ -31,7 +26,7 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 		}
 	}
 
-	//TODO: Never fires and we don't get info if the user has thier statistics hidden
+	//TODO: Never fires and we don't get info if the user has their statistics hidden
 	const table = await querySelectorPromise(".user-statistics-table > tbody") as HTMLElement;
 
 	if (table.classList.contains(EXTENSION_ITEM_CLASSNAME)) {
@@ -88,39 +83,6 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 				}, 0);
 			cells[17].textContent = badgeCount.toString();
 		}).catch(console.error);
-}
-
-function addLegacyBackground (id: string) {
-	Promise.all([
-		querySelectorPromise(
-			".user-info.clearfix",
-			10, 500
-		),
-		getOldScratchpad(id, {
-			creatorProfile: {
-				backgroundSrc: 1
-			}
-		}, true)
-	]).then(([bgEl, profile]) => {
-		const backgroundUrl = profile.creatorProfile.backgroundSrc;
-
-		const name = document.querySelector(".user-deets > div > h1"),
-			bio = document.querySelector(".user-deets > div > span");
-
-		if (backgroundUrl && name && bio) {
-			const style =
-				`background-image: url("${backgroundUrl}");` +
-				"background-position: center;" +
-				"background-size: cover;",
-			textStyle = "color: #FFFFFF;";
-
-			if (backgroundUrl && name && bio) {
-				bgEl.setAttribute("style", style);
-				name.setAttribute("style", textStyle);
-				bio.setAttribute("style", textStyle);
-			}
-		}
-	}).catch(console.error);
 }
 
 //TODO: Fix or report to KA, currently disabled

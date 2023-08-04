@@ -183,15 +183,8 @@ function getConvo (key: string, focusKind: string, focusId: string, discussionTy
 	});
 }
 
-function getOldScratchpad (id: string, proj?: object, cached = false) : Promise<OldScratchpad> {
-	const url = window.location.origin + "/api/internal/show_scratchpad?scratchpad_id=";
-	return getJSON(url + id, proj, cached)
-		.then(e => e as OldScratchpad);
-}
-
 export {
 	getJSON,
 	getConvo, FinalReply, FinalConvo,
-	DiscussionTypes, deleteNotif, putPostJSON,
-	getOldScratchpad
+	DiscussionTypes, deleteNotif, putPostJSON
 };
