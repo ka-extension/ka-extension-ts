@@ -1,5 +1,14 @@
 [
     {
+        "version": "4.9.0",
+        "new": [
+            "Save new scratchpads to LocalStorage."
+        ],
+        "fixes": [
+            "Remove legacy profile background functionality, which has been broken for a while."
+        ]
+    },
+    {
         "version": "4.8.3",
         "new": [
             "None"
