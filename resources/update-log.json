@@ -1,5 +1,14 @@
 [
     {
+        "version": "4.9.1",
+        "new": [
+            "None"
+        ],
+        "fixes": [
+            "Updates notifications query."
+        ]
+    },
+    {
         "version": "4.9.0",
         "new": [
             "Save new scratchpads to LocalStorage."
