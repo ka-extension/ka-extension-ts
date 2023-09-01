@@ -1,5 +1,14 @@
 [
     {
+        "version": "4.9.2",
+        "new": [
+            "None"
+        ],
+        "fixes": [
+            "Automatically fetch queries as they become outdated."
+        ]
+    },
+    {
         "version": "4.9.1",
         "new": [
             "None"
