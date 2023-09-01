@@ -4,9 +4,9 @@
 	"description": "A Chrome extension for the Khan Academy Computer Programming section",
 	"private": true,
 	"scripts": {
-		"build": "esbuild ./src/index.ts ./src/background.ts ./src/content.ts ./src/popup.ts --bundle --outdir=dist --target=es2018",
-		"build-prod": "esbuild ./src/index.ts ./src/background.ts ./src/content.ts ./src/popup.ts --bundle --minify --outdir=dist --target=es2018",
-		"watch": "esbuild --watch ./src/index.ts ./src/background.ts ./src/content.ts ./src/popup.ts --bundle --outdir=dist --target=es2018",
+		"build": "esbuild ./src/index.ts ./src/background.ts ./src/content.ts ./src/popup.ts --bundle --outdir=dist --target=es2020",
+		"build-prod": "esbuild ./src/index.ts ./src/background.ts ./src/content.ts ./src/popup.ts --bundle --minify --outdir=dist --target=es2020",
+		"watch": "esbuild --watch ./src/index.ts ./src/background.ts ./src/content.ts ./src/popup.ts --bundle --outdir=dist --target=es2020",
 		"clean": "rm ./dist/*",
 		"lint": "tslint --project tsconfig.json -c tslint.json \"src/**/*.ts\"",
 		"fix": "tslint --project tsconfig.json -c tslint.json \"src/**/*.ts\" --fix",
@@ -30,6 +30,7 @@
 		"typescript": "^4.5.5"
 	},
 	"dependencies": {
+		"@bhavjit/khan-api": "^0.6.2",
 		"highlight.js": "^11.5.0",
 		"js-beautify": "^1.14.7",
 		"whatwg-fetch": "^3.6.2"

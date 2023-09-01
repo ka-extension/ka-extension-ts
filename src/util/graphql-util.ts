@@ -3,6 +3,7 @@ import { CSRF_HEADER } from "../types/names";
 import { UsernameOrKaid, UserProfileData, CommentResponse, CommentData, NotificationResponse, Notification } from "../types/data";
 
 import { getCSRF } from "./cookie-util";
+import { getLatestQuery, getLatestMutation } from "@bhavjit/khan-api";
 
 // Typed names for queries in graphqlQueries.json
 enum GraphqlQuery {
@@ -33,7 +34,7 @@ function getOrigin (overrideOrigin: string|undefined) {
 function graphql<T> (query: GraphqlQuery, variables: object, over: OverrideData = {}) : Promise<T> {
 	const origin = getOrigin(over.origin);
 	const url = origin + "/api/internal/graphql/" + query;
-	return fetch(url, {
+	const init: RequestInit = {
 		method: "POST",
 		headers: {
 			[CSRF_HEADER]: over.fkey ? over.fkey : getCSRF(),
@@ -45,17 +46,49 @@ function graphql<T> (query: GraphqlQuery, variables: object, over: OverrideData 
 			variables,
 		}),
 		credentials: "same-origin"
-	})
-		.then(response => {
+	};
+	const reject = (response: Response) => response.text().then(txt => Promise.reject(
+		`Error in GraphQL ${query} call: ` +
+		"Server responded with status " +
+		JSON.stringify(response.statusText) +
+		" and body " + JSON.stringify(txt)
+	));
+
+	return fetch(url, init)
+		.then(async (response) => {
 			if (response.status === 200) {
 				return response.json();
+			} else if (response.status === 403) {
+				// Adapted from
+				// https://github.com/bhavjitChauhan/khan-api/blob/530df3de42ce6ab4cc2b235c08a98ac5022ca1fc/src/utils/fetch.ts#L32
+				const isMutation = queries[query].startsWith("mutation");
+				if (!query) {
+					throw new Error(`An unknown query is no longer in the safelist`);
+				}
+				console.warn(`The query for operation "${query}" is no longer in the safelist. Attempting to fetch the latest version from the safelist...`);
+				const latestQuery = isMutation
+					? await getLatestMutation(query)
+					: await getLatestQuery(query);
+
+				if (!latestQuery) {
+					throw new Error(`The query for operation "${query}" was not found in the safelist`);
+				}
+
+				init.body = JSON.stringify({
+					operationName: query,
+					// Use the latest query
+					query: latestQuery,
+					variables,
+				});
+				return fetch(url, init).then(response => {
+					if (response.status === 200) {
+						// Cache iff request was successful
+						queries[query] = latestQuery;
+						return response.json();
+					} else { return reject(response); }
+				});
 			} else {
-				return response.text().then(txt => Promise.reject(
-					`Error in GraphQL ${query} call: ` +
-					"Server responded with status " +
-					JSON.stringify(response.statusText) +
-					" and body " + JSON.stringify(txt)
-				));
+				return reject(response);
 			}
 		})
 		.then(e => e.data as T);
