@@ -178,7 +178,8 @@ async function addEditorSettingsButton (program: Program) {
 
 async function fixSavingScratchpadToLocalStorage (program: Program) {
 	// exit if this isn't a new scratchpad
-	if (typeof program.id === "number") {
+	// xxx HS16 - exit if the scratchpad belongs to a tutorial video
+	if (program.id !== undefined) {
 		return;
 	}
 
