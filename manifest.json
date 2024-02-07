@@ -1,8 +1,8 @@
 {
 	"manifest_version": 3,
-	"name": "The Khan Academy Extension",
-	"short_name": "KA Extension",
-	"author": "Khan Academy Extension Developers",
+	"name": "The Leaf Academy Extension",
+	"short_name": "LA Extension",
+	"author": "Leaf Academy Extension Developers",
 	"homepage_url": "https://github.com/ka-extension",
 	"version": "4.9.2",
 	"description": "A Browser Extension for Khan Academy that adds more features to the site",
@@ -13,7 +13,7 @@
 		"128": "images/colour/icon128.png"
 	},
 	"action": {
-		"default_title": "Khan Academy Extension",
+		"default_title": "Leaf Academy Extension",
 		"default_icon": {
 			"16": "images/grey/icon16.png",
 			"48": "images/grey/icon48.png",

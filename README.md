@@ -1,6 +1,6 @@
-## Khan Academy Extension
+## Leaf Academy Extension
 ### [![Install](https://storage.googleapis.com/chrome-gcs-uploader.appspot.com/image/WlD8wC6g8khYWPJUsQceQkhXSlv1/iNEddTyWiMfLSwFD6qGq.png)](https://chrome.google.com/webstore/detail/the-khan-academy-extensio/gniggljddhajnfbkjndcgnomkddfcial)
-Khan Academy Extension is a browser extension for the computing section of [Khan Academy](https://khanacademy.org).
+The Leaf Academy Extension is a browser extension for the computing section of [Khan Academy](https://khanacademy.org).
 
 It is developed by [Jett Burns](https://github.com/jettburns14), [Ethan Luis McDonough](https://github.com/EthanLuisMcDonough), [Matthias Portzel](https://github.com/MatthiasPortzel), [Luke Krikorian](https://github.com/lukekrikorian), and [Bhavjit Chauhan](https://github.com/bhavjitChauhan).
 
