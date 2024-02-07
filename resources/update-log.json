@@ -1,5 +1,14 @@
 [
     {
+        "version": "4.9.3",
+        "new": [
+            "None"
+        ],
+        "fixes": [
+            "Rebranded to Leaf Academy Extension due to trademark issues with Khan Academy."
+        ]
+    },
+    {
         "version": "4.9.2",
         "new": [
             "None"

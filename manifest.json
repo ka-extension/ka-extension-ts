@@ -4,7 +4,7 @@
 	"short_name": "LA Extension",
 	"author": "Leaf Academy Extension Developers",
 	"homepage_url": "https://github.com/ka-extension",
-	"version": "4.9.2",
+	"version": "4.9.3",
 	"description": "A Browser Extension for Khan Academy that adds more features to the site",
 	"minimum_chrome_version": "88",
 	"icons": {
