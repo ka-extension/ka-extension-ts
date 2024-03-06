@@ -143,7 +143,7 @@ function qaExpanded () {
 }
 
 function switchToTipsAndThanks () {
-	querySelectorPromise("#ka-uid-discussiontabbedpanel-0--tabbedpanel-tab-1").then(tabButton => tabButton as HTMLButtonElement).then(tabButton => {
+	querySelectorPromise("#ka-uid-discussiontabbedpanel-0--tabbedpanel-tab-2").then(tabButton => tabButton as HTMLButtonElement).then(tabButton => {
 		//Don't switch to T&T if you have followed a direct link to question
 		if (qaExpanded()) {
 			return;
