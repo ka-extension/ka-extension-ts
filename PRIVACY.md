@@ -1,8 +1,8 @@
-# Privacy Policy for Khan Academy Extension
+# Privacy Policy for Leaf Academy Extension
 
 Effective Date: 2023-08-04
 
-The Khan Academy Extension Developers ("we," "us," or "our") developed The Khan Academy Extension (the "Extension"). This Privacy Policy aims to inform users of the Extension about the collection, use, and disclosure of any information while using the Extension.
+The Leaf Academy Extension Developers ("we," "us," or "our") developed The Leaf Academy Extension (the "Extension"). This Privacy Policy aims to inform users of the Extension about the collection, use, and disclosure of any information while using the Extension.
 
 ## 1. Information Usage
 
@@ -18,7 +18,7 @@ All of this data is collected and processed LOCALLY ON YOUR DEVICE.
 
 ### 2.1 Servers operated by us
 
-The Khan Academy Extension Developers do not operate any remote servers in accordance with the Extension features. The Khan Academy Extension Developers do not have access to any information about your usage of The Extension or of Khan Academy. We do not do any centralized collection or processing of your data.
+The Leaf Academy Extension Developers do not operate any remote servers in accordance with the Extension features. The Leaf Academy Extension Developers do not have access to any information about your usage of The Extension or of Khan Academy. We do not do any centralized collection or processing of your data.
 
 ### 2.2 Servers operated by Khan Academy
 
