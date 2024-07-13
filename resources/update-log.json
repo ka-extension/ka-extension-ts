@@ -1,5 +1,14 @@
 [
     {
+        "version": "4.9.3",
+        "new": [
+            "Automatically switch to Tips and Thanks instead of Questions."
+        ],
+        "fixes": [
+            "Rebranded to \"Extension for Khan Academy\" due to trademark issues with Khan Academy."
+        ]
+    },
+    {
         "version": "4.9.2",
         "new": [
             "None"
