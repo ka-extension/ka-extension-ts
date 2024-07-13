@@ -4,6 +4,9 @@ The Extension for Khan Academy is a browser extension for the computing section 
 
 It is developed by [Jett Burns](https://github.com/jettburns14), [Ethan Luis McDonough](https://github.com/EthanLuisMcDonough), [Matthias Portzel](https://github.com/MatthiasPortzel), [Luke Krikorian](https://github.com/lukekrikorian), and [Bhavjit Chauhan](https://github.com/bhavjitChauhan).
 
+> [!NOTE]
+> The Extension for Khan Academy is not affiliated with Khan Academy. Khan Academy is a registered trademark of Khan Academy, Inc.
+
 ### Contributing
 #### Run the extension locally:
 * Run `npm install` in the extension directory.
