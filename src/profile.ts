@@ -72,7 +72,7 @@ async function addUserInfo (uok: UsernameOrKaid): Promise<void> {
 	table.classList.add(EXTENSION_ITEM_CLASSNAME);
 
 	if (DEVELOPERS.includes(User.kaid)) {
-		table.innerHTML += `<div class="kae-green user-statistics-label">KA Extension Developer</div>`;
+		table.innerHTML += `<div class="kae-green user-statistics-label">Extension Developer</div>`;
 	}
 
 	querySelectorAllPromise(".badge-category-count", 10, 500)
