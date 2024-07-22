@@ -1,5 +1,5 @@
 ## Extension for Khan Academy
-### [![Install](https://storage.googleapis.com/chrome-gcs-uploader.appspot.com/image/WlD8wC6g8khYWPJUsQceQkhXSlv1/iNEddTyWiMfLSwFD6qGq.png)](https://chrome.google.com/webstore/detail/the-khan-academy-extensio/gniggljddhajnfbkjndcgnomkddfcial)
+### [![Install](./images/chrome-web-store-badge.png)](https://chromewebstore.google.com/detail/extension-for-khan-academ/cbabcjnnndpemcmaliblcijkdfbdmbdh)
 The Extension for Khan Academy is a browser extension for the computing section of [Khan Academy](https://khanacademy.org).
 
 It is developed by [Jett Burns](https://github.com/jettburns14), [Ethan Luis McDonough](https://github.com/EthanLuisMcDonough), [Matthias Portzel](https://github.com/MatthiasPortzel), [Luke Krikorian](https://github.com/lukekrikorian), and [Bhavjit Chauhan](https://github.com/bhavjitChauhan).
