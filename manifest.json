@@ -1,10 +1,10 @@
 {
 	"manifest_version": 3,
-	"name": "The Khan Academy Extension",
-	"short_name": "KA Extension",
-	"author": "Khan Academy Extension Developers",
+	"name": "Extension for Khan Academy",
+	"short_name": "Extension for KA",
+	"author": "Extension for Khan Academy developers",
 	"homepage_url": "https://github.com/ka-extension",
-	"version": "4.9.2",
+	"version": "4.9.3",
 	"description": "A Browser Extension for Khan Academy that adds more features to the site",
 	"minimum_chrome_version": "88",
 	"icons": {
@@ -13,7 +13,7 @@
 		"128": "images/colour/icon128.png"
 	},
 	"action": {
-		"default_title": "Khan Academy Extension",
+		"default_title": "Extension for Khan Academy",
 		"default_icon": {
 			"16": "images/grey/icon16.png",
 			"48": "images/grey/icon48.png",

@@ -1,6 +1,6 @@
 {
 	"name": "ka-extension-ts",
-	"version": "4.9.2",
+	"version": "4.9.3",
 	"description": "A Chrome extension for the Khan Academy Computer Programming section",
 	"private": true,
 	"scripts": {
@@ -16,7 +16,7 @@
 		"Khan Academy",
 		"Browser Extension"
 	],
-	"author": "KA Extension Developers",
+	"author": "Extension for Khan Academy developers",
 	"license": "MIT",
 	"repository": {
 		"type": "git",
