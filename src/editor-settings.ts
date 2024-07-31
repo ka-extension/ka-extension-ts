@@ -414,6 +414,7 @@ function addEditorSettings(
 
   container.style.display = "none";
 
+  // This allows you to exit the editor settings by clicking the document also
   toggleButton.addEventListener("click", function (e) {
     toggledOn = !toggledOn;
     e.stopPropagation();
