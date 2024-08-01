@@ -1,6 +1,5 @@
 import { UsernameOrKaid, UserProfileData } from "./types/data";
 import { querySelectorPromise, querySelectorAllPromise } from "./util/promise-util";
-import { getOldScratchpad } from "./util/api-util";
 import { getUserData, getUserScratchpads } from "./util/graphql-util";
 import { formatDate } from "./util/text-util";
 import { DEVELOPERS, EXTENSION_ITEM_CLASSNAME } from "./types/names";
