@@ -385,7 +385,7 @@ function addEditorSettings (toggleButton: HTMLElement, editor: HTMLElement, prog
 	document.body.addEventListener("click", () => {
 		toggledOn = false;
 		container.style.display = "none";
-	})
+	});
 
 	container.addEventListener("click", (e) => {
 		e.stopPropagation();
