@@ -389,7 +389,7 @@ function addEditorSettings (toggleButton: HTMLElement, editor: HTMLElement, prog
 
 	container.addEventListener("click", (e) => {
 		e.stopPropagation();
-	})
+	});
 
 	const mode = aceEditor.getSession().getMode().$id;
 	aceEditor.getSession().setMode(new (window.ace.require(mode).Mode)());
