@@ -370,13 +370,25 @@ function addEditorSettings (toggleButton: HTMLElement, editor: HTMLElement, prog
 
 	container.style.display = "none";
 
-	toggleButton.addEventListener("click", function () {
+	// This allows you to exit the editor settings by clicking the document also
+	toggleButton.addEventListener("click", function (e) {
 		toggledOn = !toggledOn;
+		e.stopPropagation();
+
 		if (toggledOn) {
 			container.style.display = "block";
 		} else {
 			container.style.display = "none";
 		}
+	});
+
+	document.body.addEventListener("click", () => {
+		toggledOn = false;
+		container.style.display = "none";
+	});
+
+	container.addEventListener("click", (e) => {
+		e.stopPropagation();
 	});
 
 	const mode = aceEditor.getSession().getMode().$id;
