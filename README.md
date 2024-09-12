@@ -29,6 +29,7 @@ PRs are welcomed!
 * [An0n3m0us](https://github.com/An0n3m0us)
 * [jjroley](https://github.com/jjroley)
 * [vExcess](https://github.com/vExcess)
+* [NoahR](https://github.com/MinecraftXPert)
 
 ### Legal
 
